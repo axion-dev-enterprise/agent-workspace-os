@@ -1,0 +1,37 @@
+# Agent Workspace OS — Git Ignore
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Secrets & Environment
+.env
+.env.*
+!.env.example
+!.env.template
+*.key
+*.pem
+*.pfx
+secrets/
+vault/private/
+
+# Temporary files & Logs
+temp/
+tmp/
+*.log
+*.dump
+*.sqlite-wal
+*.sqlite-shm
+*.session
+*.session-journal
+*_cookies.json
+
+# IDEs & System
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
