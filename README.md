@@ -10,7 +10,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 [![Compatible With](https://img.shields.io/badge/Agents-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex%20%7C%20Hermes-purple?style=flat-square)](#supported-agents)
 
-[Quickstart](#-quickstart-in-60-seconds) • [Core Principles](#-core-principles) • [Multi-Agent Cowork](#-multi-agent-cowork-protocol) • [Architecture](#-architecture) • [Contributing](#-contributing)
+[Quickstart](#-quickstart-in-60-seconds) • [Workflows (Setup vs Update)](#-operational-workflows) • [Core Principles](#-core-principles) • [Multi-Agent Cowork](#-multi-agent-cowork-protocol) • [Architecture](#-architecture)
 
 </div>
 
@@ -18,13 +18,13 @@
 
 ## 💡 Why Agent Workspace OS?
 
-Autonomous coding agents (Claude Code, Antigravity, Cursor, Codex, Windsurf, Copilot) are extraordinarily capable, but when dropped into loose codebases without strict rails, they suffer from well-known failure modes:
-- **Root Pollution**: Dropping random test scripts and scratch files into the project root.
-- **False Positive Affirmations**: Declaring tasks finished without empirical verification.
-- **Destructive Concurrency**: When running multiple agents or subagents, they overwrite each other's edits.
-- **AI Cliché UIs**: Inundating frontends with purple neon gradients, floating robots and emojis instead of professional UI/UX.
+Autonomous coding agents (Claude Code, Antigravity, Cursor, Codex, Windsurf, Copilot) are extraordinarily capable, but without deterministic rails they suffer from well-known failure modes:
+- **Root Pollution**: Dropping random test scripts into the root directory.
+- **False Positive Affirmations**: Declaring tasks done without empirical validation.
+- **Destructive Concurrency**: Overwriting each other's edits during multi-agent sessions.
+- **AI Cliché UIs**: Inundating frontends with purple neon gradients, floating robots and emojis.
 
-**Agent Workspace OS** solves this by establishing a **file-based deterministic governance protocol**. It provides the strict behavioral boundaries, empirical quality gates, and asynchronous synchronization primitives that production engineering demands.
+**Agent Workspace OS** establishes an asynchronous, file-based governance protocol with empirical quality gates, concurrency locks, and automated memory synchronization.
 
 ---
 
@@ -39,34 +39,44 @@ cd my-project
 ### 2. Open in your favorite AI Editor or CLI
 Works out of the box with **Claude Code**, **Antigravity**, **Cursor Composer**, **ChatGPT/Codex**, **Hermes**, or **Windsurf**.
 
-### 3. Send the Magic Prompt to your Agent
-Copy and paste this single instruction to your agent:
+### 3. Choose your operational workflow:
 
+#### 🚀 For Fresh Setup:
+Copy and paste this instruction to your agent:
 ```text
-Hi! Please read SETUP_AGENT_DIRECTIVE.md and conduct the interactive onboarding setup for my workspace.
+Hi! Please execute SETUP_PROTOCOL.md and conduct the interactive onboarding setup for my workspace.
 ```
 
-The AI agent will read the protocol, ask you **6 concise questions** (Project Name, Git Identity, Domain, Deploy Target, etc.), atomically replace all placeholders, and configure your repository ready for production!
+#### 🔄 For Incremental Updates (Pull new skills & commits):
+When new updates or skills are pushed upstream, tell your agent:
+```text
+Hi! Please execute UPDATE_PROTOCOL.md to fetch new commits and update context and memory.
+```
 
 ---
 
-## 🏛️ Architecture & Flow
+## 🔄 Operational Workflows: Setup vs Update
 
 ```mermaid
 graph TD
-    User([Developer / Operator]) -->|Sends Onboarding Prompt| Agent([Autonomous AI Agent])
-    Agent -->|Reads Protocol| Directive[SETUP_AGENT_DIRECTIVE.md]
-    Directive -->|Interactive Interview| User
-    User -->|Answers Project Context| Agent
-    Agent -->|Populates Template| Config[workspace.config.json]
-    Agent -->|Specializes Rules| Rules[AGENTS.md & DIRECTIVES.md]
-    Agent -->|Initializes Cowork Board| Cowork[memory/cowork/]
+    User([Developer / Operator]) -->|Chooses Mode| Dispatcher{WORKFLOW.md}
     
-    subgraph Multi-Agent Runtime
-        Agent1[Agent Alpha - Architecture] <-->|Task Locks & Handoffs| Cowork
-        Agent2[Agent Beta - Implementation] <-->|Shared Blackboard| Cowork
-    end
+    Dispatcher -->|New Project| Setup[SETUP_PROTOCOL.md]
+    Setup -->|Interactive Interview| Ask[Asks 6 Questions]
+    Ask -->|Configures Identity| Config[workspace.config.json]
+    Config -->|Populates| Codebase[Ready Workspace]
+
+    Dispatcher -->|Existing Project| Update[UPDATE_PROTOCOL.md]
+    Update -->|Fetches New Commits| GitFetch[git fetch upstream]
+    GitFetch -->|Audits Changes| Audit[Diff & Changelog]
+    Audit -->|Preserves Local Vars| SafeMerge[Smart Merge]
+    SafeMerge -->|Syncs Memory| Memory[Blackboard & Daily Log]
 ```
+
+| Workflow | When to Use | What it Does |
+|---|---|---|
+| **[SETUP_PROTOCOL.md](SETUP_PROTOCOL.md)** | Fresh clone | Conducts 6-question interview, replaces `{{PLACEHOLDERS}}`, configures Git identity and initializes directory tree. |
+| **[UPDATE_PROTOCOL.md](UPDATE_PROTOCOL.md)** | Ongoing workspace | Fetches upstream commits, merges new skills/docs, **preserves 100% of user variables**, and updates memory (`daily_logs/` & `blackboard.json`). |
 
 ---
 
@@ -88,7 +98,13 @@ graph TD
 
 ```
 .
-├── .github/                    # Issue & Pull Request templates
+├── WORKFLOW.md                 # Master operational router (Setup vs Update)
+├── SETUP_PROTOCOL.md           # Step-by-step interactive onboarding protocol
+├── UPDATE_PROTOCOL.md          # Step-by-step incremental update & memory sync
+├── AGENTS.md                   # Canonical rules governing all AI agents
+├── DIRECTIVES.md               # Engineering, CI/CD, and security policies
+├── README.md                   # Project overview and documentation
+├── workspace.config.template.json # Template for project variables
 ├── .skills/                    # Modular skills executable by agents
 │   ├── cicd-quality-gate/      # 5 Mandatory quality gates (Go / No-Go)
 │   ├── multi-agent-cowork/     # Concurrency locks and shared findings
@@ -101,13 +117,9 @@ graph TD
 ├── apps/                       # User-facing applications and SPAs
 ├── services/                   # Backend services, APIs, and background workers
 ├── packages/                   # Shared monorepo packages and libraries
-├── memory/                     # Persistent agent telemetry and coworking
-│   ├── daily_logs/             # Chronological work logs (YYYY-MM-DD.md)
-│   └── cowork/                 # Active locks, blackboard, and handoffs
-├── AGENTS.md                   # The core rulebook governing all AI agents
-├── DIRECTIVES.md               # Engineering, CI/CD, and security policies
-├── SETUP_AGENT_DIRECTIVE.md    # Interactive onboarding instruction
-└── workspace.config.template.json # Template for project variables
+└── memory/                     # Persistent agent telemetry and coworking
+    ├── daily_logs/             # Chronological work logs (YYYY-MM-DD.md)
+    └── cowork/                 # Active locks, blackboard, and handoffs
 ```
 
 ---
