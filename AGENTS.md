@@ -66,6 +66,14 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 
 ---
 
+### Regra #9: Pre-flight Checks Mandatórios, Aprendizado de Erros e Proibição de Retries Cegos
+- **Proibição Estrita de Retries Cegos (Blind Retry Loop)**: Quando um comando de deploy ou build falhar, é proibido reexecutá-lo repetidamente ou apagar pastas de configuração (como `.vercel` ou `.next`) sem antes diagnosticar a causa raiz da mensagem de erro.
+- **Pre-flight Vercel**: Antes de rodar `vercel deploy`, certificar que o projeto está linkado (`.vercel/project.json` existente via `vercel link --yes`). Nunca deletar `.vercel` para tentar resolver erros de build. Nunca imprimir tokens de ambiente com `echo $env:TOKEN`.
+- **Pre-flight Git & Docker**: Validar identidade Git antes de commits e validar portas livres e `.env` antes de subir containers Docker.
+- **Aprendizado Contínuo**: Registrar lições aprendidas em `memory/cowork/blackboard.json` e documentar na skill `execution-preflight-learning` para que futuros agentes não repitam a mesma falha.
+
+---
+
 ## 5. Protocolo de Coworking Multi-Agente & Timeline Diária
 
 ### 5.1 Registro Obrigatório em Timeline Diária
