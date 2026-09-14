@@ -43,6 +43,73 @@ def load_config() -> dict:
                 return json.load(f)
     return {}
 
+
+def apply_setup_initialization(cfg: dict) -> None:
+    """Atomic workspace initialization when config is saved via dashboard."""
+    replacements = {
+        "{{ORGANIZATION_NAME}}": cfg.get("organization", {}).get("name", ""),
+        "{{ORGANIZATION_SLUG}}": cfg.get("organization", {}).get("slug", ""),
+        "{{PRIMARY_DOMAIN}}": cfg.get("organization", {}).get("primary_domain", ""),
+        "{{GIT_USER_NAME}}": cfg.get("git", {}).get("user_name", ""),
+        "{{GIT_USER_EMAIL}}": cfg.get("git", {}).get("user_email", ""),
+        "{{GITHUB_ORG_HANDLE}}": cfg.get("git", {}).get("org_github_handle", ""),
+        "{{WORKSPACE_ROOT}}": cfg.get("paths", {}).get("canonical_root", ""),
+        "{{HEAVY_STORAGE_PATH}}": cfg.get("paths", {}).get("heavy_builds_and_cache", ""),
+        "{{VAULT_PATH}}": cfg.get("paths", {}).get("vault_path", ""),
+        "{{PRIMARY_DEPLOY_TARGET}}": cfg.get("deployment", {}).get("primary_target", ""),
+        "{{VPS_HOST_IP}}": cfg.get("deployment", {}).get("vps_host_ip", ""),
+    }
+    
+    files_to_replace = ["AGENTS.md", "DIRECTIVES.md", "docs/WORKSPACE_ORGANIZATION_RULES.md", "README.md"]
+    for rel_p in files_to_replace:
+        fp = os.path.join(WORKSPACE_ROOT, rel_p)
+        if os.path.exists(fp):
+            try:
+                with open(fp, "r", encoding="utf-8") as f:
+                    c = f.read()
+                for k, v in replacements.items():
+                    if v and not str(v).startswith("{{"):
+                        c = c.replace(k, str(v))
+                with open(fp, "w", encoding="utf-8") as f:
+                    f.write(c)
+            except Exception:
+                pass
+
+    dirs = [
+        "apps", "services", "packages", "docs", "credentials",
+        "memory/daily_logs", "memory/cowork/handoffs", "workspace/inbox/whatsapp"
+    ]
+    for d in dirs:
+        os.makedirs(os.path.join(WORKSPACE_ROOT, d), exist_ok=True)
+
+    tasks_file = os.path.join(WORKSPACE_ROOT, "memory", "cowork", "active_tasks.json")
+    if not os.path.exists(tasks_file):
+        with open(tasks_file, "w", encoding="utf-8") as f:
+            json.dump({"tasks": []}, f, indent=2)
+
+    blackboard_file = os.path.join(WORKSPACE_ROOT, "memory", "cowork", "blackboard.json")
+    if not os.path.exists(blackboard_file):
+        with open(blackboard_file, "w", encoding="utf-8") as f:
+            json.dump({
+                "setup_completed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "organization": cfg.get("organization", {}).get("name"),
+                "status": "READY"
+            }, f, indent=2)
+
+    today_str = time.strftime("%Y-%m-%d")
+    now_time = time.strftime("%H:%M:%S")
+    log_file = os.path.join(WORKSPACE_ROOT, "memory", "daily_logs", f"{today_str}.md")
+    org_name = cfg.get("organization", {}).get("name", "Project")
+    git_user = cfg.get("git", {}).get("user_name", "Developer")
+    git_email = cfg.get("git", {}).get("user_email", "")
+    target = cfg.get("deployment", {}).get("primary_target", "Vercel")
+    log_entry = f"\n## [{now_time}] [setup] Workspace Initialized via Web Setup Dashboard\n- **Org**: {org_name}\n- **Git**: {git_user} <{git_email}>\n- **Target**: {target}\n- **Status**: Setup Complete.\n"
+    try:
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(log_entry)
+    except Exception:
+        pass
+
 def save_config(cfg: dict) -> None:
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(cfg, f, indent=2, ensure_ascii=False)
@@ -254,7 +321,8 @@ class SetupHandler(BaseHTTPRequestHandler):
                 existing = load_config()
                 existing.update(body)
                 save_config(existing)
-                self._json({"ok": True})
+                apply_setup_initialization(existing)
+                self._json({"ok": True, "initialized": True, "message": "Workspace configurado e inicializado com sucesso!"})
             except Exception as e:
                 self._json({"ok": False, "error": str(e)})
             return

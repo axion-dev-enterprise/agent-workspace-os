@@ -1,95 +1,55 @@
-# SETUP_PROTOCOL.md — Canonical Onboarding Protocol
+# SETUP_PROTOCOL.md — Protocolo Canônico de Setup & Onboarding
 
-> **Purpose**: Configure a freshly cloned workspace from scratch by populating user project variables, establishing Git identity, and initializing the multi-agent directory tree.
-
----
-
-## 🖥️ Option A: Visual Web Dashboard (Fastest & Zero Prompting)
-
-If you prefer a graphical interface to check tools, scan the WhatsApp QR Code, and configure settings visually:
-
-```bash
-# Windows (Double-click or terminal):
-start.bat
-# or: npm start / python scripts/setup_server.py
-
-# macOS / Linux:
-./start.sh
-# or: npm start / python3 scripts/setup_server.py
-```
-Open **`http://127.0.0.1:8765`** in your browser:
-- **Tools & CLI**: Live diagnostics of Python, Node, Git, GitHub CLI, Vercel, and Cloudflare Wrangler with 1-click installation.
-- **Login & OAuth**: Instant validation of GitHub, Vercel, and Cloudflare credentials.
-- **WhatsApp Bridge**: Live QR Code pairing for Monitor Mode (passive logging) and React Mode (task dispatch).
-- **Google Drive**: One-click connection to sync meeting transcripts and briefs.
+> **PROPÓSITO**: Configurar e inicializar o workspace através do **Painel Visual Web Local** (`http://127.0.0.1:8765`), eliminando questionários manuais no terminal.
 
 ---
 
-## 🤖 Option B: Conversational Setup via AI Agent
+## 🖥️ Fluxo Primário e Obrigatório: Painel Web Local
 
-If you are interacting with an AI Agent (Claude Code, Antigravity, Cursor, Codex, Windsurf), tell the agent:
-> *"Please execute SETUP_PROTOCOL.md and configure my workspace."*
-
-### Step 1: State Detection
-1. Check if `workspace.config.json` already exists.
-   - If it exists, inform the user: *"This workspace is already configured. If you wish to pull new skills and upstream updates, use **UPDATE_PROTOCOL.md**."*
-2. If not configured, proceed to Step 2.
-
-### Step 2: 6-Question Interactive Interview
-Ask the user the following 6 concise questions (or if the user specified *"use defaults"*, fill in default values):
-
-1. **Project / Organization Name**: (e.g., `Acme Corp`, `DevStudio`, `My App`)
-2. **Project Slug**: (e.g., `acme`, `devstudio`, `my-app`)
-3. **Git Identity**:
-   - Committer Name: (e.g., `Acme Bot` or your name)
-   - Committer Email: (e.g., `dev@acme.com` or your email)
-4. **Canonical Workspace Root**: (e.g., `.` for current folder, or absolute path)
-5. **Primary Domain**: (e.g., `acme.com` or `localhost`)
-6. **Primary Deploy Target**: (e.g., `Vercel`, `VPS / Docker`, `Cloudflare Pages`, `Local-only`)
-
-> 💡 **Quick Defaults**: If the user says *"use standard defaults"*, set:
-> - Name: `My Workspace Project`
-> - Slug: `my-workspace`
-> - Branch: `main`
-> - Deploy Target: `Vercel`
-> - Root: `.`
-
-### Step 3: Config Generation & Placeholder Replacement
-1. Create `workspace.config.json` by copying `workspace.config.template.json` with user answers.
-2. Add metadata:
-   ```json
-   "setup_completed_at": "<ISO-TIMESTAMP>",
-   "setup_agent": "<AGENT_NAME>",
-   "version": "1.1.0"
+### Instrução para o Agente de IA:
+Sempre que o usuário solicitar setup ou inicialização:
+1. **Inicie o servidor de setup em segundo plano**:
+   ```bash
+   python scripts/setup_server.py
    ```
-3. Replace all matching `{{PLACEHOLDER}}` tags in `AGENTS.md` and `DIRECTIVES.md`.
+2. **Envie ao usuário o link do dashboard**:
+   ```
+   http://127.0.0.1:8765
+   ```
+3. No painel, o usuário irá:
+   - Visualizar o status de todos os compiladores e CLIs (Python, Node, Git, gh, Vercel, Wrangler).
+   - Instalar ferramentas faltantes com 1 clique (com streaming live de logs).
+   - Conectar autenticação GitHub e Vercel.
+   - Escanear o QR Code do WhatsApp para pareamento com o agente.
+   - Na aba **Workspace**, preencher os dados do projeto e clicar em **Salvar**.
 
-### Step 4: Canonical Directory Tree Initialization
-Ensure the following directory tree exists:
-```
-├── apps/               # Frontends, SPAs, and client applications
-├── services/           # Backend APIs, workers, and microservices
-├── packages/           # Shared libraries and internal SDKs
-├── docs/               # Technical specs, architecture decision records (ADRs)
-├── memory/             # Multi-agent persistent telemetry and state
-│   ├── daily_logs/     # Chronological daily journals (YYYY-MM-DD.md)
-│   └── cowork/         # active_tasks.json, blackboard.json, handoffs/
-└── credentials/        # Private keys and service accounts (.gitignored)
-```
+> 💡 **O que o botão Salvar faz automaticamente:**  
+> Ao salvar no painel web, o servidor cria `workspace.config.json`, substitui todos os placeholders `{{...}}` em `AGENTS.md` e `DIRECTIVES.md`, cria as pastas canônicas (`apps/`, `services/`, `packages/`, `docs/`, `memory/cowork/`), inicializa o lock de concorrência (`active_tasks.json`) e grava a entrada inaugural no log diário!
 
-Initialize default cowork state:
-- `memory/cowork/active_tasks.json` with `{"tasks": []}`.
-- `memory/cowork/blackboard.json` with initial setup record.
+---
 
-### Step 5: Timeline Entry
-Record entry in `memory/daily_logs/YYYY-MM-DD.md`:
-```markdown
-## [HH:mm:ss] [agent-setup] Workspace Setup Successfully Initialized
-- **Organization**: <ORGANIZATION_NAME> (<ORGANIZATION_SLUG>)
-- **Git Identity**: <GIT_USER_NAME> <<GIT_USER_EMAIL>>
-- **Primary Target**: <PRIMARY_DEPLOY_TARGET>
-- **Executor**: <AGENT_NAME>
-```
+## 1-Click Launchers para Usuários Humanos
 
-### Step 6: User Confirmation
-Output a clean, concise summary confirming the workspace is 100% ready for engineering tasks.
+Se você é o desenvolvedor e acabou de clonar o repositório, pode iniciar imediatamente sem agente:
+
+- **Windows**: Duplo-clique em **`start.bat`** (ou `npm start`).
+- **macOS / Linux**: Execute **`./start.sh`** (ou `npm start`).
+- **Qualquer sistema com Python**: `python scripts/setup_server.py`.
+
+---
+
+## 💬 Fluxo Secundário (Fallback): Configuração via Chat
+
+> ⚠️ **Atenção**: Use este fluxo **apenas se o usuário solicitar explicitamente** *"configurar via chat"* ou estiver em um ambiente sem interface gráfica (ex: servidor SSH remoto).
+
+Nesse caso de exceção, faça 6 perguntas objetivas:
+1. **Nome da Organização / Projeto**: (ex: `Acme Corp`, `Meu App`)
+2. **Slug do Projeto**: (ex: `acme`, `meu-app`)
+3. **Identidade Git Oficial**:
+   - Nome para commits: (ex: `Acme Bot`)
+   - Email para commits: (ex: `dev@acme.com`)
+4. **Caminho Raiz Oficial**: (`.` para a pasta atual)
+5. **Domínio Principal**: (ex: `acme.com` ou `localhost`)
+6. **Destino Canônico de Deploy**: (ex: `Vercel`, `VPS / Docker`, `Cloudflare Pages`)
+
+*(Se o usuário disser "usar padrões", aplique: Name: `My Workspace`, Slug: `my-workspace`, Deploy: `Vercel`, Root: `.`)*.

@@ -41,22 +41,22 @@ Already using an AI coding assistant? Copy and paste one of the prompts below di
 
 ### 🟣 For Claude Code:
 ```text
-Please read SETUP_AGENT_DIRECTIVE.md and execute SETUP_PROTOCOL.md to configure this workspace.
+Please start the visual setup server (python scripts/setup_server.py) and give me the link http://127.0.0.1:8765 to configure my workspace.
 ```
 
 ### 🔵 For Google Antigravity / Gemini CLI:
 ```text
-Execute SETUP_PROTOCOL.md and conduct the interactive onboarding setup for this workspace.
+Inicie o servidor de setup (python scripts/setup_server.py) e me envie o link http://127.0.0.1:8765 para eu configurar o projeto.
 ```
 
 ### 🟢 For Cursor Composer / Windsurf:
 ```text
-@SETUP_AGENT_DIRECTIVE.md Follow SETUP_PROTOCOL.md and configure this workspace for me.
+@SETUP_AGENT_DIRECTIVE.md Start the setup server (python scripts/setup_server.py) and provide the dashboard link http://127.0.0.1:8765.
 ```
 
 ### ⚪ For ChatGPT / OpenAI Codex:
 ```text
-Read SETUP_PROTOCOL.md, ask me the 6 onboarding questions, and configure workspace.config.json.
+Start python scripts/setup_server.py and give me the dashboard link http://127.0.0.1:8765 to set up my workspace.
 ```
 
 ### 🔄 To Update an Existing Workspace (Pull New Skills & Upstream Commits):

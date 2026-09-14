@@ -1,55 +1,61 @@
-# SETUP_AGENT_DIRECTIVE.md — Universal AI Agent Directive
+# SETUP_AGENT_DIRECTIVE.md — Diretriz Universal de Operação para Agentes de IA
 
-> **ATTENTION AI AGENT (Claude Code, Antigravity, Cursor, Codex, Hermes, Copilot, Windsurf):**  
-> You are operating inside a repository governed by **Agent Workspace OS**.  
-> Follow this deterministic protocol with zero hesitation and zero ambiguity.
-
----
-
-## 🎯 Immediate Decision: Setup vs Update vs Task
-
-```
-                                 [Workspace Check]
-                                         │
-                 ┌───────────────────────┴───────────────────────┐
-                 ▼                                               ▼
-     `workspace.config.json`                       `workspace.config.json`
-          DOES NOT EXIST                                ALREADY EXISTS
-                 │                                               │
-                 ▼                                               ▼
-      Run [SETUP_PROTOCOL.md]                     Check User Intent in Prompt
-   (Conduct 6-question onboarding                 ┌──────────────┴──────────────┐
-     or apply smart defaults)                     ▼                             ▼
-                                          "update" / "sync"             "task" / "build"
-                                                  │                             │
-                                                  ▼                             ▼
-                                       Run [UPDATE_PROTOCOL.md]       1. Check active_tasks.json
-                                     (Pull upstream commits,          2. Acquire task lock
-                                      preserve user config)           3. Follow AGENTS.md rules
-```
+> **ATENÇÃO AGENTE DE IA (Claude Code, Antigravity, Cursor, Codex, Hermes, Copilot, Windsurf):**  
+> Você está operando em um repositório governado pelo **Agent Workspace OS**.  
+> Leia atentamente a regra mandatória abaixo antes de responder ao usuário.
 
 ---
 
-## 🚀 Quick Execution Guide for Agents
+## 🛑 REGRA MANDATÓRIA #1 DO AGENTE: NÃO FAÇA PERGUNTAS NO CHAT!
 
-### If User asks for "Setup" or "Initialize":
-1. Read **[SETUP_PROTOCOL.md](SETUP_PROTOCOL.md)**.
-2. Ask the 6 simple onboarding questions (or if user said "use defaults", apply sensible defaults automatically).
-3. Create `workspace.config.json` from `workspace.config.template.json`.
-4. Replace `{{PLACEHOLDER}}` tags in `AGENTS.md` and `DIRECTIVES.md`.
-5. Initialize the canonical folder tree (`apps/`, `services/`, `packages/`, `docs/`, `memory/cowork/`).
-6. Append entry to `memory/daily_logs/YYYY-MM-DD.md` and confirm completion.
+Quando o usuário solicitar **"setup"**, **"iniciar"**, **"configurar"**, ou você detectar que o workspace ainda não foi configurado (`workspace.config.json` ausente):
 
-### If User asks for "Update" or "Sync":
-1. Read **[UPDATE_PROTOCOL.md](UPDATE_PROTOCOL.md)**.
-2. Run `git fetch origin main`.
-3. Review changes and merge non-destructively, **preserving 100% of user config and secrets**.
-4. Sync memory in `memory/cowork/blackboard.json` and daily logs.
+1. **É TERMINANTEMENTE PROIBIDO**: Enviar questionários ou listas de perguntas no chat (ex: *"1. Qual o nome da empresa? 2. Qual o email?"*).
+2. **É OBRIGATÓRIO**:
+   - Iniciar imediatamente o servidor visual Python em segundo plano:
+     ```bash
+     python scripts/setup_server.py
+     ```
+   - Responder ao usuário diretamente com uma mensagem amigável e o link:
+     > *"🚀 Iniciei o **Painel Visual de Setup & Controle** em: **http://127.0.0.1:8765**!  
+     > Acesse pelo seu navegador para:*  
+     > 1. *Preencher o nome da organização, identidade Git e destino de deploy na aba **Workspace**.*  
+     > 2. *Clicar em **Salvar & Inicializar Workspace** (todos os arquivos e regras serão configurados automaticamente).*  
+     > 3. *Verificar as ferramentas instaladas e instalar dependências faltantes com 1 clique.*  
+     > 4. *Escanear o QR Code do WhatsApp para parear o agente.*  
+     >  
+     > *(Nota: Caso esteja em um ambiente de terminal remoto sem navegador, responda 'configurar por chat' para ativar o modo conversacional fallback)."*
 
-### If User asks to develop a feature or solve an issue:
-1. Always check `memory/cowork/active_tasks.json` to prevent collisions.
-2. Follow **[AGENTS.md](AGENTS.md)**:
-   - **Zero Root Clutter**: Never drop loose test files in root.
-   - **Zero False Positives**: Verify code empirically (HTTP 200, real DOM, syntax check).
-   - **Zero Native Dialogs**: Use custom dark toasts, never `alert()` or `confirm()`.
-   - **Daily Timeline**: Chronologically record all steps in `memory/daily_logs/YYYY-MM-DD.md`.
+3. **MODO FALLBACK (Apenas se solicitado)**: Somente se o usuário pedir explicitamente *"configurar por chat"*, execute as perguntas conversacionais de [SETUP_PROTOCOL.md](SETUP_PROTOCOL.md).
+
+---
+
+## 🎯 Decisão Imediata: Setup vs Update vs Tarefa
+
+```
+                                 [Checagem do Workspace]
+                                            │
+                 ┌──────────────────────────┴──────────────────────────┐
+                 ▼                                                     ▼
+     `workspace.config.json`                              `workspace.config.json`
+          NÃO EXISTE                                            JÁ EXISTE
+                 │                                                     │
+                 ▼                                                     ▼
+   INICIE O SERVIDOR PYTHON                              Verifique o Intento no Prompt
+ `python scripts/setup_server.py`                        ┌─────────────┴─────────────┐
+        Forneça o link                                   ▼                           ▼
+   `http://127.0.0.1:8765`                       "update" / "sync"           "task" / "código"
+                                                         │                           │
+                                                         ▼                           ▼
+                                              [UPDATE_PROTOCOL.md]         1. Consulte active_tasks.json
+                                             (Puxe commits upstream,       2. Registre seu lock
+                                              preserve vars locais)        3. Siga regras de AGENTS.md
+```
+
+---
+
+## 🚦 Regras Invioláveis de Engenharia
+- **Zero Root Clutter**: Nunca crie arquivos avulsos na raiz. Arquivos temporários vão para `temp/` ou `scratch/`.
+- **Zero Falsos Declarativos**: Nunca declare sucesso sem verificação empírica real (HTTP 200, DOM inspecionado, syntax check).
+- **Zero Diálogos Nativos**: PROIBIDO `alert()`, `confirm()` ou `prompt()`. Use toasts glassmorphic dark.
+- **Daily Timeline**: Registre cada tarefa cronologicamente em `memory/daily_logs/YYYY-MM-DD.md`.
