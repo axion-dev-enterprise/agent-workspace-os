@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Agent Workspace OS Configuration Template",
   "description": "Configuracoes e placeholders a serem preenchidos pelo Agente de IA durante o onboarding inicial.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "organization": {
     "name": "{{ORGANIZATION_NAME}}",
     "slug": "{{ORGANIZATION_SLUG}}",

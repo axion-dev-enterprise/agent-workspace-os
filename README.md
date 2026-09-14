@@ -5,6 +5,7 @@
 **The Deterministic Operating Framework for Autonomous AI Software Engineering.**  
 *Turn any repository into an hallucination-resistant, multi-agent collaborative environment.*
 
+[![Version: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-blue.svg?style=flat-square)](version_dump.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/axion-dev-enterprise/agent-workspace-os?style=flat-square&logo=github)](https://github.com/axion-dev-enterprise/agent-workspace-os)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
@@ -156,6 +157,19 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 - **Windsurf Cascade**
 
 ---
+
+
+---
+
+## 🚀 Changelog
+
+### v1.1.0 (2026-09-14)
+- **Setup & Control Dashboard Server v2**: Zero-dependency Python server (`scripts/setup_server.py`) with dark Obsidian/Zinc interface and live SSE streaming installation.
+- **WhatsApp Client Bridge**: Dual-mode bridge (Monitor & React) with QR code pairing for listening and dispatching tasks directly from WhatsApp chats.
+- **High-Performance Concurrent Preflight**: Parallel tool discovery (`scripts/preflight_check.py`) using `ThreadPoolExecutor` and direct local config inspection (<4.2s).
+- **Google Drive Synchronizer**: Direct ingestion of meeting transcripts and Google Docs into workspace memory (`scripts/google_drive_sync.py`).
+- **3 New Canonical Skills**: `.skills/whatsapp-monitor-react`, `.skills/google-drive-sync`, and `.skills/environment-preflight-tooling`.
+- **Zero Native Dialogs**: Universal dark glassmorphic toast notification system.
 
 ## 📄 License
 
