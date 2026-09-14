@@ -25,7 +25,29 @@
     "ssh_port": 22
   },
   "agents": {
-    "supported_platforms": ["antigravity", "claude", "cursor", "codex", "hermes", "copilot"],
+    "supported_platforms": [
+      "antigravity",
+      "claude",
+      "cursor",
+      "codex",
+      "hermes",
+      "copilot"
+    ],
     "cowork_protocol_enabled": true
+  },
+  "whatsapp": {
+    "enabled": true,
+    "mode": "monitor",
+    "port": 4114,
+    "authorized_numbers": [
+      "{{WHATSAPP_OWNER_NUMBER}}"
+    ],
+    "inbox_path": "workspace/inbox/whatsapp"
+  },
+  "google_drive": {
+    "enabled": false,
+    "service_account_file": "credentials/google_service_account.json",
+    "target_folder_id": "{{GOOGLE_DRIVE_FOLDER_ID}}",
+    "sync_interval_minutes": 30
   }
 }

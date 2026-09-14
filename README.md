@@ -41,7 +41,14 @@ Works out of the box with **Claude Code**, **Antigravity**, **Cursor Composer**,
 
 ### 3. Choose your operational workflow:
 
-#### 🚀 For Fresh Setup:
+#### 🖥️ Visual Web Dashboard & Setup Center (Interactive GUI):
+Launch the zero-dependency Python dashboard to inspect environment readiness, scan the WhatsApp QR Code, connect Google Drive, and monitor tasks:
+```bash
+python scripts/setup_server.py
+```
+Open your browser at `http://127.0.0.1:8765`.
+
+#### 🚀 For Agent-Guided Conversational Setup:
 Copy and paste this instruction to your agent:
 ```text
 Hi! Please execute SETUP_PROTOCOL.md and conduct the interactive onboarding setup for my workspace.
@@ -110,7 +117,10 @@ graph TD
 │   ├── multi-agent-cowork/     # Concurrency locks and shared findings
 │   ├── post-deploy-verification/# Real DOM and public endpoint auditing
 │   ├── ui-anti-cliche-design/  # Big Tech design system specifications
-│   └── zero-test-pollution/    # Automated database teardown patterns
+│   ├── zero-test-pollution/    # Automated database teardown patterns
+│   ├── whatsapp-monitor-react/ # WhatsApp client bridge (Monitor & React modes)
+│   ├── google-drive-sync/      # Google Drive transcripts and docs synchronizer
+│   └── environment-preflight-tooling/ # CLI diagnostic and fast dependency installer
 ├── docs/                       # Technical specifications & ADRs
 │   ├── COWORK_PROTOCOL.md      # Multi-agent asynchronous protocol
 │   └── WORKSPACE_ORGANIZATION_RULES.md # Structural standards

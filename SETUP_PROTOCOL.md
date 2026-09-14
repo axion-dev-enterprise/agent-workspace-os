@@ -4,6 +4,22 @@
 
 ---
 
+
+---
+
+## 🖥️ Opção de Setup Visual via Painel Web Local
+
+Caso prefira configurar visualmente o workspace, inspecionar ferramentas e escanear o QR Code do WhatsApp:
+```bash
+# Inicie o painel web de setup
+python scripts/setup_server.py
+```
+Acesse no navegador em `http://127.0.0.1:8765`:
+1. **Ferramentas & CLI**: Valida presença e versões de Python, Node.js, Git, GitHub CLI (`gh`), Vercel e Cloudflare.
+2. **Login & OAuth**: Verifica status de autenticação das contas.
+3. **Ponte WhatsApp**: Escaneia o QR Code direto na tela e alterna entre modo **Monitor** (grava mensagens) e modo **React** (executa `/task`).
+4. **Google Drive**: Conecta credenciais para sincronização de pautas e transcrições de reuniões.
+
 ## 1. Quando Executar Este Protocolo
 - O usuário acabou de clonar este repositório (`git clone`).
 - Os arquivos `AGENTS.md`, `DIRECTIVES.md` e `workspace.config.template.json` ainda contêm placeholders no formato `{{NOME_DA_VARIAVEL}}`.

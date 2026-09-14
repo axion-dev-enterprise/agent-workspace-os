@@ -15,6 +15,11 @@ __pycache__/
 *.pfx
 secrets/
 vault/private/
+credentials/
+auth_info_baileys/
+workspace.config.json
+workspace/inbox/
+workspace/memory/active_tasks.json
 
 # Temporary files & Logs
 temp/
