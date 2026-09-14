@@ -5,98 +5,118 @@
 **The Deterministic Operating Framework for Autonomous AI Software Engineering.**  
 *Turn any repository into an hallucination-resistant, multi-agent collaborative environment.*
 
-[![Version: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-blue.svg?style=flat-square)](version_dump.json)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/axion-dev-enterprise/agent-workspace-os?style=flat-square&logo=github)](https://github.com/axion-dev-enterprise/agent-workspace-os)
+[![Release: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-blue.svg?style=flat-square)](version_dump.json)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
-[![Compatible With](https://img.shields.io/badge/Agents-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex%20%7C%20Hermes-purple?style=flat-square)](#supported-agents)
+[![Compatible With](https://img.shields.io/badge/Agents-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex%20%7C%20Hermes-purple?style=flat-square)](#-supported-agents)
 
-[Quickstart](#-quickstart-in-60-seconds) • [Workflows (Setup vs Update)](#-operational-workflows) • [Core Principles](#-core-principles) • [Multi-Agent Cowork](#-multi-agent-cowork-protocol) • [Architecture](#-architecture)
+[⚡ 1-Click Launch](#-1-click-launch) • [📋 Agent Copyboxes](#-copy-paste-prompts-for-ai-agents) • [🖥️ Web Dashboard](#-visual-web-dashboard--control-center) • [🎯 Core Principles](#-core-principles) • [🤝 Multi-Agent Cowork](#-multi-agent-cowork-protocol) • [🚀 Changelog](#-changelog)
 
 </div>
 
 ---
 
-## 💡 Why Agent Workspace OS?
+## ⚡ 1-Click Launch (Zero Configuration Required)
 
-Autonomous coding agents (Claude Code, Antigravity, Cursor, Codex, Windsurf, Copilot) are extraordinarily capable, but without deterministic rails they suffer from well-known failure modes:
-- **Root Pollution**: Dropping random test scripts into the root directory.
-- **False Positive Affirmations**: Declaring tasks done without empirical validation.
-- **Destructive Concurrency**: Overwriting each other's edits during multi-agent sessions.
-- **AI Cliché UIs**: Inundating frontends with purple neon gradients, floating robots and emojis.
+Clone the repository and launch the visual setup center in seconds:
 
-**Agent Workspace OS** establishes an asynchronous, file-based governance protocol with empirical quality gates, concurrency locks, and automated memory synchronization.
-
----
-
-## ⚡ Quickstart (In 60 Seconds)
-
-### 1. Clone this template
 ```bash
 git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git my-project
 cd my-project
 ```
 
-### 2. Open in your favorite AI Editor or CLI
-Works out of the box with **Claude Code**, **Antigravity**, **Cursor Composer**, **ChatGPT/Codex**, **Hermes**, or **Windsurf**.
+### Run the Dashboard:
 
-### 3. Choose your operational workflow:
-
-#### 🖥️ Visual Web Dashboard & Setup Center (Interactive GUI):
-Launch the zero-dependency Python dashboard to inspect environment readiness, scan the WhatsApp QR Code, connect Google Drive, and monitor tasks:
-```bash
-python scripts/setup_server.py
-```
-Open your browser at `http://127.0.0.1:8765`.
-
-#### 🚀 For Agent-Guided Conversational Setup:
-Copy and paste this instruction to your agent:
-```text
-Hi! Please execute SETUP_PROTOCOL.md and conduct the interactive onboarding setup for my workspace.
-```
-
-#### 🔄 For Incremental Updates (Pull new skills & commits):
-When new updates or skills are pushed upstream, tell your agent:
-```text
-Hi! Please execute UPDATE_PROTOCOL.md to fetch new commits and update context and memory.
-```
-
----
-
-## 🔄 Operational Workflows: Setup vs Update
-
-```mermaid
-graph TD
-    User([Developer / Operator]) -->|Chooses Mode| Dispatcher{WORKFLOW.md}
-    
-    Dispatcher -->|New Project| Setup[SETUP_PROTOCOL.md]
-    Setup -->|Interactive Interview| Ask[Asks 6 Questions]
-    Ask -->|Configures Identity| Config[workspace.config.json]
-    Config -->|Populates| Codebase[Ready Workspace]
-
-    Dispatcher -->|Existing Project| Update[UPDATE_PROTOCOL.md]
-    Update -->|Fetches New Commits| GitFetch[git fetch upstream]
-    GitFetch -->|Audits Changes| Audit[Diff & Changelog]
-    Audit -->|Preserves Local Vars| SafeMerge[Smart Merge]
-    SafeMerge -->|Syncs Memory| Memory[Blackboard & Daily Log]
-```
-
-| Workflow | When to Use | What it Does |
+| Platform | 1-Click Command | What Happens |
 |---|---|---|
-| **[SETUP_PROTOCOL.md](SETUP_PROTOCOL.md)** | Fresh clone | Conducts 6-question interview, replaces `{{PLACEHOLDERS}}`, configures Git identity and initializes directory tree. |
-| **[UPDATE_PROTOCOL.md](UPDATE_PROTOCOL.md)** | Ongoing workspace | Fetches upstream commits, merges new skills/docs, **preserves 100% of user variables**, and updates memory (`daily_logs/` & `blackboard.json`). |
+| **Windows** | Double-click **`start.bat`** (or `npm start`) | Automatically starts server and opens **`http://127.0.0.1:8765`** in your default browser. |
+| **macOS / Linux** | Run **`./start.sh`** (or `npm start`) | Starts server and opens dashboard in your browser. |
+| **Any System (Python)** | Run **`python scripts/setup_server.py`** | Starts the zero-dependency threaded HTTP dashboard. |
 
 ---
 
-## 🎯 Core Principles
+## 📋 Copy-Paste Prompts for AI Agents
 
-| Principle | Specification |
+Already using an AI coding assistant? Copy and paste one of the prompts below directly into your agent's chat:
+
+### 🟣 For Claude Code:
+```text
+Please read SETUP_AGENT_DIRECTIVE.md and execute SETUP_PROTOCOL.md to configure this workspace.
+```
+
+### 🔵 For Google Antigravity / Gemini CLI:
+```text
+Execute SETUP_PROTOCOL.md and conduct the interactive onboarding setup for this workspace.
+```
+
+### 🟢 For Cursor Composer / Windsurf:
+```text
+@SETUP_AGENT_DIRECTIVE.md Follow SETUP_PROTOCOL.md and configure this workspace for me.
+```
+
+### ⚪ For ChatGPT / OpenAI Codex:
+```text
+Read SETUP_PROTOCOL.md, ask me the 6 onboarding questions, and configure workspace.config.json.
+```
+
+### 🔄 To Update an Existing Workspace (Pull New Skills & Upstream Commits):
+```text
+Please execute UPDATE_PROTOCOL.md to fetch new upstream commits while preserving my local config.
+```
+
+---
+
+## 🖥️ Visual Web Dashboard & Control Center
+
+Agent Workspace OS includes a modern, high-performance local web dashboard running at **`http://127.0.0.1:8765`**:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Agent Workspace OS   [Setup & Control Center]                              │
+├───────────────┬───────────────┬──────────────────┬──────────────┬───────────┤
+│ 🔧 Tools & CLI│ 🔐 OAuth Auth │ 💬 WhatsApp Link │ 📂 Drive Sync│ ⚙️ Config │
+├───────────────┴───────────────┴──────────────────┴──────────────┴───────────┤
+│                                                                             │
+│  System Preflight Diagnostics                      Quick Actions            │
+│  ├─ Python 3.11.15       [Installed]  [Copy]       ├─ [Install Missing Tools│
+│  ├─ Node.js v24.19.0     [Installed]  [Copy]       ├─ [Connect GitHub OAuth]│
+│  ├─ Git 2.54.0           [Installed]  [Copy]       ├─ [Connect Vercel]      │
+│  ├─ GitHub CLI 2.97.0    [Installed]  [Copy]       └─ [Scan WhatsApp QR]    │
+│  ├─ Vercel CLI 59.16.0   [Installed]  [Copy]                                │
+│  └─ Cloudflare Wrangler  [Install]    [Copy]  ──> Live SSE streaming output │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Live CLI Installation**: 1-click install for missing tools via `winget`/`npm` with live terminal output streaming via SSE.
+- **WhatsApp Client Bridge**: Real-time QR Code scanning for WhatsApp pairing. Supports **Monitor Mode** (passive chat & audio logging) and **React Mode** (autonomous task queue execution with `/task`).
+- **Google Drive Synchronizer**: Direct ingestion of meeting transcripts, Google Docs, and briefs into workspace memory.
+- **Zero Native Dialogs**: Dark glassmorphic toast notification system (zero `alert()`, `confirm()`, or `prompt()`).
+
+---
+
+## ⌨️ NPM Quick Reference
+
+| Command | Action |
 |---|---|
-| **Zero Root Clutter** | Strictly only essential config files permitted in the root directory. Scratch scripts and tests go to isolated canonical directories. |
-| **Empirical Verification** | It is strictly forbidden for agents to declare success based solely on status codes. HTML/DOM body inspection and live response validation are mandatory. |
-| **Zero Test Pollution** | Automated teardown in `finally` blocks for all test users, orders, and mock data. Zero DB residue. |
+| `npm start` | Launches the visual setup dashboard on `http://127.0.0.1:8765` |
+| `npm run dashboard` | Alias to start the setup server |
+| `npm run preflight` | Runs fast concurrent environment check (`<4.2s`) |
+| `npm run whatsapp:bridge` | Starts the Baileys WhatsApp client bridge on port `4114` |
+| `npm run drive:check` | Verifies Google Drive credentials |
+| `npm run drive:sync` | Ingests recent documents and meeting transcripts from Google Drive |
+
+---
+
+## 🎯 Core Principles & Anti-Hallucination Rails
+
+| Principle | Technical Specification |
+|---|---|
+| **Zero Root Clutter** | Only essential configuration files permitted in root. All temporary tests and scratch scripts reside in `temp/` or `scratch/`. |
+| **Empirical Verification** | Prohibits agents from declaring success based solely on status codes. HTML/DOM inspection, syntax compilation, and live tests are mandatory. |
+| **Zero Test Pollution** | Mandatory teardown blocks (`finally`) ensuring test users, carts, and mock database rows are purged immediately after testing. |
 | **Big Tech UI/UX Standard** | Total prohibition of emojis as UI icons. Professional SVG vector icons only (Lucide, Heroicons). Obsidian/Zinc surfaces, 150-200ms transitions, CLS = 0. |
-| **Custom Modals & Toasts** | Browser-native `alert()`, `confirm()`, and `prompt()` are prohibited. Dark 3D glassmorphic dialogs only. |
+| **Custom Modals & Toasts** | Browser-native `alert()`, `confirm()`, and `prompt()` are strictly prohibited. Custom 3D glassmorphic notifications only. |
 | **Multi-Agent Cowork** | Asynchronous coordination via `active_tasks.json` (locks), `blackboard.json` (findings), and formal `handoffs/`. |
 | **Mandatory Daily Timeline** | Every action and technical diagnosis is chronologically recorded in `memory/daily_logs/YYYY-MM-DD.md`. |
 
@@ -106,12 +126,17 @@ graph TD
 
 ```
 .
+├── start.bat                   # 1-Click launcher for Windows
+├── start.sh                    # 1-Click launcher for macOS / Linux
+├── package.json                # Project shortcuts (npm start, npm run preflight)
+├── version_dump.json           # Machine-readable release metadata
 ├── WORKFLOW.md                 # Master operational router (Setup vs Update)
-├── SETUP_PROTOCOL.md           # Step-by-step interactive onboarding protocol
+├── SETUP_PROTOCOL.md           # Step-by-step onboarding protocol (GUI & Agent)
 ├── UPDATE_PROTOCOL.md          # Step-by-step incremental update & memory sync
-├── AGENTS.md                   # Canonical rules governing all AI agents
+├── SETUP_AGENT_DIRECTIVE.md    # Universal directive for all AI agents
+├── AGENTS.md                   # Canonical governance rules for AI coding agents
 ├── DIRECTIVES.md               # Engineering, CI/CD, and security policies
-├── README.md                   # Project overview and documentation
+├── README.md                   # Project documentation
 ├── workspace.config.template.json # Template for project variables
 ├── .skills/                    # Modular skills executable by agents
 │   ├── cicd-quality-gate/      # 5 Mandatory quality gates (Go / No-Go)
@@ -122,10 +147,13 @@ graph TD
 │   ├── whatsapp-monitor-react/ # WhatsApp client bridge (Monitor & React modes)
 │   ├── google-drive-sync/      # Google Drive transcripts and docs synchronizer
 │   └── environment-preflight-tooling/ # CLI diagnostic and fast dependency installer
-├── docs/                       # Technical specifications & ADRs
-│   ├── COWORK_PROTOCOL.md      # Multi-agent asynchronous protocol
-│   └── WORKSPACE_ORGANIZATION_RULES.md # Structural standards
-├── apps/                       # User-facing applications and SPAs
+├── scripts/                    # Dashboard, bridge, and diagnostic engines
+│   ├── setup_server.py         # Python Threaded HTTP server (:8765)
+│   ├── setup_dashboard.html    # Obsidian/Zinc responsive dashboard UI
+│   ├── preflight_check.py      # High-performance parallel diagnostic engine
+│   ├── google_drive_sync.py    # Google Drive document ingestion tool
+│   └── whatsapp_bridge/        # Node.js Baileys client bridge (:4114)
+├── apps/                       # Frontends, SPAs, and client applications
 ├── services/                   # Backend services, APIs, and background workers
 ├── packages/                   # Shared monorepo packages and libraries
 └── memory/                     # Persistent agent telemetry and coworking
@@ -137,19 +165,19 @@ graph TD
 
 ## 🤝 Multi-Agent Cowork Protocol
 
-When scaling from a single agent to a team of specialized subagents, Agent Workspace OS prevents race conditions via an atomic file-based state machine:
+When running multiple autonomous agents or subagents concurrently, Agent Workspace OS prevents race conditions via an atomic file-based state machine:
 
-1. **Anti-Collision Locks**: Before modifying code in `apps/` or `services/`, the agent registers an exclusive lock in `memory/cowork/active_tasks.json`.
+1. **Anti-Collision Locks**: Before modifying files in `apps/` or `services/`, the agent registers an exclusive lock in `memory/cowork/active_tasks.json`.
 2. **Shared Blackboard**: When an agent discovers a root-cause bug or validates a database schema migration, it publishes a structured note to `memory/cowork/blackboard.json`.
 3. **Formal Handoffs**: When transitioning tasks between sessions or agents, a Markdown transition report is archived in `memory/cowork/handoffs/`.
 
 ---
 
-## 🛠️ Supported Agents & Tooling
+## 🛠️ Supported Agents
 
 Agent Workspace OS is model-agnostic and runtime-agnostic:
-- **Google Antigravity / Gemini CLI**
 - **Anthropic Claude Code / Claude Desktop**
+- **Google Antigravity / Gemini CLI**
 - **Cursor IDE (Composer & Background Agents)**
 - **OpenAI Codex / ChatGPT CLI**
 - **Hermes Agent Suite**
@@ -158,20 +186,19 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 
 ---
 
-
----
-
 ## 🚀 Changelog
 
 ### v1.1.0 (2026-09-14)
+- **1-Click Launchers**: Added `start.bat` (Windows) and `start.sh` (macOS/Linux) for instant dashboard opening.
 - **Setup & Control Dashboard Server v2**: Zero-dependency Python server (`scripts/setup_server.py`) with dark Obsidian/Zinc interface and live SSE streaming installation.
 - **WhatsApp Client Bridge**: Dual-mode bridge (Monitor & React) with QR code pairing for listening and dispatching tasks directly from WhatsApp chats.
-- **High-Performance Concurrent Preflight**: Parallel tool discovery (`scripts/preflight_check.py`) using `ThreadPoolExecutor` and direct local config inspection (<4.2s).
+- **High-Performance Concurrent Preflight**: Parallel tool discovery (`scripts/preflight_check.py`) using `ThreadPoolExecutor` and direct local config inspection (`<4.2s`).
 - **Google Drive Synchronizer**: Direct ingestion of meeting transcripts and Google Docs into workspace memory (`scripts/google_drive_sync.py`).
 - **3 New Canonical Skills**: `.skills/whatsapp-monitor-react`, `.skills/google-drive-sync`, and `.skills/environment-preflight-tooling`.
 - **Zero Native Dialogs**: Universal dark glassmorphic toast notification system.
 
+---
+
 ## 📄 License
 
-This project is open-source software licensed under the [MIT License](LICENSE).
-Built with precision for autonomous engineering excellence.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.

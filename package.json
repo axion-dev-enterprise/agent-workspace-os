@@ -13,7 +13,8 @@
     "preflight": "python scripts/preflight_check.py",
     "drive:check": "python scripts/google_drive_sync.py --check",
     "drive:sync": "python scripts/google_drive_sync.py --sync",
-    "whatsapp:bridge": "cd scripts/whatsapp_bridge && npm start"
+    "whatsapp:bridge": "cd scripts/whatsapp_bridge && npm start",
+    "start": "python scripts/setup_server.py"
   },
   "keywords": [
     "ai-agents",
