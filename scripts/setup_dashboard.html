@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Workspace OS &mdash; Setup &amp; Control Center</title>
+  <style>
+    /* ── Design tokens ───────────────────────────── */
+    :root {
+      --bg: #09090b;
+      --card-bg: #121217;
+      --card-border: rgba(255,255,255,0.08);
+      --hover-bg: #18181f;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #06b6d4;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", Consolas, Menlo, monospace;
+      --ease: cubic-bezier(0.16,1,0.3,1);
+    }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(16px);
+      background: rgba(18,18,23,0.8);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 1rem; letter-spacing: -0.02em;
+    }
+    .brand svg { color: var(--accent); }
+    .header-badge {
+      padding: 4px 12px; border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      background: rgba(59,130,246,0.12); color: var(--accent);
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+
+    /* ── Layout ──────────────────────────────────── */
+    main { flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; padding: 28px 24px; }
+
+    /* ── Tabs ────────────────────────────────────── */
+    .nav-tabs {
+      display: flex; gap: 4px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 10px 16px; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: 7px;
+      transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.02); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeUp 0.18s var(--ease) both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Grid / Card ─────────────────────────────── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border); border-radius: 12px;
+      padding: 22px 24px;
+      transition: border-color 0.15s var(--ease);
+    }
+    .card:hover { border-color: rgba(255,255,255,0.14); }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .card-title { font-size: 0.95rem; font-weight: 600; }
+    .card-desc { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 16px; line-height: 1.5; }
+
+    /* ── Skeleton ────────────────────────────────── */
+    .skeleton {
+      height: 16px; border-radius: 4px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .skeleton-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 16px; }
+    .skeleton-row .sk-left { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+    /* ── Tool rows ───────────────────────────────── */
+    .tool-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      gap: 10px;
+    }
+    .tool-row:last-child { border-bottom: none; }
+    .tool-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .tool-icon { color: var(--text-muted); flex-shrink: 0; }
+    .tool-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .tool-name { font-weight: 500; font-size: 0.875rem; }
+    .tool-version {
+      font-family: var(--font-mono);
+      font-size: 0.73rem; color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .tool-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    /* ── Pills ───────────────────────────────────── */
+    .pill {
+      font-size: 0.7rem; padding: 3px 9px; border-radius: 4px;
+      font-weight: 500; white-space: nowrap;
+    }
+    .pill-success { background: rgba(16,185,129,0.12); color: var(--success); }
+    .pill-warning { background: rgba(245,158,11,0.12); color: var(--warning); }
+    .pill-danger  { background: rgba(239,68,68,0.12);  color: var(--danger);  }
+    .pill-info    { background: rgba(6,182,212,0.12);   color: var(--info);    }
+    .pill-muted   { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+    /* ── Buttons ─────────────────────────────────── */
+    .btn {
+      background: var(--accent); color: #fff;
+      border: none; padding: 7px 14px; border-radius: 6px;
+      font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.15s var(--ease), transform 0.1s var(--ease);
+      white-space: nowrap; position: relative;
+    }
+    .btn:hover:not(:disabled) { background: var(--accent-hover); }
+    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+    .btn-secondary {
+      background: var(--hover-bg); color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.06); }
+    .btn-icon {
+      background: transparent; border: 1px solid var(--card-border);
+      color: var(--text-muted); padding: 5px; border-radius: 6px;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .btn-icon:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
+    /* ── Spinner ─────────────────────────────────── */
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-loading-wrap {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Code box ────────────────────────────────── */
+    .code-box {
+      background: #0d0d11; padding: 12px 14px; border-radius: 8px;
+      font-family: var(--font-mono); font-size: 0.75rem; color: #93c5fd;
+      border: 1px solid var(--card-border);
+      overflow-x: auto; scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .cmd-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 8px; padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .cmd-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cmd-text { font-family: var(--font-mono); font-size: 0.78rem; color: #93c5fd; flex: 1; }
+
+    /* ── Install output pre ──────────────────────── */
+    .install-output {
+      margin-top: 10px;
+      background: #0d0d11; border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 12px; font-family: var(--font-mono); font-size: 0.73rem;
+      color: #a3e635; max-height: 200px; overflow-y: auto;
+      white-space: pre-wrap; word-break: break-all;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    /* ── Result box ──────────────────────────────── */
+    .result-box {
+      margin-top: 12px;
+      background: #0d0d11; border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 12px; font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--text-muted); min-height: 40px;
+      white-space: pre-wrap; word-break: break-all;
+    }
+
+    /* ── QR / WhatsApp ───────────────────────────── */
+    .qr-container {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 24px;
+      background: #0d0d11; border-radius: 12px;
+      border: 1px dashed var(--card-border); margin-bottom: 16px;
+      min-height: 120px;
+    }
+    .qr-image { max-width: 220px; border-radius: 8px; border: 4px solid white; margin-bottom: 10px; }
+    .feed-list {
+      display: flex; flex-direction: column; gap: 7px;
+      max-height: 280px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .feed-item {
+      padding: 9px 12px; background: #0d0d11;
+      border: 1px solid var(--card-border); border-radius: 8px;
+      font-size: 0.82rem; display: flex; flex-direction: column; gap: 4px;
+    }
+    .feed-header {
+      display: flex; justify-content: space-between;
+      color: var(--text-muted); font-size: 0.72rem; font-family: var(--font-mono);
+    }
+
+    /* ── Form ────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 0.78rem; font-weight: 500; color: var(--text-muted); }
+    .form-input {
+      background: #0d0d11; border: 1px solid var(--card-border); border-radius: 6px;
+      color: var(--text); font-family: var(--font); font-size: 0.85rem;
+      padding: 8px 11px; transition: border-color 0.15s var(--ease); outline: none;
+      width: 100%;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .input-wrap { position: relative; }
+    .input-wrap .form-input { padding-right: 38px; }
+    .eye-btn {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; padding: 2px;
+    }
+    .eye-btn:hover { color: var(--text); }
+
+    /* ── Divider ─────────────────────────────────── */
+    .divider { height: 1px; background: var(--card-border); margin: 16px 0; }
+
+    /* ── System info ─────────────────────────────── */
+    .sysinfo { background: #0d0d11; border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; }
+    .sysinfo-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 4px 0; }
+    .sysinfo-key { color: var(--text-muted); }
+    .sysinfo-val { font-family: var(--font-mono); font-size: 0.73rem; }
+
+    /* ── Toast container ─────────────────────────── */
+    #toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column-reverse; gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: all;
+      background: rgba(18,18,23,0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border); border-radius: 10px;
+      padding: 12px 16px;
+      display: flex; align-items: flex-start; gap: 10px;
+      min-width: 280px; max-width: 360px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      animation: toastIn 0.22s var(--ease) both;
+    }
+    .toast.toast-out { animation: toastOut 0.2s var(--ease) both; }
+    @keyframes toastIn  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(12px); } }
+    .toast-icon { flex-shrink: 0; margin-top: 1px; }
+    .toast-msg  { font-size: 0.83rem; line-height: 1.4; flex: 1; color: var(--text); }
+    .toast-close {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; padding: 0; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    .toast-close:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────── -->
+<header>
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="m4.93 4.93 4.24 4.24"/>
+      <path d="m14.83 9.17 4.24-4.24"/>
+      <path d="m14.83 14.83 4.24 4.24"/>
+      <path d="m9.17 14.83-4.24 4.24"/>
+      <circle cx="12" cy="12" r="4"/>
+    </svg>
+    <span>Agent Workspace OS</span>
+  </div>
+  <span class="header-badge">Setup &amp; Control Center v2</span>
+</header>
+
+<main>
+  <!-- ── Tabs nav ────────────────────────────────── -->
+  <nav class="nav-tabs" id="tab-nav" role="tablist">
+    <button class="tab-btn active" data-tab="tab-tools" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+      </svg>
+      Ferramentas &amp; CLI
+    </button>
+    <button class="tab-btn" data-tab="tab-oauth" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Login &amp; OAuth
+    </button>
+    <button class="tab-btn" data-tab="tab-whatsapp" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      WhatsApp Bridge
+    </button>
+    <button class="tab-btn" data-tab="tab-drive" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+        <path d="M12 12v9"/>
+        <path d="m8 17 4 4 4-4"/>
+      </svg>
+      Google Drive
+    </button>
+    <button class="tab-btn" data-tab="tab-workspace" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      </svg>
+      Workspace Config
+    </button>
+  </nav>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 1 — Ferramentas & CLI
+  ────────────────────────────────────────────── -->
+  <section id="tab-tools" class="tab-pane active">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Diagn&#243;stico do Sistema</span>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-tools">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+              <path d="M8 16H3v5"/>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+        <p class="card-desc">Verifica&#231;&#227;o de runtimes, CLIs e utilit&#225;rios no host Windows.</p>
+        <div id="tools-list"></div>
+        <div class="divider"></div>
+        <div id="sysinfo-box" class="sysinfo" style="display:none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:6px;">Comandos de Instala&#231;&#227;o</div>
+        <p class="card-desc">Copie o comando de instala&#231;&#227;o da ferramenta desejada:</p>
+        <div id="install-cmds-list"></div>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:10px;">
+          Ap&#243;s instalar, reinicie o terminal para atualizar o PATH.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 2 — Login & OAuth
+  ────────────────────────────────────────────── -->
+  <section id="tab-oauth" class="tab-pane">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+      <button class="btn btn-secondary btn-sm" id="btn-refresh-oauth">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M8 16H3v5"/>
+        </svg>
+        Atualizar Status
+      </button>
+    </div>
+    <div class="grid-3">
+      <!-- GitHub card -->
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+              <path d="M9 18c-4.51 2-5-2-7-2"/>
+            </svg>
+            <span class="card-title">GitHub</span>
+          </div>
+          <span class="pill pill-muted" id="github-pill">&#8212;</span>
+        </div>
+        <p class="card-desc">Autentique a CLI do GitHub para push, pull requests e releases.</p>
+        <button class="btn" id="btn-github-login" style="width:100%; justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Conectar GitHub
+        </button>
+      </div>
+
+      <!-- Vercel card -->
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span class="card-title">Vercel</span>
+          </div>
+          <span class="pill pill-muted" id="vercel-pill">&#8212;</span>
+        </div>
+        <p class="card-desc">Conecte a CLI da Vercel para deployments serverless e projetos.</p>
+        <button class="btn" id="btn-vercel-login" style="width:100%; justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Conectar Vercel
+        </button>
+      </div>
+
+      <!-- Cloudflare card -->
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+            <span class="card-title">Cloudflare</span>
+          </div>
+          <span class="pill pill-muted" id="cloudflare-pill">&#8212;</span>
+        </div>
+        <p class="card-desc">Insira seu API Token do Cloudflare para DNS e Workers.</p>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" for="cf-token-input">API Token</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="cf-token-input" placeholder="cf_xxxx..." autocomplete="off">
+            <button class="eye-btn" id="cf-eye-btn" aria-label="Mostrar/ocultar token">
+              <svg id="cf-eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="btn-cf-save" style="width:100%; justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Salvar Token
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 3 — WhatsApp Bridge
+  ────────────────────────────────────────────── -->
+  <section id="tab-whatsapp" class="tab-pane">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header" style="margin-bottom:10px;">
+          <span class="card-title">Status da Bridge</span>
+          <span class="pill pill-muted" id="wa-status-pill">Verificando&#8230;</span>
+        </div>
+        <div class="qr-container" id="wa-qr-container">
+          <img id="wa-qr-img" class="qr-image" src="" alt="WhatsApp QR Code" style="display:none;">
+          <span id="wa-qr-placeholder" style="font-size:0.82rem; color:var(--text-muted);">Verificando bridge&#8230;</span>
+          <span id="wa-number" style="font-family:var(--font-mono); font-size:0.8rem; margin-top:8px; display:none;"></span>
+        </div>
+        <div id="wa-offline-card" style="display:none; margin-bottom:14px;">
+          <p class="card-desc">Inicie a bridge no terminal:</p>
+          <div class="code-box" style="margin-bottom:8px;">cd scripts/whatsapp_bridge &amp;&amp; npm install &amp;&amp; node server.js</div>
+          <button class="btn-icon" id="btn-copy-wa-cmd" aria-label="Copiar comando">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          </button>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <div>
+            <div style="font-weight:500; font-size:0.85rem; margin-bottom:3px;">Modo operacional</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);" id="wa-mode-desc">&#8212;</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-wa-toggle">Alternar Modo</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="margin-bottom:10px;">
+          <span class="card-title">Feed de Mensagens</span>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-wa-feed">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+              <path d="M8 16H3v5"/>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+        <p class="card-desc">&#218;ltimas mensagens capturadas (auto-atualiza a cada 3s):</p>
+        <div class="feed-list" id="wa-feed-list">
+          <div style="color:var(--text-muted); font-size:0.82rem;">Aguardando mensagens&#8230;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 4 — Google Drive
+  ────────────────────────────────────────────── -->
+  <section id="tab-drive" class="tab-pane">
+    <div class="grid">
+      <div class="card">
+        <div class="card-header" style="margin-bottom:10px;">
+          <span class="card-title">Conector Google Drive</span>
+          <span class="pill pill-muted" id="drive-auth-pill">Verificando&#8230;</span>
+        </div>
+        <p class="card-desc">Sincroniza atas, reuni&#245;es gravadas e documentos para o workspace.</p>
+        <div id="drive-status-detail" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;"></div>
+        <button class="btn" id="btn-drive-sync" style="width:100%; justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+            <path d="M8 16H3v5"/>
+          </svg>
+          Sincronizar
+        </button>
+        <div class="result-box" id="drive-result" style="display:none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px;">Como configurar credenciais</div>
+        <p class="card-desc">Passos para habilitar a Google Drive API:</p>
+        <ol style="padding-left:18px; font-size:0.82rem; color:var(--text-muted); line-height:1.8;">
+          <li>Acesse <strong>console.cloud.google.com</strong> e crie um projeto.</li>
+          <li>Ative a <strong>Google Drive API</strong>.</li>
+          <li>Crie uma <strong>Conta de Servi&#231;o</strong> e baixe a chave JSON.</li>
+          <li>Salve o JSON em:</li>
+        </ol>
+        <div class="cmd-row" style="margin-top:8px;">
+          <span class="cmd-text">credentials/google_service_account.json</span>
+          <button class="btn-icon" data-copy="credentials/google_service_account.json" aria-label="Copiar caminho">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="cmd-row">
+          <span class="cmd-text">python scripts/google_drive_sync.py --check</span>
+          <button class="btn-icon" data-copy="python scripts/google_drive_sync.py --check" aria-label="Copiar comando">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 5 — Workspace Config
+  ────────────────────────────────────────────── -->
+  <section id="tab-workspace" class="tab-pane">
+    <div class="grid">
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header" style="margin-bottom:6px;">
+          <span class="card-title">Configura&#231;&#227;o do Workspace</span>
+          <button class="btn" id="btn-save-config">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Salvar
+          </button>
+        </div>
+        <p class="card-desc" id="config-path-note">Carregando configura&#231;&#227;o&#8230;</p>
+        <div class="form-grid" id="config-form"></div>
+      </div>
+
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-title" style="margin-bottom:8px;">Tarefas Ativas</div>
+        <p class="card-desc">Refer&#234;ncias de governan&#231;a do ecossistema AXION:</p>
+        <div class="sysinfo">
+          <div class="sysinfo-row"><span class="sysinfo-key">Raiz can&#244;nica</span><span class="sysinfo-val">D:\WORKSPACE</span></div>
+          <div class="sysinfo-row"><span class="sysinfo-key">Tarefas ativas</span><span class="sysinfo-val">MEMORY/active_tasks.json</span></div>
+          <div class="sysinfo-row"><span class="sysinfo-key">Logs di&#225;rios</span><span class="sysinfo-val">MEMORY/daily_logs/YYYY-MM-DD.md</span></div>
+          <div class="sysinfo-row"><span class="sysinfo-key">Downloads can&#244;nicos</span><span class="sysinfo-val">E:\Downloads</span></div>
+          <div class="sysinfo-row"><span class="sysinfo-key">Reposit&#243;rio</span><span class="sysinfo-val">axion-dev-enterprise/agent-workspace-os</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Toast container -->
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Toast system ──────────────────────────────────────────
+  var TOAST_ICONS = {
+    success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    error:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    info:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+  };
+  var CLOSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+
+  function showToast(message, type) {
+    type = type || 'info';
+    var container = document.getElementById('toast-container');
+    var el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = '<span class="toast-icon">' + (TOAST_ICONS[type] || TOAST_ICONS.info) + '</span>'
+      + '<span class="toast-msg">' + escHtml(message) + '</span>'
+      + '<button class="toast-close" aria-label="Fechar">' + CLOSE_SVG + '</button>';
+    container.appendChild(el);
+    el.querySelector('.toast-close').addEventListener('click', function() { dismissToast(el); });
+    setTimeout(function() { dismissToast(el); }, 4000);
+  }
+
+  function dismissToast(el) {
+    if (!el.parentNode) return;
+    el.classList.add('toast-out');
+    el.addEventListener('animationend', function() { if (el.parentNode) el.parentNode.removeChild(el); }, { once: true });
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Copy util ─────────────────────────────────────────────
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('Copiado para &#225;rea de transfer&#234;ncia!', 'success');
+    }).catch(function() {
+      showToast('Falha ao copiar', 'error');
+    });
+  }
+
+  // ── Button loading ────────────────────────────────────────
+  function setLoading(btn, on) {
+    if (on) {
+      btn._ogHTML = btn.innerHTML;
+      btn._ogMinW = btn.style.minWidth;
+      btn.style.minWidth = btn.offsetWidth + 'px';
+      btn.disabled = true;
+      btn.innerHTML = '<span style="visibility:hidden;">' + btn._ogHTML + '</span>'
+        + '<span class="btn-loading-wrap"><span class="spinner"></span></span>';
+    } else {
+      btn.disabled = false;
+      btn.style.minWidth = btn._ogMinW || '';
+      if (btn._ogHTML !== undefined) btn.innerHTML = btn._ogHTML;
+    }
+  }
+
+  // ── Tab switching (event delegation) ─────────────────────
+  var _preflightData = null;
+
+  document.getElementById('tab-nav').addEventListener('click', function(e) {
+    var btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+
+  // ── Skeletons ──────────────────────────────────────────────
+  function renderSkeletons(n) {
+    var out = '';
+    for (var i = 0; i < n; i++) {
+      out += '<div class="skeleton-row">'
+        + '<div class="sk-left"><div class="skeleton" style="width:45%;"></div><div class="skeleton" style="width:65%; height:11px;"></div></div>'
+        + '<div class="skeleton" style="width:64px; height:22px; border-radius:4px;"></div>'
+        + '</div>';
+    }
+    return out;
+  }
+
+  // ── Preflight ─────────────────────────────────────────────
+  var WRENCH_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
+  var CLIP_SVG  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+
+  function loadPreflight(quiet) {
+    var toolsDiv = document.getElementById('tools-list');
+    var cmdsDiv  = document.getElementById('install-cmds-list');
+    var sysinfoBox = document.getElementById('sysinfo-box');
+    if (!quiet) toolsDiv.innerHTML = renderSkeletons(6);
+
+    return fetch('/api/preflight').then(function(r) { return r.json(); }).then(function(data) {
+      _preflightData = data;
+
+      var toolsHtml = '';
+      var cmdsHtml  = '';
+
+      Object.entries(data.tools || {}).forEach(function(entry) {
+        var id = entry[0], t = entry[1];
+        var pc = t.installed ? 'pill-success' : (t.required ? 'pill-danger' : 'pill-warning');
+        var pt = t.installed ? 'Instalado' : (t.required ? 'Necess&#225;rio' : 'Opcional');
+        var installBtn = !t.installed
+          ? '<button class="btn btn-sm" data-tool-install="' + escHtml(id) + '">Instalar</button>'
+          : '';
+        toolsHtml += '<div class="tool-row" id="tool-row-' + escHtml(id) + '">'
+          + '<div class="tool-left"><span class="tool-icon">' + WRENCH_SVG + '</span>'
+          + '<div class="tool-meta"><span class="tool-name">' + escHtml(t.name) + '</span>'
+          + '<span class="tool-version">' + escHtml(t.version || 'N&#227;o detectado no PATH') + '</span>'
+          + '</div></div>'
+          + '<div class="tool-actions"><span class="pill ' + pc + '">' + pt + '</span>'
+          + installBtn
+          + '<button class="btn-icon" data-copy-cmd="' + escHtml(t.install_win || '') + '" aria-label="Copiar comando">' + CLIP_SVG + '</button>'
+          + '</div></div>'
+          + '<div id="install-out-' + escHtml(id) + '" style="display:none;"></div>';
+
+        if (t.install_win) {
+          cmdsHtml += '<div class="cmd-row">'
+            + '<span class="cmd-text">' + escHtml(t.install_win) + '</span>'
+            + '<button class="btn-icon" data-copy="' + escHtml(t.install_win) + '" aria-label="Copiar">' + CLIP_SVG + '</button>'
+            + '</div>';
+        }
+      });
+
+      toolsDiv.innerHTML = toolsHtml || '<p style="color:var(--text-muted);">Nenhuma ferramenta configurada.</p>';
+      cmdsDiv.innerHTML  = cmdsHtml  || '<p style="color:var(--text-muted); font-size:0.82rem;">Nenhum comando dispon&#237;vel.</p>';
+
+      sysinfoBox.style.display = 'block';
+      sysinfoBox.innerHTML =
+        '<div class="sysinfo-row"><span class="sysinfo-key">Plataforma</span><span class="sysinfo-val">' + escHtml(data.platform || '&#8212;') + '</span></div>'
+        + '<div class="sysinfo-row"><span class="sysinfo-key">Todos os requeridos</span><span class="sysinfo-val">'
+        + (data.all_required_met
+          ? '<span class="pill pill-success">OK</span>'
+          : '<span class="pill pill-danger">Pendente</span>')
+        + '</span></div>';
+
+      updateAuthPills(data.auth || {});
+    }).catch(function(err) {
+      toolsDiv.innerHTML = '<p style="color:var(--danger); font-size:0.82rem;">Erro ao carregar preflight: ' + escHtml(String(err)) + '</p>';
+    });
+  }
+
+  function updateAuthPills(auth) {
+    var map = { github: 'github-pill', vercel: 'vercel-pill', cloudflare: 'cloudflare-pill' };
+    Object.entries(map).forEach(function(e) {
+      var key = e[0], elId = e[1];
+      var el = document.getElementById(elId);
+      if (!el) return;
+      var a = auth[key];
+      if (!a) { el.textContent = '&#8212;'; el.className = 'pill pill-muted'; return; }
+      el.textContent = a.authenticated ? 'Conectado' : 'N&#227;o autenticado';
+      el.className   = 'pill ' + (a.authenticated ? 'pill-success' : 'pill-danger');
+      if (a.details) el.title = a.details;
+    });
+  }
+
+  // ── Tool install via SSE ──────────────────────────────────
+  document.getElementById('tools-list').addEventListener('click', function(e) {
+    var copyBtn = e.target.closest('[data-copy-cmd]');
+    if (copyBtn) { copyText(copyBtn.dataset.copyCmd); return; }
+
+    var installBtn = e.target.closest('[data-tool-install]');
+    if (!installBtn) return;
+    var toolId = installBtn.dataset.toolInstall;
+    var outEl  = document.getElementById('install-out-' + toolId);
+    if (!outEl) return;
+
+    outEl.style.display = 'block';
+    outEl.innerHTML = '<pre class="install-output" id="install-pre-' + toolId + '">Iniciando instala&#231;&#227;o...
+</pre>';
+    var pre = document.getElementById('install-pre-' + toolId);
+
+    setLoading(installBtn, true);
+
+    fetch('/api/install', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool_id: toolId })
+    }).then(function(resp) {
+      var reader = resp.body.getReader();
+      var dec    = new TextDecoder();
+      var buf    = '';
+
+      function pump() {
+        return reader.read().then(function(chunk) {
+          if (chunk.done) {
+            showToast('Instala&#231;&#227;o conclu&#237;da: ' + toolId, 'success');
+            setLoading(installBtn, false);
+            return;
+          }
+          buf += dec.decode(chunk.value, { stream: true });
+          var parts = buf.split('
+
+');
+          buf = parts.pop();
+          parts.forEach(function(part) {
+            part = part.trim();
+            if (!part.startsWith('data:')) return;
+            try {
+              var obj = JSON.parse(part.slice(5).trim());
+              if (obj.done) {
+                showToast('Instala&#231;&#227;o conclu&#237;da: ' + toolId, 'success');
+                setLoading(installBtn, false);
+                return;
+              }
+              if (obj.line !== undefined) {
+                pre.textContent += obj.line + '
+';
+                pre.scrollTop = pre.scrollHeight;
+              }
+            } catch(_) {}
+          });
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function(err) {
+      pre.textContent += '
+Erro: ' + String(err);
+      showToast('Erro na instala&#231;&#227;o: ' + String(err), 'error');
+      setLoading(installBtn, false);
+    });
+  });
+
+  // ── Global copy delegation ────────────────────────────────
+  document.body.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-copy]');
+    if (btn) copyText(btn.dataset.copy);
+  });
+
+  // ── Refresh tools ─────────────────────────────────────────
+  document.getElementById('btn-refresh-tools').addEventListener('click', function() {
+    var self = this; setLoading(self, true);
+    loadPreflight().then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
+  });
+
+  // ── Refresh oauth ─────────────────────────────────────────
+  document.getElementById('btn-refresh-oauth').addEventListener('click', function() {
+    var self = this; setLoading(self, true);
+    loadPreflight(true).then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
+  });
+
+  // ── GitHub login ──────────────────────────────────────────
+  document.getElementById('btn-github-login').addEventListener('click', function() {
+    var self = this; setLoading(self, true);
+    fetch('/api/oauth/github', { method: 'POST' }).then(function() {
+      showToast('Navegador aberto para login OAuth. Complete a autentica&#231;&#227;o e clique em Atualizar Status.', 'info');
+    }).catch(function(err) {
+      showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  // ── Vercel login ──────────────────────────────────────────
+  document.getElementById('btn-vercel-login').addEventListener('click', function() {
+    var self = this; setLoading(self, true);
+    fetch('/api/oauth/vercel', { method: 'POST' }).then(function() {
+      showToast('Navegador aberto para login Vercel. Complete a autentica&#231;&#227;o e clique em Atualizar Status.', 'info');
+    }).catch(function(err) {
+      showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  // ── Cloudflare eye toggle ─────────────────────────────────
+  document.getElementById('cf-eye-btn').addEventListener('click', function() {
+    var inp = document.getElementById('cf-token-input');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+
+  // ── Cloudflare save ───────────────────────────────────────
+  document.getElementById('btn-cf-save').addEventListener('click', function() {
+    var token = document.getElementById('cf-token-input').value.trim();
+    if (!token) { showToast('Insira um token v&#225;lido', 'warning'); return; }
+    var self = this; setLoading(self, true);
+    fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cloudflare_token: token })
+    }).then(function() {
+      showToast('Token Cloudflare salvo com sucesso!', 'success');
+    }).catch(function(err) {
+      showToast('Erro ao salvar token: ' + String(err), 'error');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  // ── WhatsApp ──────────────────────────────────────────────
+  var _currentWaMode = 'monitor';
+  var _waOfflineToastShown = false;
+
+  function loadWhatsApp() {
+    return fetch('/api/whatsapp/status').then(function(r) { return r.json(); }).then(function(data) {
+      var pill        = document.getElementById('wa-status-pill');
+      var qrImg       = document.getElementById('wa-qr-img');
+      var placeholder = document.getElementById('wa-qr-placeholder');
+      var numEl       = document.getElementById('wa-number');
+      var offlineCard = document.getElementById('wa-offline-card');
+
+      _currentWaMode = data.mode || 'monitor';
+      document.getElementById('wa-mode-desc').textContent =
+        _currentWaMode === 'react'
+          ? 'React: executa comandos (/task) diretamente no workspace.'
+          : 'Monitor: apenas salva e categoriza mensagens.';
+
+      if (data.status === 'standby' || data.status === 'offline') {
+        pill.textContent = 'Offline'; pill.className = 'pill pill-danger';
+        offlineCard.style.display = 'block';
+        qrImg.style.display = 'none';
+        placeholder.style.display = 'block';
+        placeholder.textContent = 'Bridge não está rodando';
+        numEl.style.display = 'none';
+        if (!_waOfflineToastShown) { _waOfflineToastShown = true; showToast('Bridge WhatsApp não está rodando', 'warning'); }
+      } else if (data.status === 'connected') {
+        pill.textContent = 'Conectado'; pill.className = 'pill pill-success';
+        offlineCard.style.display = 'none';
+        qrImg.style.display = 'none'; placeholder.style.display = 'none';
+        numEl.style.display = 'block';
+        numEl.textContent = 'Número: ' + (data.connectedNumber || 'Ativo');
+        _waOfflineToastShown = false;
+      } else if (data.status === 'qr_ready') {
+        pill.textContent = 'Aguardando QR'; pill.className = 'pill pill-warning';
+        offlineCard.style.display = 'none';
+        placeholder.style.display = 'none'; numEl.style.display = 'none';
+        if (data.lastQrImage) { qrImg.src = data.lastQrImage; qrImg.style.display = 'block'; }
+        _waOfflineToastShown = false;
+      }
+      renderWaFeed(data.recentMessages || []);
+    }).catch(function() {});
+  }
+
+  function renderWaFeed(msgs) {
+    var feedDiv = document.getElementById('wa-feed-list');
+    if (!msgs.length) {
+      feedDiv.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem;">Nenhuma mensagem registrada.</div>';
+      return;
+    }
+    var CAT_COLORS = { task:'pill-info', alert:'pill-danger', info:'pill-muted', chat:'pill-warning' };
+    feedDiv.innerHTML = msgs.slice(0,20).map(function(m) {
+      var catClass = CAT_COLORS[m.category] || 'pill-muted';
+      var catPill  = m.category ? '<span class="pill ' + catClass + '">' + escHtml(m.category.toUpperCase()) + '</span>' : '';
+      var ts = m.timestamp ? m.timestamp.slice(11,19) : '';
+      return '<div class="feed-item">'
+        + '<div class="feed-header"><span>' + escHtml(m.sender || '—') + '</span>'
+        + '<span style="display:flex;align-items:center;gap:5px;">' + catPill + '<span>' + escHtml(ts) + '</span></span></div>'
+        + '<div>' + escHtml(m.text || '') + '</div></div>';
+    }).join('');
+  }
+
+  document.getElementById('btn-copy-wa-cmd').addEventListener('click', function() {
+    copyText('cd scripts/whatsapp_bridge && npm install && node server.js');
+  });
+
+  document.getElementById('btn-wa-toggle').addEventListener('click', function() {
+    var newMode = _currentWaMode === 'monitor' ? 'react' : 'monitor';
+    var self = this; setLoading(self, true);
+    fetch('/api/whatsapp/mode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: newMode })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      showToast(
+        data.ok !== false ? 'Modo alterado para: ' + newMode : 'Erro: ' + (data.error || 'Falha'),
+        data.ok !== false ? 'success' : 'error'
+      );
+      return loadWhatsApp();
+    }).catch(function() {
+      showToast('Bridge offline. Inicie o serviço primeiro.', 'warning');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  document.getElementById('btn-refresh-wa-feed').addEventListener('click', function() {
+    var self = this; setLoading(self, true);
+    loadWhatsApp().finally(function() { setLoading(self, false); });
+  });
+
+  // ── Drive ─────────────────────────────────────────────────
+  function loadDriveStatus() {
+    return fetch('/api/drive/status').then(function(r) { return r.json(); }).then(function(data) {
+      var pill = document.getElementById('drive-auth-pill');
+      var det  = document.getElementById('drive-status-detail');
+      pill.textContent = data.authenticated ? 'Autenticado' : 'Não autenticado';
+      pill.className   = 'pill ' + (data.authenticated ? 'pill-success' : 'pill-danger');
+      det.textContent  = (data.details || '') + (data.type ? ' (' + data.type + ')' : '');
+    }).catch(function() {});
+  }
+
+  document.getElementById('btn-drive-sync').addEventListener('click', function() {
+    var resultBox = document.getElementById('drive-result');
+    resultBox.style.display = 'block';
+    resultBox.textContent = 'Sincronizando…';
+    var self = this; setLoading(self, true);
+    fetch('/api/drive/sync', { method: 'POST' }).then(function(r) { return r.json(); }).then(function(data) {
+      resultBox.textContent = data.output || data.error || JSON.stringify(data, null, 2);
+      showToast(data.ok !== false ? 'Sincronização concluída!' : 'Erro na sincronização', data.ok !== false ? 'success' : 'error');
+    }).catch(function(err) {
+      resultBox.textContent = 'Erro: ' + String(err);
+      showToast('Erro na sincronização: ' + String(err), 'error');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  // ── Config ────────────────────────────────────────────────
+  var CONFIG_FIELDS = [
+    { key:'org_name',       label:'Organization Name', path:['organization','name'] },
+    { key:'org_slug',       label:'Org Slug',          path:['organization','slug'] },
+    { key:'primary_domain', label:'Primary Domain',    path:['organization','primary_domain'] },
+    { key:'git_user_name',  label:'Git User Name',     path:['git','user_name'] },
+    { key:'git_user_email', label:'Git User Email',    path:['git','user_email'] },
+    { key:'workspace_root', label:'Workspace Root',    path:['paths','canonical_root'] },
+    { key:'github_handle',  label:'GitHub Handle',     path:['git','org_github_handle'] },
+    { key:'deploy_target',  label:'Deploy Target',     path:['deployment','primary_target'] },
+    { key:'vps_ip',         label:'VPS IP',            path:['deployment','vps_host_ip'] }
+  ];
+
+  function getNestedVal(obj, path) {
+    return path.reduce(function(o,k) { return (o && o[k] !== undefined) ? o[k] : ''; }, obj);
+  }
+
+  function loadConfig() {
+    var note = document.getElementById('config-path-note');
+    var form = document.getElementById('config-form');
+    return fetch('/api/config').then(function(r) { return r.json(); }).then(function(data) {
+      note.textContent = 'Arquivo: workspace.config.json';
+      form.innerHTML = CONFIG_FIELDS.map(function(f) {
+        return '<div class="form-group">'
+          + '<label class="form-label" for="cfg-' + f.key + '">' + escHtml(f.label) + '</label>'
+          + '<input class="form-input" id="cfg-' + f.key + '" type="text" '
+          + 'data-cfg-key="' + f.key + '" '
+          + 'value="' + escHtml(String(getNestedVal(data, f.path))) + '" autocomplete="off">'
+          + '</div>';
+      }).join('');
+    }).catch(function() { note.textContent = 'Erro ao carregar config.'; });
+  }
+
+  document.getElementById('btn-save-config').addEventListener('click', function() {
+    var self = this;
+    fetch('/api/config').then(function(r) { return r.json(); }).then(function(existing) {
+      document.querySelectorAll('#config-form [data-cfg-key]').forEach(function(inp) {
+        var f = CONFIG_FIELDS.find(function(x) { return x.key === inp.dataset.cfgKey; });
+        if (!f) return;
+        var obj = existing;
+        f.path.slice(0,-1).forEach(function(k) { if (!obj[k] || typeof obj[k] !== 'object') obj[k] = {}; obj = obj[k]; });
+        obj[f.path[f.path.length-1]] = inp.value;
+      });
+      setLoading(self, true);
+      return fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(existing)
+      });
+    }).then(function() {
+      showToast('Configuração salva com sucesso!', 'success');
+    }).catch(function(err) {
+      showToast('Erro ao salvar: ' + String(err), 'error');
+    }).finally(function() { setLoading(self, false); });
+  });
+
+  // ── Init ──────────────────────────────────────────────────
+  loadPreflight();
+  loadDriveStatus();
+  loadConfig();
+  loadWhatsApp();
+  setInterval(loadWhatsApp, 3000);
+
+})();
+</script>
+</body>
+</html>
