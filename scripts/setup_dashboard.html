@@ -643,96 +643,137 @@
 (function() {
   'use strict';
 
-  // ── Toast system ──────────────────────────────────────────
-  var TOAST_ICONS = {
-    success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-    error:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-    info:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
-  };
-  var CLOSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+  // ── SVGs ───────────────────────────────────────────────────
+  var WRENCH_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
+  var CLIP_SVG   = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+  var CHECK_SVG  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  var ALERT_SVG  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>';
+  var INFO_SVG   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
+  var CLOSE_SVG  = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>';
+  var SPINNER_SVG = '<svg class="spinner" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
 
-  function showToast(message, type) {
+  // ── Helpers ────────────────────────────────────────────────
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // ── Toast System ───────────────────────────────────────────
+  function showToast(msg, type) {
     type = type || 'info';
     var container = document.getElementById('toast-container');
-    var el = document.createElement('div');
-    el.className = 'toast';
-    el.innerHTML = '<span class="toast-icon">' + (TOAST_ICONS[type] || TOAST_ICONS.info) + '</span>'
-      + '<span class="toast-msg">' + escHtml(message) + '</span>'
+    if (!container) return;
+
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+
+    var iconSvg = INFO_SVG;
+    if (type === 'success') iconSvg = CHECK_SVG;
+    else if (type === 'error' || type === 'warning') iconSvg = ALERT_SVG;
+
+    toast.innerHTML = '<span class="toast-icon">' + iconSvg + '</span>'
+      + '<span class="toast-msg">' + escHtml(msg) + '</span>'
       + '<button class="toast-close" aria-label="Fechar">' + CLOSE_SVG + '</button>';
-    container.appendChild(el);
-    el.querySelector('.toast-close').addEventListener('click', function() { dismissToast(el); });
-    setTimeout(function() { dismissToast(el); }, 4000);
+
+    var dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      toast.classList.add('hide');
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 250);
+    }
+
+    toast.querySelector('.toast-close').addEventListener('click', dismiss);
+    setTimeout(dismiss, 4500);
+    container.appendChild(toast);
   }
 
-  function dismissToast(el) {
-    if (!el.parentNode) return;
-    el.classList.add('toast-out');
-    el.addEventListener('animationend', function() { if (el.parentNode) el.parentNode.removeChild(el); }, { once: true });
-  }
-
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ── Copy util ─────────────────────────────────────────────
+  // ── Copy to Clipboard ──────────────────────────────────────
   function copyText(text) {
-    navigator.clipboard.writeText(text).then(function() {
-      showToast('Copiado para &#225;rea de transfer&#234;ncia!', 'success');
-    }).catch(function() {
-      showToast('Falha ao copiar', 'error');
-    });
-  }
-
-  // ── Button loading ────────────────────────────────────────
-  function setLoading(btn, on) {
-    if (on) {
-      btn._ogHTML = btn.innerHTML;
-      btn._ogMinW = btn.style.minWidth;
-      btn.style.minWidth = btn.offsetWidth + 'px';
-      btn.disabled = true;
-      btn.innerHTML = '<span style="visibility:hidden;">' + btn._ogHTML + '</span>'
-        + '<span class="btn-loading-wrap"><span class="spinner"></span></span>';
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('Copiado para a área de transferência!', 'success');
+      }).catch(function() {
+        fallbackCopy(text);
+      });
     } else {
-      btn.disabled = false;
-      btn.style.minWidth = btn._ogMinW || '';
-      if (btn._ogHTML !== undefined) btn.innerHTML = btn._ogHTML;
+      fallbackCopy(text);
     }
   }
 
-  // ── Tab switching (event delegation) ─────────────────────
-  var _preflightData = null;
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Copiado para a área de transferência!', 'success');
+    } catch (_) {
+      showToast('Falha ao copiar', 'error');
+    }
+    document.body.removeChild(ta);
+  }
 
-  document.getElementById('tab-nav').addEventListener('click', function(e) {
-    var btn = e.target.closest('.tab-btn');
+  // ── Button Loading State ───────────────────────────────────
+  function setLoading(btn, isLoading) {
     if (!btn) return;
-    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
+    if (isLoading) {
+      btn.dataset.origHtml = btn.innerHTML;
+      btn.dataset.origWidth = btn.offsetWidth + 'px';
+      btn.style.minWidth = btn.dataset.origWidth;
+      btn.disabled = true;
+      btn.innerHTML = SPINNER_SVG;
+    } else {
+      btn.disabled = false;
+      if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+      btn.style.minWidth = '';
+    }
+  }
+
+  // ── Tab Switching ──────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var targetId = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      var pane = document.getElementById(targetId);
+      if (pane) pane.classList.add('active');
+    });
   });
 
   // ── Skeletons ──────────────────────────────────────────────
-  function renderSkeletons(n) {
-    var out = '';
-    for (var i = 0; i < n; i++) {
-      out += '<div class="skeleton-row">'
-        + '<div class="sk-left"><div class="skeleton" style="width:45%;"></div><div class="skeleton" style="width:65%; height:11px;"></div></div>'
-        + '<div class="skeleton" style="width:64px; height:22px; border-radius:4px;"></div>'
-        + '</div>';
+  function renderSkeletons(count) {
+    var html = '';
+    for (var i = 0; i < count; i++) {
+      html += '<div class="tool-row">'
+        + '<div class="tool-left"><div class="skeleton" style="width:16px;height:16px;border-radius:4px;"></div>'
+        + '<div class="tool-meta"><div class="skeleton" style="width:120px;height:14px;margin-bottom:4px;"></div>'
+        + '<div class="skeleton" style="width:80px;height:11px;"></div></div></div>'
+        + '<div class="skeleton" style="width:70px;height:22px;border-radius:4px;"></div></div>';
     }
-    return out;
+    return html;
   }
 
-  // ── Preflight ─────────────────────────────────────────────
-  var WRENCH_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
-  var CLIP_SVG  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+  // ── Preflight & Tools ──────────────────────────────────────
+  var _preflightData = null;
 
   function loadPreflight(quiet) {
     var toolsDiv = document.getElementById('tools-list');
     var cmdsDiv  = document.getElementById('install-cmds-list');
     var sysinfoBox = document.getElementById('sysinfo-box');
-    if (!quiet) toolsDiv.innerHTML = renderSkeletons(6);
+    if (!quiet && toolsDiv) toolsDiv.innerHTML = renderSkeletons(6);
 
     return fetch('/api/preflight').then(function(r) { return r.json(); }).then(function(data) {
       _preflightData = data;
@@ -743,14 +784,14 @@
       Object.entries(data.tools || {}).forEach(function(entry) {
         var id = entry[0], t = entry[1];
         var pc = t.installed ? 'pill-success' : (t.required ? 'pill-danger' : 'pill-warning');
-        var pt = t.installed ? 'Instalado' : (t.required ? 'Necess&#225;rio' : 'Opcional');
+        var pt = t.installed ? 'Instalado' : (t.required ? 'Necessário' : 'Opcional');
         var installBtn = !t.installed
           ? '<button class="btn btn-sm" data-tool-install="' + escHtml(id) + '">Instalar</button>'
           : '';
         toolsHtml += '<div class="tool-row" id="tool-row-' + escHtml(id) + '">'
           + '<div class="tool-left"><span class="tool-icon">' + WRENCH_SVG + '</span>'
           + '<div class="tool-meta"><span class="tool-name">' + escHtml(t.name) + '</span>'
-          + '<span class="tool-version">' + escHtml(t.version || 'N&#227;o detectado no PATH') + '</span>'
+          + '<span class="tool-version">' + escHtml(t.version || 'Não detectado no PATH') + '</span>'
           + '</div></div>'
           + '<div class="tool-actions"><span class="pill ' + pc + '">' + pt + '</span>'
           + installBtn
@@ -766,21 +807,23 @@
         }
       });
 
-      toolsDiv.innerHTML = toolsHtml || '<p style="color:var(--text-muted);">Nenhuma ferramenta configurada.</p>';
-      cmdsDiv.innerHTML  = cmdsHtml  || '<p style="color:var(--text-muted); font-size:0.82rem;">Nenhum comando dispon&#237;vel.</p>';
+      if (toolsDiv) toolsDiv.innerHTML = toolsHtml || '<p style="color:var(--text-muted);">Nenhuma ferramenta configurada.</p>';
+      if (cmdsDiv) cmdsDiv.innerHTML  = cmdsHtml  || '<p style="color:var(--text-muted); font-size:0.82rem;">Nenhum comando disponível.</p>';
 
-      sysinfoBox.style.display = 'block';
-      sysinfoBox.innerHTML =
-        '<div class="sysinfo-row"><span class="sysinfo-key">Plataforma</span><span class="sysinfo-val">' + escHtml(data.platform || '&#8212;') + '</span></div>'
-        + '<div class="sysinfo-row"><span class="sysinfo-key">Todos os requeridos</span><span class="sysinfo-val">'
-        + (data.all_required_met
-          ? '<span class="pill pill-success">OK</span>'
-          : '<span class="pill pill-danger">Pendente</span>')
-        + '</span></div>';
+      if (sysinfoBox) {
+        sysinfoBox.style.display = 'block';
+        sysinfoBox.innerHTML =
+          '<div class="sysinfo-row"><span class="sysinfo-key">Plataforma</span><span class="sysinfo-val">' + escHtml(data.platform || '—') + '</span></div>'
+          + '<div class="sysinfo-row"><span class="sysinfo-key">Todos os requeridos</span><span class="sysinfo-val">'
+          + (data.all_required_met
+            ? '<span class="pill pill-success">OK</span>'
+            : '<span class="pill pill-danger">Pendente</span>')
+          + '</span></div>';
+      }
 
       updateAuthPills(data.auth || {});
     }).catch(function(err) {
-      toolsDiv.innerHTML = '<p style="color:var(--danger); font-size:0.82rem;">Erro ao carregar preflight: ' + escHtml(String(err)) + '</p>';
+      if (toolsDiv) toolsDiv.innerHTML = '<p style="color:var(--danger); font-size:0.82rem;">Erro ao carregar preflight: ' + escHtml(String(err)) + '</p>';
     });
   }
 
@@ -791,140 +834,159 @@
       var el = document.getElementById(elId);
       if (!el) return;
       var a = auth[key];
-      if (!a) { el.textContent = '&#8212;'; el.className = 'pill pill-muted'; return; }
-      el.textContent = a.authenticated ? 'Conectado' : 'N&#227;o autenticado';
+      if (!a) { el.textContent = '—'; el.className = 'pill pill-muted'; return; }
+      el.textContent = a.authenticated ? 'Conectado' : 'Não autenticado';
       el.className   = 'pill ' + (a.authenticated ? 'pill-success' : 'pill-danger');
       if (a.details) el.title = a.details;
     });
   }
 
-  // ── Tool install via SSE ──────────────────────────────────
-  document.getElementById('tools-list').addEventListener('click', function(e) {
-    var copyBtn = e.target.closest('[data-copy-cmd]');
-    if (copyBtn) { copyText(copyBtn.dataset.copyCmd); return; }
+  // ── Tool Install via SSE ──────────────────────────────────
+  var toolsListEl = document.getElementById('tools-list');
+  if (toolsListEl) {
+    toolsListEl.addEventListener('click', function(e) {
+      var copyBtn = e.target.closest('[data-copy-cmd]');
+      if (copyBtn) { copyText(copyBtn.dataset.copyCmd); return; }
 
-    var installBtn = e.target.closest('[data-tool-install]');
-    if (!installBtn) return;
-    var toolId = installBtn.dataset.toolInstall;
-    var outEl  = document.getElementById('install-out-' + toolId);
-    if (!outEl) return;
+      var installBtn = e.target.closest('[data-tool-install]');
+      if (!installBtn) return;
+      var toolId = installBtn.dataset.toolInstall;
+      var outEl  = document.getElementById('install-out-' + toolId);
+      if (!outEl) return;
 
-    outEl.style.display = 'block';
-    outEl.innerHTML = '<pre class="install-output" id="install-pre-' + toolId + '">Iniciando instala&#231;&#227;o...
-</pre>';
-    var pre = document.getElementById('install-pre-' + toolId);
+      outEl.style.display = 'block';
+      outEl.innerHTML = '<pre class="install-output" id="install-pre-' + escHtml(toolId) + '">Iniciando instalação...\n</pre>';
+      var pre = document.getElementById('install-pre-' + toolId);
 
-    setLoading(installBtn, true);
+      setLoading(installBtn, true);
 
-    fetch('/api/install', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tool_id: toolId })
-    }).then(function(resp) {
-      var reader = resp.body.getReader();
-      var dec    = new TextDecoder();
-      var buf    = '';
+      fetch('/api/install', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tool_id: toolId })
+      }).then(function(resp) {
+        var reader = resp.body.getReader();
+        var dec    = new TextDecoder();
+        var buf    = '';
 
-      function pump() {
-        return reader.read().then(function(chunk) {
-          if (chunk.done) {
-            showToast('Instala&#231;&#227;o conclu&#237;da: ' + toolId, 'success');
-            setLoading(installBtn, false);
-            return;
-          }
-          buf += dec.decode(chunk.value, { stream: true });
-          var parts = buf.split('
-
-');
-          buf = parts.pop();
-          parts.forEach(function(part) {
-            part = part.trim();
-            if (!part.startsWith('data:')) return;
-            try {
-              var obj = JSON.parse(part.slice(5).trim());
-              if (obj.done) {
-                showToast('Instala&#231;&#227;o conclu&#237;da: ' + toolId, 'success');
-                setLoading(installBtn, false);
-                return;
-              }
-              if (obj.line !== undefined) {
-                pre.textContent += obj.line + '
-';
-                pre.scrollTop = pre.scrollHeight;
-              }
-            } catch(_) {}
+        function pump() {
+          return reader.read().then(function(chunk) {
+            if (chunk.done) {
+              showToast('Instalação concluída: ' + toolId, 'success');
+              setLoading(installBtn, false);
+              loadPreflight(true);
+              return;
+            }
+            buf += dec.decode(chunk.value, { stream: true });
+            var parts = buf.split('\n\n');
+            buf = parts.pop();
+            parts.forEach(function(part) {
+              part = part.trim();
+              if (!part.startsWith('data:')) return;
+              try {
+                var obj = JSON.parse(part.slice(5).trim());
+                if (obj.done) {
+                  showToast('Instalação concluída: ' + toolId, 'success');
+                  setLoading(installBtn, false);
+                  loadPreflight(true);
+                  return;
+                }
+                if (obj.line !== undefined && pre) {
+                  pre.textContent += obj.line + '\n';
+                  pre.scrollTop = pre.scrollHeight;
+                }
+              } catch(_) {}
+            });
+            return pump();
           });
-          return pump();
-        });
-      }
-      return pump();
-    }).catch(function(err) {
-      pre.textContent += '
-Erro: ' + String(err);
-      showToast('Erro na instala&#231;&#227;o: ' + String(err), 'error');
-      setLoading(installBtn, false);
+        }
+        return pump();
+      }).catch(function(err) {
+        if (pre) pre.textContent += '\nErro: ' + String(err);
+        showToast('Erro na instalação: ' + String(err), 'error');
+        setLoading(installBtn, false);
+      });
     });
-  });
+  }
 
-  // ── Global copy delegation ────────────────────────────────
+  // ── Global Copy Delegation ────────────────────────────────
   document.body.addEventListener('click', function(e) {
     var btn = e.target.closest('[data-copy]');
     if (btn) copyText(btn.dataset.copy);
   });
 
-  // ── Refresh tools ─────────────────────────────────────────
-  document.getElementById('btn-refresh-tools').addEventListener('click', function() {
-    var self = this; setLoading(self, true);
-    loadPreflight().then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
-  });
+  // ── Refresh Tools ─────────────────────────────────────────
+  var btnRefreshTools = document.getElementById('btn-refresh-tools');
+  if (btnRefreshTools) {
+    btnRefreshTools.addEventListener('click', function() {
+      var self = this; setLoading(self, true);
+      loadPreflight().then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
+    });
+  }
 
-  // ── Refresh oauth ─────────────────────────────────────────
-  document.getElementById('btn-refresh-oauth').addEventListener('click', function() {
-    var self = this; setLoading(self, true);
-    loadPreflight(true).then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
-  });
+  // ── Refresh OAuth ─────────────────────────────────────────
+  var btnRefreshOauth = document.getElementById('btn-refresh-oauth');
+  if (btnRefreshOauth) {
+    btnRefreshOauth.addEventListener('click', function() {
+      var self = this; setLoading(self, true);
+      loadPreflight(true).then(function() { setLoading(self, false); }).catch(function() { setLoading(self, false); });
+    });
+  }
 
-  // ── GitHub login ──────────────────────────────────────────
-  document.getElementById('btn-github-login').addEventListener('click', function() {
-    var self = this; setLoading(self, true);
-    fetch('/api/oauth/github', { method: 'POST' }).then(function() {
-      showToast('Navegador aberto para login OAuth. Complete a autentica&#231;&#227;o e clique em Atualizar Status.', 'info');
-    }).catch(function(err) {
-      showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
-    }).finally(function() { setLoading(self, false); });
-  });
+  // ── GitHub Login ──────────────────────────────────────────
+  var btnGithubLogin = document.getElementById('btn-github-login');
+  if (btnGithubLogin) {
+    btnGithubLogin.addEventListener('click', function() {
+      var self = this; setLoading(self, true);
+      fetch('/api/oauth/github', { method: 'POST' }).then(function() {
+        showToast('Navegador aberto para login OAuth. Complete a autenticação e clique em Atualizar Status.', 'info');
+      }).catch(function(err) {
+        showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
-  // ── Vercel login ──────────────────────────────────────────
-  document.getElementById('btn-vercel-login').addEventListener('click', function() {
-    var self = this; setLoading(self, true);
-    fetch('/api/oauth/vercel', { method: 'POST' }).then(function() {
-      showToast('Navegador aberto para login Vercel. Complete a autentica&#231;&#227;o e clique em Atualizar Status.', 'info');
-    }).catch(function(err) {
-      showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
-    }).finally(function() { setLoading(self, false); });
-  });
+  // ── Vercel Login ──────────────────────────────────────────
+  var btnVercelLogin = document.getElementById('btn-vercel-login');
+  if (btnVercelLogin) {
+    btnVercelLogin.addEventListener('click', function() {
+      var self = this; setLoading(self, true);
+      fetch('/api/oauth/vercel', { method: 'POST' }).then(function() {
+        showToast('Navegador aberto para login Vercel. Complete a autenticação e clique em Atualizar Status.', 'info');
+      }).catch(function(err) {
+        showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
-  // ── Cloudflare eye toggle ─────────────────────────────────
-  document.getElementById('cf-eye-btn').addEventListener('click', function() {
-    var inp = document.getElementById('cf-token-input');
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-  });
+  // ── Cloudflare Eye Toggle ─────────────────────────────────
+  var cfEyeBtn = document.getElementById('cf-eye-btn');
+  if (cfEyeBtn) {
+    cfEyeBtn.addEventListener('click', function() {
+      var inp = document.getElementById('cf-token-input');
+      if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+  }
 
-  // ── Cloudflare save ───────────────────────────────────────
-  document.getElementById('btn-cf-save').addEventListener('click', function() {
-    var token = document.getElementById('cf-token-input').value.trim();
-    if (!token) { showToast('Insira um token v&#225;lido', 'warning'); return; }
-    var self = this; setLoading(self, true);
-    fetch('/api/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cloudflare_token: token })
-    }).then(function() {
-      showToast('Token Cloudflare salvo com sucesso!', 'success');
-    }).catch(function(err) {
-      showToast('Erro ao salvar token: ' + String(err), 'error');
-    }).finally(function() { setLoading(self, false); });
-  });
+  // ── Cloudflare Save ───────────────────────────────────────
+  var btnCfSave = document.getElementById('btn-cf-save');
+  if (btnCfSave) {
+    btnCfSave.addEventListener('click', function() {
+      var inp = document.getElementById('cf-token-input');
+      var token = inp ? inp.value.trim() : '';
+      if (!token) { showToast('Insira um token válido', 'warning'); return; }
+      var self = this; setLoading(self, true);
+      fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cloudflare_token: token })
+      }).then(function() {
+        showToast('Token Cloudflare salvo com sucesso!', 'success');
+      }).catch(function(err) {
+        showToast('Erro ao salvar token: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
   // ── WhatsApp ──────────────────────────────────────────────
   var _currentWaMode = 'monitor';
@@ -937,33 +999,36 @@ Erro: ' + String(err);
       var placeholder = document.getElementById('wa-qr-placeholder');
       var numEl       = document.getElementById('wa-number');
       var offlineCard = document.getElementById('wa-offline-card');
+      var modeDesc    = document.getElementById('wa-mode-desc');
 
       _currentWaMode = data.mode || 'monitor';
-      document.getElementById('wa-mode-desc').textContent =
-        _currentWaMode === 'react'
-          ? 'React: executa comandos (/task) diretamente no workspace.'
-          : 'Monitor: apenas salva e categoriza mensagens.';
+      if (modeDesc) {
+        modeDesc.textContent =
+          _currentWaMode === 'react'
+            ? 'React: executa comandos (/task) diretamente no workspace.'
+            : 'Monitor: apenas salva e categoriza mensagens.';
+      }
 
       if (data.status === 'standby' || data.status === 'offline') {
-        pill.textContent = 'Offline'; pill.className = 'pill pill-danger';
-        offlineCard.style.display = 'block';
-        qrImg.style.display = 'none';
-        placeholder.style.display = 'block';
-        placeholder.textContent = 'Bridge não está rodando';
-        numEl.style.display = 'none';
+        if (pill) { pill.textContent = 'Offline'; pill.className = 'pill pill-danger'; }
+        if (offlineCard) offlineCard.style.display = 'block';
+        if (qrImg) qrImg.style.display = 'none';
+        if (placeholder) { placeholder.style.display = 'block'; placeholder.textContent = 'Bridge não está rodando'; }
+        if (numEl) numEl.style.display = 'none';
         if (!_waOfflineToastShown) { _waOfflineToastShown = true; showToast('Bridge WhatsApp não está rodando', 'warning'); }
       } else if (data.status === 'connected') {
-        pill.textContent = 'Conectado'; pill.className = 'pill pill-success';
-        offlineCard.style.display = 'none';
-        qrImg.style.display = 'none'; placeholder.style.display = 'none';
-        numEl.style.display = 'block';
-        numEl.textContent = 'Número: ' + (data.connectedNumber || 'Ativo');
+        if (pill) { pill.textContent = 'Conectado'; pill.className = 'pill pill-success'; }
+        if (offlineCard) offlineCard.style.display = 'none';
+        if (qrImg) qrImg.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'none';
+        if (numEl) { numEl.style.display = 'block'; numEl.textContent = 'Número: ' + (data.connectedNumber || 'Ativo'); }
         _waOfflineToastShown = false;
       } else if (data.status === 'qr_ready') {
-        pill.textContent = 'Aguardando QR'; pill.className = 'pill pill-warning';
-        offlineCard.style.display = 'none';
-        placeholder.style.display = 'none'; numEl.style.display = 'none';
-        if (data.lastQrImage) { qrImg.src = data.lastQrImage; qrImg.style.display = 'block'; }
+        if (pill) { pill.textContent = 'Aguardando QR'; pill.className = 'pill pill-warning'; }
+        if (offlineCard) offlineCard.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'none';
+        if (numEl) numEl.style.display = 'none';
+        if (data.lastQrImage && qrImg) { qrImg.src = data.lastQrImage; qrImg.style.display = 'block'; }
         _waOfflineToastShown = false;
       }
       renderWaFeed(data.recentMessages || []);
@@ -972,6 +1037,7 @@ Erro: ' + String(err);
 
   function renderWaFeed(msgs) {
     var feedDiv = document.getElementById('wa-feed-list');
+    if (!feedDiv) return;
     if (!msgs.length) {
       feedDiv.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem;">Nenhuma mensagem registrada.</div>';
       return;
@@ -988,57 +1054,75 @@ Erro: ' + String(err);
     }).join('');
   }
 
-  document.getElementById('btn-copy-wa-cmd').addEventListener('click', function() {
-    copyText('cd scripts/whatsapp_bridge && npm install && node server.js');
-  });
+  var btnCopyWaCmd = document.getElementById('btn-copy-wa-cmd');
+  if (btnCopyWaCmd) {
+    btnCopyWaCmd.addEventListener('click', function() {
+      copyText('cd scripts/whatsapp_bridge && npm install && node server.js');
+    });
+  }
 
-  document.getElementById('btn-wa-toggle').addEventListener('click', function() {
-    var newMode = _currentWaMode === 'monitor' ? 'react' : 'monitor';
-    var self = this; setLoading(self, true);
-    fetch('/api/whatsapp/mode', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: newMode })
-    }).then(function(r) { return r.json(); }).then(function(data) {
-      showToast(
-        data.ok !== false ? 'Modo alterado para: ' + newMode : 'Erro: ' + (data.error || 'Falha'),
-        data.ok !== false ? 'success' : 'error'
-      );
-      return loadWhatsApp();
-    }).catch(function() {
-      showToast('Bridge offline. Inicie o serviço primeiro.', 'warning');
-    }).finally(function() { setLoading(self, false); });
-  });
+  var btnWaToggle = document.getElementById('btn-wa-toggle');
+  if (btnWaToggle) {
+    btnWaToggle.addEventListener('click', function() {
+      var newMode = _currentWaMode === 'monitor' ? 'react' : 'monitor';
+      var self = this; setLoading(self, true);
+      fetch('/api/whatsapp/mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: newMode })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        showToast(
+          data.ok !== false ? 'Modo alterado para: ' + newMode : 'Erro: ' + (data.error || 'Falha'),
+          data.ok !== false ? 'success' : 'error'
+        );
+        return loadWhatsApp();
+      }).catch(function() {
+        showToast('Bridge offline. Inicie o serviço primeiro.', 'warning');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
-  document.getElementById('btn-refresh-wa-feed').addEventListener('click', function() {
-    var self = this; setLoading(self, true);
-    loadWhatsApp().finally(function() { setLoading(self, false); });
-  });
+  var btnRefreshWaFeed = document.getElementById('btn-refresh-wa-feed');
+  if (btnRefreshWaFeed) {
+    btnRefreshWaFeed.addEventListener('click', function() {
+      var self = this; setLoading(self, true);
+      loadWhatsApp().finally(function() { setLoading(self, false); });
+    });
+  }
 
   // ── Drive ─────────────────────────────────────────────────
   function loadDriveStatus() {
     return fetch('/api/drive/status').then(function(r) { return r.json(); }).then(function(data) {
       var pill = document.getElementById('drive-auth-pill');
       var det  = document.getElementById('drive-status-detail');
-      pill.textContent = data.authenticated ? 'Autenticado' : 'Não autenticado';
-      pill.className   = 'pill ' + (data.authenticated ? 'pill-success' : 'pill-danger');
-      det.textContent  = (data.details || '') + (data.type ? ' (' + data.type + ')' : '');
+      if (pill) {
+        pill.textContent = data.authenticated ? 'Autenticado' : 'Não autenticado';
+        pill.className   = 'pill ' + (data.authenticated ? 'pill-success' : 'pill-danger');
+      }
+      if (det) {
+        det.textContent = (data.details || '') + (data.type ? ' (' + data.type + ')' : '');
+      }
     }).catch(function() {});
   }
 
-  document.getElementById('btn-drive-sync').addEventListener('click', function() {
-    var resultBox = document.getElementById('drive-result');
-    resultBox.style.display = 'block';
-    resultBox.textContent = 'Sincronizando…';
-    var self = this; setLoading(self, true);
-    fetch('/api/drive/sync', { method: 'POST' }).then(function(r) { return r.json(); }).then(function(data) {
-      resultBox.textContent = data.output || data.error || JSON.stringify(data, null, 2);
-      showToast(data.ok !== false ? 'Sincronização concluída!' : 'Erro na sincronização', data.ok !== false ? 'success' : 'error');
-    }).catch(function(err) {
-      resultBox.textContent = 'Erro: ' + String(err);
-      showToast('Erro na sincronização: ' + String(err), 'error');
-    }).finally(function() { setLoading(self, false); });
-  });
+  var btnDriveSync = document.getElementById('btn-drive-sync');
+  if (btnDriveSync) {
+    btnDriveSync.addEventListener('click', function() {
+      var resultBox = document.getElementById('drive-result');
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        resultBox.textContent = 'Sincronizando…';
+      }
+      var self = this; setLoading(self, true);
+      fetch('/api/drive/sync', { method: 'POST' }).then(function(r) { return r.json(); }).then(function(data) {
+        if (resultBox) resultBox.textContent = data.output || data.error || JSON.stringify(data, null, 2);
+        showToast(data.ok !== false ? 'Sincronização concluída!' : 'Erro na sincronização', data.ok !== false ? 'success' : 'error');
+      }).catch(function(err) {
+        if (resultBox) resultBox.textContent = 'Erro: ' + String(err);
+        showToast('Erro na sincronização: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
   // ── Config ────────────────────────────────────────────────
   var CONFIG_FIELDS = [
@@ -1061,49 +1145,55 @@ Erro: ' + String(err);
     var note = document.getElementById('config-path-note');
     var form = document.getElementById('config-form');
     return fetch('/api/config').then(function(r) { return r.json(); }).then(function(data) {
-      note.textContent = 'Arquivo: workspace.config.json';
-      form.innerHTML = CONFIG_FIELDS.map(function(f) {
-        return '<div class="form-group">'
-          + '<label class="form-label" for="cfg-' + f.key + '">' + escHtml(f.label) + '</label>'
-          + '<input class="form-input" id="cfg-' + f.key + '" type="text" '
-          + 'data-cfg-key="' + f.key + '" '
-          + 'value="' + escHtml(String(getNestedVal(data, f.path))) + '" autocomplete="off">'
-          + '</div>';
-      }).join('');
-    }).catch(function() { note.textContent = 'Erro ao carregar config.'; });
+      if (note) note.textContent = 'Arquivo: workspace.config.json';
+      if (form) {
+        form.innerHTML = CONFIG_FIELDS.map(function(f) {
+          return '<div class="form-group">'
+            + '<label class="form-label" for="cfg-' + f.key + '">' + escHtml(f.label) + '</label>'
+            + '<input class="form-input" id="cfg-' + f.key + '" type="text" '
+            + 'data-cfg-key="' + f.key + '" '
+            + 'value="' + escHtml(String(getNestedVal(data, f.path))) + '" autocomplete="off">'
+            + '</div>';
+        }).join('');
+      }
+    }).catch(function() { if (note) note.textContent = 'Erro ao carregar config.'; });
   }
 
-  document.getElementById('btn-save-config').addEventListener('click', function() {
-    var self = this;
-    fetch('/api/config').then(function(r) { return r.json(); }).then(function(existing) {
-      document.querySelectorAll('#config-form [data-cfg-key]').forEach(function(inp) {
-        var f = CONFIG_FIELDS.find(function(x) { return x.key === inp.dataset.cfgKey; });
-        if (!f) return;
-        var obj = existing;
-        f.path.slice(0,-1).forEach(function(k) { if (!obj[k] || typeof obj[k] !== 'object') obj[k] = {}; obj = obj[k]; });
-        obj[f.path[f.path.length-1]] = inp.value;
-      });
-      setLoading(self, true);
-      return fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(existing)
-      });
-    }).then(function() {
-      showToast('Configuração salva com sucesso!', 'success');
-    }).catch(function(err) {
-      showToast('Erro ao salvar: ' + String(err), 'error');
-    }).finally(function() { setLoading(self, false); });
-  });
+  var btnSaveConfig = document.getElementById('btn-save-config');
+  if (btnSaveConfig) {
+    btnSaveConfig.addEventListener('click', function() {
+      var self = this;
+      fetch('/api/config').then(function(r) { return r.json(); }).then(function(existing) {
+        document.querySelectorAll('#config-form [data-cfg-key]').forEach(function(inp) {
+          var f = CONFIG_FIELDS.find(function(x) { return x.key === inp.dataset.cfgKey; });
+          if (!f) return;
+          var obj = existing;
+          f.path.slice(0,-1).forEach(function(k) { if (!obj[k] || typeof obj[k] !== 'object') obj[k] = {}; obj = obj[k]; });
+          obj[f.path[f.path.length-1]] = inp.value;
+        });
+        setLoading(self, true);
+        return fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(existing)
+        });
+      }).then(function() {
+        showToast('Configuração salva com sucesso!', 'success');
+      }).catch(function(err) {
+        showToast('Erro ao salvar: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
 
   // ── Init ──────────────────────────────────────────────────
   loadPreflight();
   loadDriveStatus();
   loadConfig();
   loadWhatsApp();
-  setInterval(loadWhatsApp, 3000);
+  setInterval(loadWhatsApp, 4000);
 
 })();
+
 </script>
 </body>
 </html>

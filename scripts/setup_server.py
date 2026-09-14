@@ -86,12 +86,11 @@ def get_whatsapp_qr() -> dict:
     except Exception:
         return {"qr": None, "status": "standby"}
 
-# Install command lookup — mirrors preflight_check.py TOOLS list
 INSTALL_COMMANDS: dict[str, str] = {
-    "python":   "winget install Python.Python.3.11",
-    "node":     "winget install OpenJS.NodeJS.LTS",
-    "git":      "winget install Git.Git",
-    "gh":       "winget install GitHub.cli",
+    "python":   "winget install --id Python.Python.3.11 --exact --accept-source-agreements --accept-package-agreements",
+    "node":     "winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements",
+    "git":      "winget install --id Git.Git --exact --accept-source-agreements --accept-package-agreements",
+    "gh":       "winget install --id GitHub.cli --exact --accept-source-agreements --accept-package-agreements",
     "vercel":   "npm install -g vercel",
     "wrangler": "npm install -g wrangler",
 }

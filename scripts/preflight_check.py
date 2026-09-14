@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Preflight Environment Diagnostic Tool (Ultra-Fast & Safe)
+Preflight Environment Diagnostic Tool (High-Performance Concurrent)
 Agent Workspace OS - Diagnostic and CLI Verification Engine
 """
 
@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import json
 import platform
+from concurrent.futures import ThreadPoolExecutor
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -19,7 +20,7 @@ TOOLS = [
         "name": "Python 3",
         "cmd": "python --version",
         "required": True,
-        "install_win": "winget install Python.Python.3.11",
+        "install_win": "winget install --id Python.Python.3.11 --exact --accept-source-agreements --accept-package-agreements",
         "url": "https://www.python.org/downloads/"
     },
     {
@@ -27,7 +28,7 @@ TOOLS = [
         "name": "Node.js (LTS)",
         "cmd": "node -v",
         "required": True,
-        "install_win": "winget install OpenJS.NodeJS.LTS",
+        "install_win": "winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements",
         "url": "https://nodejs.org/"
     },
     {
@@ -35,7 +36,7 @@ TOOLS = [
         "name": "Git",
         "cmd": "git --version",
         "required": True,
-        "install_win": "winget install Git.Git",
+        "install_win": "winget install --id Git.Git --exact --accept-source-agreements --accept-package-agreements",
         "url": "https://git-scm.com/"
     },
     {
@@ -43,7 +44,7 @@ TOOLS = [
         "name": "GitHub CLI (gh)",
         "cmd": "gh --version",
         "required": False,
-        "install_win": "winget install GitHub.cli",
+        "install_win": "winget install --id GitHub.cli --exact --accept-source-agreements --accept-package-agreements",
         "url": "https://cli.github.com/"
     },
     {
@@ -68,7 +69,7 @@ def check_tool(tool):
     binary_name = tool["id"]
     path = shutil.which(binary_name) or shutil.which(f"{binary_name}.cmd") or shutil.which(f"{binary_name}.exe")
     if not path:
-        return False, None
+        return tool["id"], False, None
     try:
         proc = subprocess.run(
             tool["cmd"],
@@ -80,44 +81,47 @@ def check_tool(tool):
             timeout=2
         )
         out = (proc.stdout.strip() or proc.stderr.strip()).split('\n')[0].strip()
-        return True, out if out else "Instalado"
+        return tool["id"], True, out if out else "Instalado"
     except Exception:
-        return True, "Instalado"
+        return tool["id"], True, "Instalado"
 
 def check_auth_statuses():
     statuses = {}
     
-    # 1. GitHub Auth (via gh auth status)
-    gh_bin = shutil.which("gh") or shutil.which("gh.exe")
-    if gh_bin:
-        try:
-            proc = subprocess.run(
-                "gh auth status",
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                stdin=subprocess.DEVNULL,
-                text=True,
-                timeout=3
-            )
-            out = proc.stdout.strip() or proc.stderr.strip()
-            is_logged = ("Logged in to" in out) or (proc.returncode == 0)
-            details = "Não autenticado"
-            if is_logged:
-                for line in out.split('\n'):
-                    if "Logged in to" in line:
-                        details = line.strip()
+    # 1. GitHub Auth (fast local config check)
+    gh_paths = [
+        os.path.expandvars(r'%APPDATA%\GitHub CLI\hosts.yml'),
+        os.path.expanduser("~/.config/gh/hosts.yml"),
+    ]
+    gh_logged = False
+    gh_detail = "Não autenticado"
+    for gp in gh_paths:
+        if os.path.exists(gp):
+            try:
+                with open(gp, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    for line in content.splitlines():
+                        if line.strip().startswith("user:"):
+                            active_user = line.strip().split(":", 1)[1].strip()
+                            if active_user:
+                                gh_logged = True
+                                gh_detail = f"Conectado ({active_user})"
+                                break
+                    if gh_logged:
                         break
-                if details == "Não autenticado":
-                    details = "Autenticado (Conta ativa)"
-            statuses["github"] = {"authenticated": is_logged, "details": details}
-        except Exception as e:
-            statuses["github"] = {"authenticated": False, "details": "Timeout ou erro ao verificar"}
-    else:
-        statuses["github"] = {"authenticated": False, "details": "gh CLI não instalado"}
+            except Exception:
+                pass
+    
+    if not gh_logged and shutil.which("gh"):
+        gh_detail = "Não autenticado (execute 'gh auth login --web')"
+    elif not shutil.which("gh"):
+        gh_detail = "gh CLI não instalado"
 
-    # 2. Vercel Auth (via auth.json file or env)
+    statuses["github"] = {"authenticated": gh_logged, "details": gh_detail}
+
+    # 2. Vercel Auth (fast local config check)
     v_paths = [
+        os.path.expandvars(r'%APPDATA%\com.vercel.cli\auth.json'),
         os.path.expanduser("~/AppData/Roaming/com.vercel.cli/auth.json"),
         os.path.expanduser("~/.vercel/auth.json"),
     ]
@@ -160,9 +164,15 @@ def run_preflight():
         "all_required_met": True
     }
 
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        tool_results = list(executor.map(check_tool, TOOLS))
+
+    tool_dict = {tid: (inst, ver) for tid, inst, ver in tool_results}
+
     for tool in TOOLS:
-        installed, version_str = check_tool(tool)
-        results["tools"][tool["id"]] = {
+        tid = tool["id"]
+        installed, version_str = tool_dict.get(tid, (False, None))
+        results["tools"][tid] = {
             "name": tool["name"],
             "installed": installed,
             "version": version_str,
