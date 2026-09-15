@@ -66,24 +66,50 @@ TOOLS = [
 ]
 
 def check_tool(tool):
-    binary_name = tool["id"]
+    tid = tool["id"]
+    
+    # Fast-path for Python (already running inside it)
+    if tid == "python":
+        v = sys.version.split()[0]
+        return tid, True, f"Python {v}"
+        
+    binary_name = tid
     path = shutil.which(binary_name) or shutil.which(f"{binary_name}.cmd") or shutil.which(f"{binary_name}.exe")
     if not path:
-        return tool["id"], False, None
+        return tid, False, None
+
+    cmd = [path, "-v"] if tid == "node" else [path, "--version"]
+    timeout_sec = 0.8 if tid in ("wrangler", "vercel") else 1.2
+    
     try:
         proc = subprocess.run(
-            tool["cmd"],
-            shell=True,
+            cmd,
+            shell=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,
             text=True,
-            timeout=2
+            timeout=timeout_sec
         )
         out = (proc.stdout.strip() or proc.stderr.strip()).split('\n')[0].strip()
-        return tool["id"], True, out if out else "Instalado"
+        return tid, True, out if out else "Instalado"
+    except subprocess.TimeoutExpired:
+        return tid, True, "Instalado"
     except Exception:
-        return tool["id"], True, "Instalado"
+        try:
+            proc = subprocess.run(
+                tool["cmd"],
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.DEVNULL,
+                text=True,
+                timeout=0.8
+            )
+            out = (proc.stdout.strip() or proc.stderr.strip()).split('\n')[0].strip()
+            return tid, True, out if out else "Instalado"
+        except Exception:
+            return tid, True, "Instalado"
 
 def check_auth_statuses():
     statuses = {}
