@@ -1,96 +1,189 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agent Workspace OS &mdash; O Sistema Operacional Canônico para Agentes de IA</title>
   <meta name="description" content="Ambiente local-first, multi-agente e 100% open-source para coordenar Antigravity, Claude, Cursor, Hermes e Codex com co-work determinístico, WhatsApp Bridge e governança de produção.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── Design Tokens (Obsidian / Zinc / Big Tech Standard) ── */
-    :root {
-      --bg: #09090b;
-      --bg-surface-1: #121217;
-      --bg-surface-2: #18181f;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-highlight: rgba(255, 255, 255, 0.16);
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --text-main: #f4f4f5;
-      --text-muted: #a1a1aa;
-      --text-subtle: #71717a;
+    /* ── High-Tech Design Tokens (Luminous Precision / Hi-Tech Standard) ── */
+    :root, [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-grid: rgba(15, 23, 42, 0.05);
+      --bg-surface-1: #ffffff;
+      --bg-surface-2: #f1f5f9;
+      --bg-surface-3: #e2e8f0;
+      --border-subtle: #e2e8f0;
+      --border-highlight: #cbd5e1;
+      --border-tech: rgba(2, 132, 199, 0.35);
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-light: #e0f2fe;
+      --accent-ring: rgba(2, 132, 199, 0.2);
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --text-subtle: #64748b;
+      --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+      --card-shadow-hover: 0 12px 30px -4px rgba(2, 132, 199, 0.12), 0 4px 10px rgba(15, 23, 42, 0.05);
+      --terminal-bg: #0b0f19;
+      --terminal-header: #111827;
+      --terminal-border: #1e293b;
+      --terminal-text: #f1f5f9;
       --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", Consolas, Menlo, monospace;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
+
+    [data-theme="dark"] {
+      --bg: #0b0f19;
+      --bg-grid: rgba(255, 255, 255, 0.05);
+      --bg-surface-1: #111827;
+      --bg-surface-2: #1e293b;
+      --bg-surface-3: #334155;
+      --border-subtle: #1e293b;
+      --border-highlight: #334155;
+      --border-tech: rgba(56, 189, 248, 0.4);
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --accent-light: rgba(56, 189, 248, 0.12);
+      --accent-ring: rgba(56, 189, 248, 0.25);
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.12);
+      --warning: #f59e0b;
+      --warning-light: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-subtle: #94a3b8;
+      --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+      --card-shadow-hover: 0 12px 30px -4px rgba(56, 189, 248, 0.15);
+      --terminal-bg: #030712;
+      --terminal-header: #0b0f19;
+      --terminal-border: #1f2937;
+      --terminal-text: #f8fafc;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+    html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(15, 23, 42, 0.2) transparent; }
     body {
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        linear-gradient(to right, var(--bg-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--bg-grid) 1px, transparent 1px);
+      background-size: 32px 32px;
       color: var(--text-main);
       font-family: var(--font);
       font-size: 14px;
       line-height: 1.6;
       overflow-x: hidden;
+      transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
     }
 
-    /* ── Topbar ─────────────────────────────────────────── */
+    /* ── Topbar (Frosted Hi-Tech Glass) ─────────────────── */
     header {
       position: sticky; top: 0; z-index: 50;
       backdrop-filter: blur(16px);
-      background: rgba(9, 9, 11, 0.85);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.9);
       border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
       padding: 14px 32px;
       display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+    }
+    [data-theme="dark"] header {
+      background: rgba(11, 15, 25, 0.9);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     .brand {
       display: flex; align-items: center; gap: 10px;
-      font-weight: 600; font-size: 1rem; color: var(--text-main);
+      font-weight: 700; font-size: 1.05rem; color: var(--text-main);
       text-decoration: none; letter-spacing: -0.02em;
     }
     .brand svg { color: var(--accent); }
     nav.top-nav { display: flex; align-items: center; gap: 24px; }
     nav.top-nav a {
-      color: var(--text-muted); text-decoration: none; font-size: 0.84rem; font-weight: 500;
+      color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
       transition: color 0.15s var(--ease);
     }
-    nav.top-nav a:hover { color: var(--text-main); }
+    nav.top-nav a:hover { color: var(--accent); }
     .header-actions { display: flex; align-items: center; gap: 12px; }
 
     /* ── Common Components ──────────────────────────────── */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 6px;
-      font-size: 0.83rem; font-weight: 500; text-decoration: none;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 0.84rem; font-weight: 600; text-decoration: none;
       border: 1px solid transparent; cursor: pointer;
-      transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.1s var(--ease);
+      transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.1s var(--ease), box-shadow 0.15s var(--ease);
       white-space: nowrap;
     }
     .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--accent); color: #ffffff; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary { background: var(--bg-surface-2); color: var(--text-main); border-color: var(--border-subtle); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.08); border-color: var(--border-highlight); }
-    .btn-success { background: #059669; color: #ffffff; }
-    .btn-success:hover { background: #047857; }
-    .btn-lg { padding: 12px 24px; font-size: 0.92rem; border-radius: 8px; font-weight: 600; }
+    .btn-primary {
+      background: var(--accent); color: #ffffff;
+      box-shadow: 0 2px 8px var(--accent-ring);
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 14px var(--accent-ring);
+    }
+    .btn-secondary {
+      background: var(--bg-surface-1); color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-surface-2); border-color: var(--border-highlight);
+    }
+    .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
+    .btn-lg { padding: 12px 24px; font-size: 0.95rem; border-radius: 10px; }
+
+    .theme-toggle-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--bg-surface-2); border: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-muted);
+      transition: all 0.15s var(--ease);
+    }
+    .theme-toggle-btn:hover {
+      color: var(--text-main); border-color: var(--border-highlight);
+      background: var(--bg-surface-3);
+    }
 
     .pill {
-      font-size: 0.72rem; font-weight: 500; padding: 3px 9px; border-radius: 4px;
-      display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+      font-size: 0.74rem; font-weight: 600; padding: 4px 10px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+      font-family: var(--font-mono);
     }
-    .pill-accent { background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.25); }
-    .pill-success { background: rgba(16, 185, 129, 0.12); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
-    .pill-subtle { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+    .pill-accent {
+      background: var(--accent-light); color: var(--accent);
+      border: 1px solid var(--border-tech);
+    }
+    .pill-success {
+      background: var(--success-light); color: var(--success);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+    }
+    .pill-subtle {
+      background: var(--bg-surface-2); color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     section { padding: 80px 0; border-bottom: 1px solid var(--border-subtle); }
 
     /* ── Hero ───────────────────────────────────────────── */
     .hero {
-      padding: 100px 0 80px;
+      padding: 90px 0 70px;
       text-align: center;
       position: relative;
     }
@@ -99,13 +192,13 @@
       margin-bottom: 24px;
     }
     .hero-title {
-      font-size: 2.8rem; font-weight: 700; letter-spacing: -0.035em;
-      line-height: 1.15; max-width: 860px; margin: 0 auto 20px;
-      color: #ffffff;
+      font-size: 3rem; font-weight: 800; letter-spacing: -0.035em;
+      line-height: 1.15; max-width: 880px; margin: 0 auto 20px;
+      color: var(--text-main);
     }
     .hero-subtitle {
-      font-size: 1.05rem; color: var(--text-muted); max-width: 720px;
-      margin: 0 auto 36px; line-height: 1.6; font-weight: 400;
+      font-size: 1.1rem; color: var(--text-muted); max-width: 740px;
+      margin: 0 auto 36px; line-height: 1.65; font-weight: 400;
     }
     .hero-ctas {
       display: flex; align-items: center; justify-content: center;
@@ -113,63 +206,91 @@
     }
     .stats-strip {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px; max-width: 900px; margin: 0 auto;
-      background: var(--bg-surface-1); padding: 18px 24px;
-      border: 1px solid var(--border-subtle); border-radius: 12px;
+      gap: 16px; max-width: 920px; margin: 0 auto;
+      background: var(--bg-surface-1); padding: 20px 24px;
+      border: 1px solid var(--border-subtle); border-radius: 14px;
+      box-shadow: var(--card-shadow);
     }
     .stat-item { text-align: center; }
-    .stat-val { font-size: 1.45rem; font-weight: 700; font-family: var(--font-mono); color: #ffffff; font-variant-numeric: tabular-nums; }
-    .stat-label { font-size: 0.76rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+    .stat-val {
+      font-size: 1.25rem; font-weight: 700; color: var(--text-main);
+      font-family: var(--font-mono); margin-bottom: 4px;
+    }
+    .stat-lbl {
+      font-size: 0.74rem; color: var(--text-subtle);
+      text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+    }
 
     /* ── Section Titles ─────────────────────────────────── */
-    .section-header { text-align: center; max-width: 700px; margin: 0 auto 50px; }
-    .section-eyebrow { font-size: 0.78rem; font-weight: 600; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-    .section-title { font-size: 1.95rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.25; margin-bottom: 12px; color: #ffffff; }
-    .section-desc { font-size: 0.92rem; color: var(--text-muted); line-height: 1.55; }
+    .section-header { text-align: center; max-width: 700px; margin: 0 auto 48px; }
+    .section-eyebrow {
+      font-size: 0.76rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+    .section-title {
+      font-size: 2.1rem; font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text-main); margin-bottom: 12px;
+    }
+    .section-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
-    /* ── Setup Simples (Interactive Widget) ─────────────── */
-    .setup-widget {
+    /* ── Setup & Agent Selector (Hi-Tech) ────────────────── */
+    .setup-box {
       background: var(--bg-surface-1);
       border: 1px solid var(--border-subtle);
-      border-top: 1px solid var(--border-highlight);
-      border-radius: 14px;
-      padding: 32px;
-      box-shadow: 0 16px 36px rgba(0,0,0,0.4);
+      border-top: 3px solid var(--accent);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: var(--card-shadow);
+      position: relative;
     }
-    .selector-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .selector-label {
+      font-size: 0.86rem; font-weight: 700; color: var(--text-main);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
     .agent-selector-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 10px; margin-bottom: 24px;
     }
     .agent-pill-btn {
-      background: var(--bg-surface-2); border: 1px solid var(--border-subtle);
+      display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 14px; border-radius: 8px;
-      color: var(--text-muted); font-size: 0.82rem; font-weight: 500;
-      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      background: var(--bg-surface-2); border: 1px solid var(--border-subtle);
+      color: var(--text-muted); font-size: 0.84rem; font-weight: 600;
+      cursor: pointer;
       transition: all 0.15s var(--ease);
     }
-    .agent-pill-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-main); border-color: var(--border-highlight); }
+    .agent-pill-btn:hover {
+      background: var(--bg-surface-3); color: var(--text-main);
+      border-color: var(--border-highlight);
+    }
     .agent-pill-btn.active {
-      background: rgba(59, 130, 246, 0.12); color: #93c5fd;
-      border-color: rgba(59, 130, 246, 0.4); font-weight: 600;
+      background: var(--accent-light); color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 2px 8px var(--accent-ring);
     }
     .agent-pill-btn svg { flex-shrink: 0; }
 
     .code-terminal {
-      background: #0d0d11; border: 1px solid var(--border-subtle);
-      border-radius: 10px; overflow: hidden; margin-bottom: 20px;
+      background: var(--terminal-bg); border: 1px solid var(--terminal-border);
+      border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+      box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.2);
     }
     .code-terminal-header {
-      background: #15151c; padding: 10px 16px;
+      background: var(--terminal-header); padding: 12px 18px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle); font-size: 0.76rem;
-      color: var(--text-muted); font-family: var(--font-mono);
+      border-bottom: 1px solid var(--terminal-border); font-size: 0.78rem;
+      color: #94a3b8; font-family: var(--font-mono);
     }
     .terminal-dots { display: flex; gap: 6px; }
-    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
     .code-terminal-body {
-      padding: 18px 20px; font-family: var(--font-mono); font-size: 0.8rem;
-      line-height: 1.6; color: #e4e4e7; max-height: 220px; overflow-y: auto;
+      padding: 20px 22px; font-family: var(--font-mono); font-size: 0.82rem;
+      line-height: 1.65; color: var(--terminal-text); max-height: 240px; overflow-y: auto;
       white-space: pre-wrap; word-break: break-word;
     }
     .terminal-actions {
@@ -177,104 +298,138 @@
       flex-wrap: wrap; gap: 14px;
     }
 
-    /* ── Benefícios / Comparativo ───────────────────────── */
+    /* ── Benefícios / Comparativo (Hi-Tech) ─────────────── */
     .comparison-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
     }
     .comp-card {
       background: var(--bg-surface-1); border: 1px solid var(--border-subtle);
-      border-radius: 12px; padding: 28px;
+      border-radius: 14px; padding: 28px; box-shadow: var(--card-shadow);
     }
-    .comp-card.bad { border-color: rgba(239, 68, 68, 0.2); }
-    .comp-card.good { border-color: rgba(16, 185, 129, 0.3); border-top: 2px solid var(--success); }
-    .comp-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .comp-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .comp-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; line-height: 1.5; color: var(--text-muted); }
+    .comp-card.bad {
+      background: var(--danger-light); border-color: rgba(220, 38, 38, 0.25);
+      border-top: 3px solid var(--danger);
+    }
+    .comp-card.good {
+      background: var(--success-light); border-color: rgba(5, 150, 105, 0.25);
+      border-top: 3px solid var(--success);
+    }
+    .comp-title {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .comp-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .comp-list li {
+      display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem;
+      line-height: 1.55; color: var(--text-muted);
+    }
     .comp-list li svg { flex-shrink: 0; margin-top: 3px; }
 
-    /* ── Bento Grid (Features Valiosas) ─────────────────── */
+    /* ── Bento Grid (Features Valiosas Hi-Tech) ──────────── */
     .bento-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
     }
     .bento-item {
       background: var(--bg-surface-1); border: 1px solid var(--border-subtle);
-      border-radius: 12px; padding: 24px; display: flex; flex-direction: column;
-      transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
+      border-radius: 14px; padding: 26px; display: flex; flex-direction: column;
+      box-shadow: var(--card-shadow);
+      transition: border-color 0.15s var(--ease), transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
     }
-    .bento-item:hover { border-color: var(--border-highlight); transform: translateY(-2px); }
+    .bento-item:hover {
+      border-color: var(--accent); transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
     .bento-2col { grid-column: span 2; }
     .bento-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: var(--bg-surface-2); border: 1px solid var(--border-subtle);
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--accent-light); border: 1px solid var(--border-tech);
       display: flex; align-items: center; justify-content: center;
-      color: var(--accent); margin-bottom: 14px;
+      color: var(--accent); margin-bottom: 16px;
     }
-    .bento-title { font-size: 1rem; font-weight: 600; color: #ffffff; margin-bottom: 8px; }
-    .bento-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 16px; flex: 1; }
+    .bento-title {
+      font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;
+    }
+    .bento-desc {
+      font-size: 0.86rem; color: var(--text-muted); line-height: 1.6;
+      margin-bottom: 18px; flex: 1;
+    }
     .bento-preview {
-      background: #0d0d11; border: 1px solid var(--border-subtle);
-      border-radius: 8px; padding: 12px; font-family: var(--font-mono);
-      font-size: 0.75rem; color: #93c5fd; overflow-x: auto;
+      background: var(--terminal-bg); border: 1px solid var(--terminal-border);
+      border-radius: 8px; padding: 12px 14px; font-family: var(--font-mono);
+      font-size: 0.76rem; color: #38bdf8; overflow-x: auto;
     }
 
-    /* ── Open Source & Liberdade ────────────────────────── */
+    /* ── Open Source & Liberdade Hi-Tech ────────────────── */
     .opensource-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 100%), var(--bg-surface-1);
-      border: 1px solid var(--border-subtle); border-top: 1px solid var(--border-highlight);
-      border-radius: 14px; padding: 48px 36px; text-align: center;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle); border-top: 3px solid var(--accent);
+      border-radius: 16px; padding: 52px 36px; text-align: center;
+      box-shadow: var(--card-shadow);
     }
     .os-badges-row {
       display: flex; align-items: center; justify-content: center;
       gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
     }
     .os-manifesto {
-      font-size: 1.05rem; color: #e4e4e7; max-width: 680px; margin: 0 auto 32px;
-      line-height: 1.6;
+      font-size: 1.08rem; color: var(--text-main); max-width: 720px; margin: 0 auto 32px;
+      line-height: 1.65;
+    }
+
+    /* ── Toast Notifications ────────────────────────────── */
+    #toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.95);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 10px; padding: 12px 18px;
+      font-size: 0.84rem; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: toastSlide 0.25s var(--ease);
+    }
+    @keyframes toastSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     /* ── Footer ─────────────────────────────────────────── */
     footer {
-      padding: 48px 0; background: #060608; border-top: 1px solid var(--border-subtle);
-      font-size: 0.8rem; color: var(--text-subtle);
+      padding: 48px 0; background: var(--bg-surface-1); border-top: 1px solid var(--border-subtle);
+      font-size: 0.84rem; color: var(--text-subtle);
     }
     .footer-inner {
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 20px;
     }
     .footer-links { display: flex; gap: 18px; }
-    .footer-links a { color: var(--text-muted); text-decoration: none; }
-    .footer-links a:hover { color: var(--text-main); }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; }
+    .footer-links a:hover { color: var(--accent); }
 
     /* ── Responsive ─────────────────────────────────────── */
     @media (max-width: 900px) {
       .bento-grid { grid-template-columns: 1fr; }
       .bento-2col { grid-column: span 1; }
-      .hero-title { font-size: 2.1rem; }
+      .hero-title { font-size: 2.2rem; }
       nav.top-nav { display: none; }
+      header { padding: 12px 20px; }
+      .setup-box { padding: 24px; }
     }
-
-    /* ── Toast Container ────────────────────────────────── */
-    #toast-container {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-      display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: none;
-    }
-    .toast {
-      pointer-events: all; background: rgba(18,18,23,0.95); backdrop-filter: blur(14px);
-      border: 1px solid var(--border-subtle); border-radius: 8px;
-      padding: 10px 16px; font-size: 0.82rem; color: var(--text-main);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px;
-      animation: toastIn 0.2s var(--ease) both;
-    }
-    @keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
-<!-- ── Topbar ─────────────────────────────────────────── -->
+<!-- ── Toast Container ─────────────────────────────────── -->
+<div id="toast-container"></div>
+
+<!-- ── Header / Topbar ─────────────────────────────────── -->
 <header>
-  <a href="#" class="brand">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <a href="/" class="brand">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="10"/>
       <path d="m4.93 4.93 4.24 4.24"/>
       <path d="m14.83 9.17 4.24-4.24"/>
@@ -282,7 +437,7 @@
       <path d="m9.17 14.83-4.24 4.24"/>
       <circle cx="12" cy="12" r="4"/>
     </svg>
-    <span>Agent Workspace OS</span>
+    Agent Workspace OS
   </a>
 
   <nav class="top-nav">
@@ -293,14 +448,32 @@
   </nav>
 
   <div class="header-actions">
-    <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener" class="btn btn-secondary">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle-btn" id="theme-toggle" title="Alternar tema Claro/Escuro" aria-label="Alternar tema">
+      <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2"/>
+        <path d="M12 20v2"/>
+        <path d="m4.93 4.93 1.41 1.41"/>
+        <path d="m17.66 17.66 1.41 1.41"/>
+        <path d="M2 12h2"/>
+        <path d="M20 12h2"/>
+        <path d="m6.34 17.66-1.41 1.41"/>
+        <path d="m19.07 4.93-1.41 1.41"/>
+      </svg>
+      <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    </button>
+
+    <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
         <path d="M9 18c-4.51 2-5-2-7-2"/>
       </svg>
       GitHub
     </a>
-    <a href="/setup" class="btn btn-primary">
+    <a href="/setup" class="btn btn-primary btn-sm">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
@@ -309,71 +482,74 @@
   </div>
 </header>
 
-<!-- ── Hero ───────────────────────────────────────────── -->
+<!-- ── Hero Section ───────────────────────────────────── -->
 <section class="hero">
   <div class="container">
     <div class="hero-eyebrow">
-      <span class="pill pill-accent">MIT License</span>
-      <span class="pill pill-success">100% Open Source</span>
-      <span class="pill pill-subtle">Local-First Architecture</span>
+      <span class="pill pill-accent">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg>
+        AXION Workspace OS v2.1 &bull; Produção &bull; Hi-Tech Standard
+      </span>
+      <span class="pill pill-success">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        100% Open Source (MIT)
+      </span>
     </div>
 
     <h1 class="hero-title">
-      O Sistema Operacional Canônico para Agentes Autônomos de IA
+      O Sistema Operacional Canônico para Agentes de IA Autônomos
     </h1>
 
     <p class="hero-subtitle">
-      Coordene Antigravity, Claude, Cursor, Hermes e Codex em uma arquitetura local unificada. Co-work determinístico, WhatsApp Bridge nativo, sincronização de arquivos e governança de produção sem vendor lock-in.
+      Arquitetura local-first e determinística para coordenar Antigravity, Claude Code, Cursor, Hermes e Codex.
+      Elimine a amnésia entre sessões, garanta governança estrita e acelere seu fluxo com ferramentas de produção reais.
     </p>
 
     <div class="hero-ctas">
       <a href="#setup" class="btn btn-primary btn-lg">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        Setup Rápido em 1 Minuto
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Iniciar Setup com Seu Agente
       </a>
-      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-        Star no GitHub
+      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
+        Ver Código no GitHub
       </a>
     </div>
 
+    <!-- Quick Stats -->
     <div class="stats-strip">
       <div class="stat-item">
-        <div class="stat-val">100%</div>
-        <div class="stat-label">Open Source (MIT)</div>
+        <div class="stat-val">&lt; 5ms</div>
+        <div class="stat-lbl">Preflight Check</div>
       </div>
       <div class="stat-item">
-        <div class="stat-val">&lt;5ms</div>
-        <div class="stat-label">Diagnóstico Local</div>
+        <div class="stat-val">6 Agentes</div>
+        <div class="stat-lbl">Suporte Nativo</div>
       </div>
       <div class="stat-item">
-        <div class="stat-val">6+</div>
-        <div class="stat-label">Agentes Suportados</div>
+        <div class="stat-val">Zero Build</div>
+        <div class="stat-lbl">Local Guard</div>
       </div>
       <div class="stat-item">
-        <div class="stat-val">Zero</div>
-        <div class="stat-label">Build Local Exigido</div>
+        <div class="stat-val">100% Soberano</div>
+        <div class="stat-lbl">Local-First / Sem Lock-in</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Setup Simples (Interactive Widget) ─────────────── -->
+<!-- ── Setup Simples com Seletor de Agentes ─────────────── -->
 <section id="setup">
   <div class="container">
     <div class="section-header">
-      <div class="section-eyebrow">Inicialização Guiada</div>
-      <h2 class="section-title">Setup em 1 Minuto com Qualquer Agente</h2>
+      <div class="section-eyebrow">Setup Rápido em 1 Minuto</div>
+      <h2 class="section-title">Configure Qualquer Agente de IA em 1 Clique</h2>
       <p class="section-desc">
-        Selecione o agente de IA que você utiliza. Copie o prompt otimizado e cole diretamente no chat do agente ou clone o repositório no terminal.
+        Selecione o seu assistente favorito abaixo, copie o prompt otimizado e cole diretamente no chat do seu agente.
       </p>
     </div>
 
-    <div class="setup-widget">
+    <div class="setup-box">
       <div class="selector-label">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="3"/>
@@ -420,9 +596,9 @@
       <div class="code-terminal">
         <div class="code-terminal-header">
           <div class="terminal-dots">
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
           </div>
           <span id="terminal-agent-tag">prompt-antigravity.txt</span>
           <button class="btn btn-secondary btn-sm" id="btn-copy-prompt">
@@ -435,23 +611,18 @@
 
       <div class="terminal-actions">
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <span style="font-size:0.8rem; color:var(--text-muted);">Comando Git direto:</span>
-          <code style="background:#0d0d11; border:1px solid var(--border-subtle); padding:6px 10px; border-radius:6px; font-family:var(--font-mono); font-size:0.76rem; color:#93c5fd;">
+          <span style="font-size:0.84rem; font-weight:600; color:var(--text-muted);">Comando Git direto:</span>
+          <code style="background:var(--terminal-bg); border:1px solid var(--terminal-border); padding:8px 12px; border-radius:8px; font-family:var(--font-mono); font-size:0.8rem; color:#38bdf8;">
             git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
           </code>
           <button class="btn btn-secondary btn-sm" id="btn-copy-git">Copiar Git</button>
         </div>
-
-        <a href="/setup" class="btn btn-success">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Abrir Painel de Setup Local (:8765)
-        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Benefícios / Diferenciais ──────────────────────── -->
+<!-- ── Benefícios / Diferenciais (Hi-Tech) ─────────────── -->
 <section id="diferenciais">
   <div class="container">
     <div class="section-header">
@@ -466,29 +637,29 @@
       <!-- Sem o OS -->
       <div class="comp-card bad">
         <div class="comp-title" style="color:var(--danger);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           Sem o Workspace OS (Caos Tradicional)
         </div>
         <ul class="comp-list">
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             <span><strong>Amnésia entre sessões:</strong> O agente perde o contexto toda vez que uma conversa encerra.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             <span><strong>Conflito entre ferramentas:</strong> Cursor sobrescreve arquivos que o Claude estava editando sem sincronização.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             <span><strong>UI Clichê de IA ("AI Slop"):</strong> Emojis em botões, gradientes roxos fluorescentes e cópia sem sentido.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Vazamento de credenciais:</strong> Chaves de API e tokens `.env` acidentalmente versionados no Git.</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span><strong>Vazamento de credenciais:</strong> Chaves de API e tokens <code>.env</code> acidentalmente versionados no Git.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Builds lentos que travam a máquina:</strong> O agente tenta compilar pipelines pesados localmente.</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <span><strong>Builds lentos locais:</strong> O agente tenta compilar pipelines pesados localmente travando a máquina.</span>
           </li>
         </ul>
       </div>
@@ -496,28 +667,28 @@
       <!-- Com o OS -->
       <div class="comp-card good">
         <div class="comp-title" style="color:var(--success);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           Com o Agent Workspace OS (Padrão AXION)
         </div>
         <ul class="comp-list">
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             <span><strong>Memória Compartilhada:</strong> Fila <code>active_tasks.json</code> e quadro <code>blackboard.json</code> persistentes no disco.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             <span><strong>Co-Work Multi-Agente:</strong> Handoffs estruturados permitindo que Antigravity, Claude e Cursor colaborem no mesmo repositório.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             <span><strong>Auditoria Anti-AI Slop:</strong> Linter nativo que impede emojis em UI, gradientes radioativos e jargões vazios.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             <span><strong>Cofre Seguro Isolado:</strong> Diretório <code>credentials/</code> com sonda prévia (Whoami Probe) antes de qualquer mutação.</span>
           </li>
           <li>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             <span><strong>Zero Build Local:</strong> Servidor Python nativo ultrarrápido (&lt;5ms) e esteiras CI/CD remotas rastreáveis.</span>
           </li>
         </ul>
@@ -526,7 +697,7 @@
   </div>
 </section>
 
-<!-- ── Features Mais Valiosas (Bento Grid) ─────────────── -->
+<!-- ── Features Mais Valiosas (Bento Grid Hi-Tech) ───────── -->
 <section id="features">
   <div class="container">
     <div class="section-header">
@@ -583,73 +754,68 @@
       <!-- Item 4 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
         </div>
-        <h3 class="bento-title">Sincronização Google Drive</h3>
+        <h3 class="bento-title">Auditoria Anti-AI Slop Automatizada</h3>
         <p class="bento-desc">
-          Conector em Python com autenticação por Service Account que ingere atas de reuniões, gravações e documentos diretamente para o diretório de memória do workspace do agente.
+          Script de verificação contínua <code>audit_anti_slop.py</code> que detecta violações dos 6 vícios de IA generativa em HTML/CSS/React antes de qualquer deploy em produção.
         </p>
         <div class="bento-preview">
-          python scripts/google_drive_sync.py --sync &rarr; OK
+          python audit_anti_slop.py &rarr; [PASS] 0 erros
         </div>
       </div>
 
       <!-- Item 5 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </div>
-        <h3 class="bento-title">Matriz Canônica de Deploy</h3>
+        <h3 class="bento-title">Google Drive Sync &amp; RAG Local</h3>
         <p class="bento-desc">
-          Regras determinísticas de hospedagem: frontends estáticos e serverless SPAs na Vercel; backends com estado, bancos PostgreSQL e bots persistentes exclusivamente na VPS/Docker.
+          Sincronização bidirecional de documentação corporativa e diretrizes de governança com indexação RAG local em <code>workspace/knowledge_base/</code> sem custo de API externa.
         </p>
         <div class="bento-preview">
-          Vercel (SPAs) &bull; VPS Nó Compute (APIs/Docker)
-        </div>
-      </div>
-
-      <!-- Item 6 (2 cols) -->
-      <div class="bento-item bento-2col">
-        <div class="bento-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h3 class="bento-title">Linter &amp; Auditor Automatizado Anti-AI Slop</h3>
-        <p class="bento-desc">
-          Auditoria de código estático integrada que inspeciona marcações HTML, JSX, TSX e CSS para impedir vícios de IA generativa: zero emojis em botões/títulos, zero gradientes radioativos de neon e zero métricas falsas.
-        </p>
-        <div class="bento-preview">
-          python .agents/skills/axion-anti-ai-slop-design/scripts/audit_anti_slop.py &rarr; [PASS] 0 violações
+          python google_drive_sync.py --sync &rarr; 100% OK
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Open Source & Liberdade ────────────────────────── -->
+<!-- ── Open Source & Liberdade (Hi-Tech) ────────────────── -->
 <section id="opensource">
   <div class="container">
     <div class="opensource-card">
       <div class="os-badges-row">
-        <span class="pill pill-success">100% Gratuito</span>
-        <span class="pill pill-accent">Licença MIT Permissiva</span>
-        <span class="pill pill-subtle">Zero Telemetria Externa</span>
-        <span class="pill pill-subtle">Auto-Hospedado</span>
+        <span class="pill pill-success">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+          100% Local-First &amp; Soberano
+        </span>
+        <span class="pill pill-accent">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Licença MIT Permissiva
+        </span>
+        <span class="pill pill-subtle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+          Zero Vendor Lock-In
+        </span>
       </div>
 
-      <h2 class="section-title">Seu Hardware. Seus Agentes. Seus Dados.</h2>
+      <h2 class="section-title">Open Source &amp; Soberano: Você É o Dono do Seu Código</h2>
 
       <p class="os-manifesto">
-        O Agent Workspace OS foi projetado sob a premissa de que a engenharia com agentes de IA deve pertencer a você. Sem assinaturas surpresa de intermediários, sem envio de código para servidores desconhecidos e sem vendor lock-in.
+        O Agent Workspace OS não é uma plataforma SaaS proprietária com cobranças recorrentes por token.
+        É um framework de engenharia de software canônico, totalmente auditável e que roda na sua infraestrutura local ou em servidores dedicados privados.
       </p>
 
-      <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
-        <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      <div style="display:inline-flex; gap:14px; flex-wrap:wrap; justify-content:center;">
+        <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
           Acessar Repositório no GitHub
         </a>
-        <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Guia de Contribuição
+        <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
+          Ler Licença MIT
         </a>
       </div>
     </div>
@@ -659,124 +825,125 @@
 <!-- ── Footer ─────────────────────────────────────────── -->
 <footer>
   <div class="container footer-inner">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-      <span>Agent Workspace OS &bull; AXION Enterprise &copy; 2026. Licença MIT.</span>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+      <span>&copy; 2026 AXION Enterprise. Agent Workspace OS &bull; Open Source sob licença MIT.</span>
     </div>
 
     <div class="footer-links">
-      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/README.md" target="_blank">Documentação</a>
-      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/AGENTS.md" target="_blank">AGENTS.md</a>
-      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/DIRECTIVES.md" target="_blank">DIRECTIVES.md</a>
-      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/releases" target="_blank">Releases</a>
+      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/AGENTS.md" target="_blank" rel="noopener noreferrer">AGENTS.md</a>
+      <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/DIRECTIVES.md" target="_blank" rel="noopener noreferrer">DIRECTIVES.md</a>
+      <a href="/setup">Painel Local (:8765)</a>
     </div>
   </div>
 </footer>
 
-<div id="toast-container"></div>
-
+<!-- ── Interactive Logic ──────────────────────────────── -->
 <script>
-(function() {
-  'use strict';
-
-  var PROMPTS = {
-    antigravity: "Você é o agente Antigravity operando neste workspace. Leia obrigatoriamente D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md. Em seguida, clone ou acesse https://github.com/axion-dev-enterprise/agent-workspace-os.git, inicie o servidor python scripts/setup_server.py na porta 8765, valide o diagnóstico em /api/preflight e siga o SETUP_PROTOCOL.md para inicializar o workspace sem executar builds locais.",
-    claude: "Você é o Claude Code. Leia SETUP_PROTOCOL.md e AGENTS.md. Acesse o repositório https://github.com/axion-dev-enterprise/agent-workspace-os, execute python scripts/preflight_check.py para verificar se os runtimes estão presentes no sistema, inicie python scripts/setup_server.py e configure o workspace.config.json de forma atômica.",
-    cursor: "Cursor AI: Abra este workspace, leia SETUP_PROTOCOL.md e configure o ambiente seguindo as diretrizes de AGENTS.md. Verifique se o servidor de setup local está ativo em http://localhost:8765. Não use emojis em componentes de UI e aplique a skill axion-anti-ai-slop-design.",
-    hermes: "Hermes Agent: Inicie o protocolo de onboarding executando python scripts/setup_server.py. Conecte a bridge do WhatsApp na porta 4114 via POST /api/whatsapp/start e registre o progresso em MEMORY/daily_logs/ com os campos obrigatórios de governança AXION.",
-    copilot: "GitHub Copilot: Leia SETUP_PROTOCOL.md neste repositório. Siga as diretrizes canônicas de commit (AXION Enterprise / axionenterprise777@gmail.com). Execute python scripts/setup_server.py para abrir o dashboard web de setup em http://127.0.0.1:8765.",
-    codex: "# Inicialização via Terminal / Scripting:\ngit clone https://github.com/axion-dev-enterprise/agent-workspace-os.git\ncd agent-workspace-os\npython scripts/setup_server.py\n# Abra http://localhost:8765 no navegador para concluir o setup gráfico."
+  // Prompts por agente
+  const PROMPTS = {
+    antigravity: `Você é o agente Antigravity operando neste workspace. Leia obrigatoriamente D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md. Em seguida, clone ou acesse https://github.com/axion-dev-enterprise/agent-workspace-os.git, inicie o servidor python scripts/setup_server.py na porta 8765, valide o diagnóstico em /api/preflight e siga o SETUP_PROTOCOL.md para inicializar o workspace sem executar builds locais.`,
+    claude: `Você é o Claude Code operando no Agent Workspace OS. Leia D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md antes de qualquer modificação. Verifique se o servidor de setup local está ativo em http://127.0.0.1:8765, execute a verificação preflight e utilize a fila de tarefas em workspace/memory/active_tasks.json para cooperar com os outros agentes com zero falso positivo.`,
+    cursor: `Você é o Cursor AI no Agent Workspace OS. Respeite as regras fundamentais de D:/WORKSPACE/AGENTS.md: nunca execute builds pesados localmente, não polua o repositório com dados de teste, mantenha os commits assinados como AXION Enterprise e consulte D:/WORKSPACE/DIRECTIVES.md para toda decisão arquitetural.`,
+    hermes: `Você é o Hermes Central operando sob o Agent Workspace OS. Inicie a bridge do WhatsApp em scripts/whatsapp_bridge na porta 4114, verifique a sincronização do Google Drive e consulte o cofre em credentials/ antes de executar qualquer chamada de ferramenta externa ou rotina de automação.`,
+    copilot: `Você é o GitHub Copilot operando no Agent Workspace OS. Mantenha os padrões semânticos de commit [agente][módulo] tipo: descrição, utilize exclusivamente a identidade AXION Enterprise e verifique empírica e diretamente todos os endpoints antes de declarar conclusão de tarefa.`,
+    codex: `Execute o setup canônico do Agent Workspace OS. Verifique Python 3.11 e Node.js no ambiente com python scripts/preflight_check.py. Suba o servidor de controle com python scripts/setup_server.py e confirme resposta HTTP 200 em http://127.0.0.1:8765/api/preflight.`
   };
 
-  var TAGS = {
-    antigravity: "prompt-antigravity.txt",
-    claude: "prompt-claude-code.txt",
-    cursor: "prompt-cursor.txt",
-    hermes: "prompt-hermes.txt",
-    copilot: "prompt-github-copilot.txt",
-    codex: "terminal-init.sh"
+  const TAGS = {
+    antigravity: 'prompt-antigravity.txt',
+    claude: 'prompt-claude-code.txt',
+    cursor: 'prompt-cursor.txt',
+    hermes: 'prompt-hermes-central.txt',
+    copilot: 'prompt-github-copilot.txt',
+    codex: 'prompt-codex-cli.txt'
   };
 
-  var promptTextEl = document.getElementById('terminal-prompt-text');
-  var tagEl = document.getElementById('terminal-agent-tag');
-  var currentAgent = 'antigravity';
+  let currentAgent = 'antigravity';
 
-  function setAgent(agentKey) {
-    currentAgent = agentKey;
-    if (promptTextEl) promptTextEl.textContent = PROMPTS[agentKey] || PROMPTS.antigravity;
-    if (tagEl) tagEl.textContent = TAGS[agentKey] || 'prompt.txt';
-
-    document.querySelectorAll('.agent-pill-btn').forEach(function(btn) {
-      if (btn.dataset.agent === agentKey) btn.classList.add('active');
-      else btn.classList.remove('active');
+  function updateAgent(agentId) {
+    currentAgent = agentId;
+    document.querySelectorAll('.agent-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-agent') === agentId);
     });
+    document.getElementById('terminal-agent-tag').textContent = TAGS[agentId] || 'prompt.txt';
+    document.getElementById('terminal-prompt-text').textContent = PROMPTS[agentId] || '';
   }
 
-  // Initial prompt
-  setAgent('antigravity');
-
-  // Selector clicks
-  var selectorGrid = document.getElementById('agent-selector');
-  if (selectorGrid) {
-    selectorGrid.addEventListener('click', function(e) {
-      var btn = e.target.closest('.agent-pill-btn');
-      if (btn && btn.dataset.agent) setAgent(btn.dataset.agent);
-    });
-  }
-
-  function showToast(msg) {
-    var tc = document.getElementById('toast-container');
-    if (!tc) return;
-    var t = document.createElement('div');
-    t.className = 'toast';
-    t.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>' + msg + '</span>';
-    tc.appendChild(t);
-    setTimeout(function() {
-      if (t.parentNode) t.parentNode.removeChild(t);
+  function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span>\${message}</span>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.transition = 'opacity 0.3s, transform 0.3s';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      setTimeout(() => toast.remove(), 300);
     }, 3500);
   }
 
-  function copyText(txt, label) {
-    if (!txt) return;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(function() {
-        showToast(label || 'Copiado para a área de transferência!');
-      }).catch(function() {
-        fallbackCopy(txt, label);
-      });
+  // Event Delegation para o seletor de agentes
+  document.getElementById('agent-selector').addEventListener('click', (e) => {
+    const btn = e.target.closest('.agent-pill-btn');
+    if (btn) {
+      const agent = btn.getAttribute('data-agent');
+      updateAgent(agent);
+    }
+  });
+
+  // Copiar Prompt
+  document.getElementById('btn-copy-prompt').addEventListener('click', () => {
+    const text = PROMPTS[currentAgent] || '';
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Prompt copiado para a área de transferência!', 'success');
+    });
+  });
+
+  // Copiar Git
+  document.getElementById('btn-copy-git').addEventListener('click', () => {
+    navigator.clipboard.writeText('git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git').then(() => {
+      showToast('Comando Git clonagem copiado!', 'success');
+    });
+  });
+
+  // Theme Toggle Logic
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = document.getElementById('theme-icon-sun');
+  const moonIcon = document.getElementById('theme-icon-moon');
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('axion_theme', theme);
+    if (theme === 'dark') {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
     } else {
-      fallbackCopy(txt, label);
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
     }
   }
 
-  function fallbackCopy(txt, label) {
-    var ta = document.createElement('textarea');
-    ta.value = txt;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      showToast(label || 'Copiado para a área de transferência!');
-    } catch (_) {}
-    document.body.removeChild(ta);
-  }
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  });
 
-  var btnCopyPrompt = document.getElementById('btn-copy-prompt');
-  if (btnCopyPrompt) {
-    btnCopyPrompt.addEventListener('click', function() {
-      copyText(PROMPTS[currentAgent] || '', 'Prompt do agente copiado com sucesso!');
-    });
-  }
-
-  var btnCopyGit = document.getElementById('btn-copy-git');
-  if (btnCopyGit) {
-    btnCopyGit.addEventListener('click', function() {
-      copyText('git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git', 'Comando git clone copiado!');
-    });
-  }
-})();
+  // Inicialização
+  const savedTheme = localStorage.getItem('axion_theme') || 'light';
+  applyTheme(savedTheme);
+  updateAgent('antigravity');
 </script>
+
 </body>
 </html>
