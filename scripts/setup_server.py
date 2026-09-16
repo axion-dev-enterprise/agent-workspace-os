@@ -219,30 +219,86 @@ def start_whatsapp_bridge() -> dict:
     try:
         req = urllib.request.Request("http://127.0.0.1:4114/api/status")
         with urllib.request.urlopen(req, timeout=1) as resp:
-            return {"ok": True, "status": "running", "message": "Bridge já está em execução na porta 4114."}
+            data = json.loads(resp.read().decode("utf-8"))
+            return {"ok": True, "status": data.get("status", "running"), "message": "Bridge já está em execução na porta 4114."}
     except Exception:
         pass
 
-    bridge_script = os.path.join(WORKSPACE_ROOT, "scripts", "whatsapp_bridge", "server.js")
+    bridge_dir = os.path.join(WORKSPACE_ROOT, "scripts", "whatsapp_bridge")
+    bridge_script = os.path.join(bridge_dir, "server.js")
     node_bin = shutil.which("node") or shutil.which("node.exe")
     if not node_bin:
         return {"ok": False, "error": "Node.js não foi encontrado no PATH do sistema. Instale o Node.js primeiro."}
 
+    # 1. Garantir que as dependências do Baileys e QRCode estão instaladas
+    baileys_path = os.path.join(bridge_dir, "node_modules", "@whiskeysockets", "baileys")
+    qrcode_path = os.path.join(bridge_dir, "node_modules", "qrcode")
+    if not os.path.exists(baileys_path) or not os.path.exists(qrcode_path):
+        npm_bin = shutil.which("npm") or shutil.which("npm.cmd")
+        if not npm_bin:
+            return {"ok": False, "error": "npm não foi encontrado no PATH para instalar as dependências do WhatsApp."}
+        try:
+            print("[SETUP] Instalando dependências do WhatsApp Bridge (npm install)...")
+            proc_install = subprocess.run(
+                [npm_bin, "install", "--no-audit", "--no-fund"],
+                cwd=bridge_dir,
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+            if proc_install.returncode != 0:
+                print(f"[SETUP] Aviso ao instalar dependências: {proc_install.stderr}")
+        except Exception as inst_err:
+            return {"ok": False, "error": f"Falha ao instalar dependências do WhatsApp: {str(inst_err)}"}
+
+    # 2. Injetar chaves do vault ou config no ambiente do processo filho
+    child_env = os.environ.copy()
+    child_env["WHATSAPP_PORT"] = "4114"
+    
+    # Carregar groq se existir no vault local do host
+    vault_groq = "D:/WORKSPACE/SECURE/VAULT/tokens/llm/groq.env"
+    if os.path.exists(vault_groq) and not child_env.get("GROQ_API_KEY"):
+        try:
+            with open(vault_groq, "r", encoding="utf-8") as vf:
+                for line in vf:
+                    if line.strip().startswith("GROQ_API_KEY="):
+                        child_env["GROQ_API_KEY"] = line.split("=", 1)[1].strip().strip('"\'')
+                        break
+        except Exception:
+            pass
+
+    # Carregar do workspace.config.json se existir
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as cf:
+                cfg_data = json.load(cf)
+                groq_k = cfg_data.get("ai", {}).get("groq_api_key") or cfg_data.get("transcription", {}).get("groq_api_key") or cfg_data.get("groq_api_key")
+                if groq_k:
+                    child_env["GROQ_API_KEY"] = groq_k
+                openai_k = cfg_data.get("ai", {}).get("openai_api_key") or cfg_data.get("openai_api_key")
+                if openai_k:
+                    child_env["OPENAI_API_KEY"] = openai_k
+        except Exception:
+            pass
+
     try:
         _whatsapp_process = subprocess.Popen(
             [node_bin, bridge_script],
-            cwd=os.path.dirname(bridge_script),
+            cwd=bridge_dir,
+            env=child_env,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             stdin=subprocess.DEVNULL
         )
-        # Poll up to 3 seconds for port 4114 to respond
-        for _ in range(15):
+        # Poll up to 6 seconds for port 4114 to respond
+        for _ in range(30):
             time.sleep(0.2)
             try:
                 req = urllib.request.Request("http://127.0.0.1:4114/api/status")
                 with urllib.request.urlopen(req, timeout=1) as resp:
-                    return {"ok": True, "status": "qr_ready", "message": "Bridge WhatsApp iniciada e pronta para pareamento!"}
+                    data = json.loads(resp.read().decode("utf-8"))
+                    st = data.get("status", "qr_ready")
+                    return {"ok": True, "status": st, "message": "Bridge WhatsApp iniciada e pronta para pareamento!"}
             except Exception:
                 pass
         return {"ok": True, "status": "starting", "message": "Bridge inicializada em segundo plano."}
@@ -403,6 +459,37 @@ class SetupHandler(BaseHTTPRequestHandler):
                 self._json(result)
             except Exception as e:
                 self._json({"ok": False, "error": str(e)})
+            return
+
+        # ── WhatsApp Install Dependencies ─────────────────────
+        if path == "/api/whatsapp/install":
+            bridge_dir = os.path.join(WORKSPACE_ROOT, "scripts", "whatsapp_bridge")
+            npm_bin = shutil.which("npm") or shutil.which("npm.cmd")
+            if not npm_bin:
+                self._json({"ok": False, "error": "npm não encontrado no sistema."}, status=400)
+                return
+            try:
+                proc = subprocess.run([npm_bin, "install", "--no-audit", "--no-fund"], cwd=bridge_dir, capture_output=True, text=True, timeout=120)
+                self._json({"ok": proc.returncode == 0, "output": proc.stdout or proc.stderr})
+            except Exception as e:
+                self._json({"ok": False, "error": str(e)}, status=500)
+            return
+
+        # ── WhatsApp Set Transcription Key ────────────────────
+        if path == "/api/whatsapp/transcription-key":
+            groq_key = body.get("groq_api_key", "").strip()
+            try:
+                cfg = load_config(raw=True)
+                if "ai" not in cfg:
+                    cfg["ai"] = {}
+                cfg["ai"]["groq_api_key"] = groq_key
+                save_config(cfg)
+                stop_whatsapp_bridge()
+                time.sleep(0.5)
+                start_res = start_whatsapp_bridge()
+                self._json({"ok": True, "message": "Chave de transcrição salva com sucesso!", "bridge": start_res})
+            except Exception as e:
+                self._json({"ok": False, "error": str(e)}, status=500)
             return
 
         # ── GitHub OAuth ──────────────────────────────────────

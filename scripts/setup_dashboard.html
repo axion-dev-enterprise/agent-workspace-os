@@ -602,6 +602,28 @@
             </button>
           </div>
         </div>
+
+        <div style="margin-top: 16px; padding: 14px; background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+            <span style="font-size:0.82rem; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              Transcrição de Áudio Whisper
+            </span>
+            <span class="pill pill-muted" id="wa-transcription-status">Verificando...</span>
+          </div>
+          <p style="font-size:0.74rem; color:var(--text-muted); margin-bottom:10px; line-height:1.4;">
+            Transcreve áudios recebidos instantaneamente usando Whisper via Groq (gratuito) ou OpenAI.
+          </p>
+          <div style="display:flex; gap:8px;">
+            <div class="input-wrap" style="flex:1;">
+              <input type="password" id="input-wa-groq-key" class="form-input" placeholder="GROQ_API_KEY (gsk_...)" style="font-size:0.78rem;">
+              <button class="eye-btn" id="btn-toggle-wa-key" type="button" title="Mostrar/Ocultar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-save-wa-key" style="white-space:nowrap;">Salvar Chave</button>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -1165,6 +1187,7 @@
       var startWrap   = document.getElementById('wa-start-wrap');
       var stepsCard   = document.getElementById('wa-steps-card');
       var modeDesc    = document.getElementById('wa-mode-desc');
+      var tStatus     = document.getElementById('wa-transcription-status');
 
       _currentWaMode = data.mode || 'monitor';
       if (modeDesc) {
@@ -1174,6 +1197,19 @@
             : 'Monitor: apenas salva e categoriza mensagens em arquivos diários.';
       }
 
+      if (tStatus) {
+        if (data.transcriptionProvider === 'groq') {
+          tStatus.textContent = 'Groq Whisper Ativo';
+          tStatus.className = 'pill pill-success';
+        } else if (data.transcriptionProvider === 'openai') {
+          tStatus.textContent = 'OpenAI Whisper Ativo';
+          tStatus.className = 'pill pill-success';
+        } else {
+          tStatus.textContent = 'Aguardando Chave';
+          tStatus.className = 'pill pill-warning';
+        }
+      }
+
       if (data.status === 'offline') {
         if (pill) { pill.textContent = 'Offline'; pill.className = 'pill pill-danger'; }
         if (startWrap) startWrap.style.display = 'block';
@@ -1181,7 +1217,17 @@
         if (connBox) connBox.style.display = 'none';
         if (placeholder) {
           placeholder.style.display = 'block';
-          placeholder.textContent = 'Bridge offline. Clique no botão acima para iniciar e gerar o QR Code.';
+          placeholder.textContent = 'Bridge offline. Clique no botão acima para iniciar e gerar o QR Code real.';
+        }
+        if (stepsCard) stepsCard.style.display = 'none';
+      } else if (data.status === 'installing' || data.status === 'missing_dependencies') {
+        if (pill) { pill.textContent = 'Instalando Baileys...'; pill.className = 'pill pill-warning'; }
+        if (startWrap) startWrap.style.display = 'none';
+        if (qrImg) qrImg.style.display = 'none';
+        if (connBox) connBox.style.display = 'none';
+        if (placeholder) {
+          placeholder.style.display = 'block';
+          placeholder.textContent = 'Instalando dependências do WhatsApp (Baileys + QRCode)... Por favor aguarde.';
         }
         if (stepsCard) stepsCard.style.display = 'none';
       } else if (data.status === 'connected') {
@@ -1225,15 +1271,30 @@
       feedDiv.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem;">Nenhuma mensagem registrada ainda.</div>';
       return;
     }
-    var CAT_COLORS = { task:'pill-info', lead:'pill-success', reuniao:'pill-warning', audio:'pill-muted', info:'pill-muted' };
-    feedDiv.innerHTML = msgs.slice(0,25).map(function(m) {
+    var CAT_COLORS = { task:'pill-info', lead:'pill-success', reuniao:'pill-warning', audio:'pill-accent', info:'pill-muted' };
+    feedDiv.innerHTML = msgs.slice(0,35).map(function(m) {
       var catClass = CAT_COLORS[m.category] || 'pill-muted';
       var catPill  = m.category ? '<span class="pill ' + catClass + '">' + escHtml(m.category.toUpperCase()) + '</span>' : '';
+      var selfBadge = (m.fromMe || m.isSelfChat) ? '<span class="pill pill-info" style="font-size:0.68rem;padding:2px 6px;">VOCÊ / ANOTAÇÕES</span>' : '';
       var ts = m.timestamp ? m.timestamp.slice(11,19) : '';
+      
+      var contentHtml = '';
+      if (m.transcription) {
+        contentHtml = '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;color:var(--accent);font-size:0.75rem;font-weight:600;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg> Transcrição Whisper:</div>'
+                    + '<div style="font-style:italic;color:var(--text);font-size:0.84rem;">&ldquo;' + escHtml(m.transcription) + '&rdquo;</div>';
+      } else {
+        contentHtml = '<div>' + escHtml(m.text || '') + '</div>';
+      }
+
+      var playerHtml = '';
+      if (m.media_file) {
+        playerHtml = '<audio controls src="http://127.0.0.1:4114/api/media/' + encodeURIComponent(m.media_file) + '" style="margin-top:6px;width:100%;height:30px;border-radius:4px;"></audio>';
+      }
+
       return '<div class="feed-item">'
-        + '<div class="feed-header"><span>' + escHtml(m.sender || 'Remetente') + '</span>'
+        + '<div class="feed-header"><span style="display:flex;align-items:center;gap:6px;">' + escHtml(m.sender || 'Remetente') + selfBadge + '</span>'
         + '<span style="display:flex;align-items:center;gap:5px;">' + catPill + '<span>' + escHtml(ts) + '</span></span></div>'
-        + '<div>' + escHtml(m.text || '') + '</div></div>';
+        + contentHtml + playerHtml + '</div>';
     }).join('');
   }
 
