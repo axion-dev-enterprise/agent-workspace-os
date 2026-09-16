@@ -244,7 +244,7 @@
     }
     .agent-selector-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 10px; margin-bottom: 24px;
+      gap: 10px; margin-bottom: 20px;
     }
     .agent-pill-btn {
       display: inline-flex; align-items: center; gap: 8px;
@@ -265,6 +265,40 @@
     }
     .agent-pill-btn svg { flex-shrink: 0; }
 
+    /* ── Agent Info & Download Bar ──────────────────────── */
+    .agent-info-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      background: var(--bg-surface-2); border: 1px solid var(--border-subtle);
+      border-radius: 10px; padding: 12px 18px; margin-bottom: 20px;
+    }
+    .agent-info-meta {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .agent-info-name {
+      font-size: 0.9rem; font-weight: 700; color: var(--text-main);
+    }
+    .agent-info-provider {
+      font-size: 0.76rem; color: var(--text-subtle);
+      background: var(--bg-surface-1); border: 1px solid var(--border-subtle);
+      padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono);
+    }
+    .agent-info-cli {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--terminal-bg); border: 1px solid var(--terminal-border);
+      border-radius: 6px; padding: 3px 8px;
+    }
+    .agent-info-cli code {
+      font-family: var(--font-mono); font-size: 0.74rem; color: #38bdf8;
+    }
+    .btn-copy-mini {
+      background: rgba(255,255,255,0.12); border: none; color: #ffffff;
+      padding: 2px 7px; border-radius: 4px; font-size: 0.7rem;
+      cursor: pointer; font-family: var(--font); font-weight: 500;
+      transition: background 0.15s;
+    }
+    .btn-copy-mini:hover { background: var(--accent); }
+
     .code-terminal {
       background: var(--terminal-bg); border: 1px solid var(--terminal-border);
       border-radius: 12px; overflow: hidden; margin-bottom: 20px;
@@ -284,7 +318,7 @@
 
     .code-terminal-body {
       padding: 20px 22px; font-family: var(--font-mono); font-size: 0.82rem;
-      line-height: 1.65; color: var(--terminal-text); max-height: 240px; overflow-y: auto;
+      line-height: 1.65; color: var(--terminal-text); max-height: 250px; overflow-y: auto;
       white-space: pre-wrap; word-break: break-word;
     }
     .terminal-actions {
@@ -527,7 +561,7 @@
       <div class="section-eyebrow">Inicialização</div>
       <h2 class="section-title">Instruções de Inicialização por Agente</h2>
       <p class="section-desc">
-        Selecione o agente de IA em uso para gerar a instrução de contexto calibrada para este workspace.
+        Selecione o agente de IA que você utiliza. Copie o prompt abaixo e cole no chat do agente como primeiro comando para clonar o repositório e inicializar o workspace em qualquer ambiente.
       </p>
     </div>
 
@@ -567,12 +601,28 @@
         </button>
       </div>
 
+      <!-- Agent Info & Download Bar -->
+      <div class="agent-info-bar" id="agent-info-bar">
+        <div class="agent-info-meta">
+          <span class="agent-info-name" id="agent-meta-name">Google Antigravity</span>
+          <span class="agent-info-provider" id="agent-meta-provider">Google DeepMind</span>
+          <span class="agent-info-cli" id="agent-meta-cli" style="display:none;">
+            <code id="agent-meta-cli-code"></code>
+            <button class="btn-copy-mini" id="btn-copy-cli" type="button" title="Copiar comando">Copiar</button>
+          </span>
+        </div>
+        <a href="https://deepmind.google/technologies/gemini/" id="agent-meta-link" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span id="agent-meta-link-text">Documentação Oficial ↗</span>
+        </a>
+      </div>
+
       <div class="selector-label">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="4 17 10 11 4 5"/>
           <line x1="12" y1="19" x2="20" y2="19"/>
         </svg>
-        2. Prompt de Contexto para o Agente:
+        2. Primeiro Prompt para Colar no Agente:
       </div>
 
       <div class="code-terminal">
@@ -813,13 +863,101 @@
 </footer>
 
 <script>
-  const PROMPTS = {
-    antigravity: `Você é o agente Antigravity operando neste workspace. Leia obrigatoriamente D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md. Em seguida, clone ou acesse https://github.com/axion-dev-enterprise/agent-workspace-os.git, inicie o servidor python scripts/setup_server.py na porta 8765, valide o diagnóstico em /api/preflight e siga o SETUP_PROTOCOL.md para inicializar o workspace sem executar builds locais.`,
-    claude: `Você é o Claude Code operando no Agent Workspace OS. Leia D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md antes de qualquer modificação. Verifique se o servidor de setup local está ativo em http://127.0.0.1:8765, execute a verificação preflight e utilize a fila de tarefas em workspace/memory/active_tasks.json para cooperar com os outros agentes com zero falso positivo.`,
-    cursor: `Você é o Cursor AI no Agent Workspace OS. Respeite as regras fundamentais de D:/WORKSPACE/AGENTS.md: nunca execute builds pesados localmente, não polua o repositório com dados de teste, mantenha os commits assinados como AXION Enterprise e consulte D:/WORKSPACE/DIRECTIVES.md para toda decisão arquitetural.`,
-    hermes: `Você é o Hermes Central operando sob o Agent Workspace OS. Inicie a bridge do WhatsApp em scripts/whatsapp_bridge na porta 4114, verifique a sincronização do Google Drive e consulte o cofre em credentials/ antes de executar qualquer chamada de ferramenta externa ou rotina de automação.`,
-    copilot: `Você é o GitHub Copilot operando no Agent Workspace OS. Mantenha os padrões semânticos de commit [agente][módulo] tipo: descrição, utilize exclusivamente a identidade AXION Enterprise e verifique empírica e diretamente todos os endpoints antes de declarar conclusão de tarefa.`,
-    codex: `Execute o setup canônico do Agent Workspace OS. Verifique Python 3.11 e Node.js no ambiente com python scripts/preflight_check.py. Suba o servidor de controle com python scripts/setup_server.py e confirme resposta HTTP 200 em http://127.0.0.1:8765/api/preflight.`
+  // Metadados técnicos e links de download por agente
+  const AGENT_DATA = {
+    antigravity: {
+      name: 'Google Antigravity',
+      provider: 'Google DeepMind',
+      downloadUrl: 'https://deepmind.google/technologies/gemini/',
+      linkLabel: 'Documentação Oficial ↗',
+      cliCommand: null,
+      prompt: `Clone o repositório oficial do Agent Workspace OS:
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+
+Acesse a pasta do projeto (cd agent-workspace-os) e leia os arquivos de governança AGENTS.md e DIRECTIVES.md.
+Em seguida, execute a checagem de pré-requisitos do ambiente com:
+python scripts/preflight_check.py
+
+Inicie o servidor de setup local:
+python scripts/setup_server.py
+
+Confirme o status HTTP 200 em http://127.0.0.1:8765/api/preflight e guie a configuração inicial deste workspace seguindo o SETUP_PROTOCOL.md, mantendo zero builds locais pesados e isolamento estrito de credenciais.`
+    },
+    claude: {
+      name: 'Claude Code',
+      provider: 'Anthropic',
+      downloadUrl: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code',
+      linkLabel: 'Download & Docs ↗',
+      cliCommand: 'npm install -g @anthropic-ai/claude-code',
+      prompt: `Clone o repositório oficial do Agent Workspace OS:
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+
+Entre na pasta agent-workspace-os e leia as diretrizes canônicas em AGENTS.md e DIRECTIVES.md.
+Execute o diagnóstico de ferramentas do ambiente:
+python scripts/preflight_check.py
+
+Inicie o servidor local de controle:
+python scripts/setup_server.py
+
+Valide o painel em http://127.0.0.1:8765 e utilize a fila de tarefas em workspace/memory/active_tasks.json para cooperar com os outros agentes com rastreabilidade total e zero falso positivo.`
+    },
+    cursor: {
+      name: 'Cursor AI Editor',
+      provider: 'Anysphere',
+      downloadUrl: 'https://www.cursor.com',
+      linkLabel: 'Baixar Cursor ↗',
+      cliCommand: 'winget install Cursor.Cursor',
+      prompt: `Clone o repositório e abra o projeto no Cursor:
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+cd agent-workspace-os
+
+No terminal do Cursor, inicie o servidor de setup executando:
+python scripts/setup_server.py
+
+Abra http://127.0.0.1:8765 para verificar as ferramentas do sistema.
+Leia atentamente os arquivos AGENTS.md e DIRECTIVES.md na raiz do repositório para respeitar os limites de arquivos, regras de isolamento no cofre de credenciais e padrões semânticos de commit.`
+    },
+    hermes: {
+      name: 'Hermes Central Agent',
+      provider: 'AXION Enterprise',
+      downloadUrl: 'https://github.com/axion-dev-enterprise',
+      linkLabel: 'Repositório GitHub ↗',
+      cliCommand: null,
+      prompt: `Clone o repositório do Agent Workspace OS:
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+cd agent-workspace-os
+
+Leia os arquivos AGENTS.md e DIRECTIVES.md na raiz do repositório.
+Inicie o servidor de controle com python scripts/setup_server.py (porta 8765) e a bridge do WhatsApp em scripts/whatsapp_bridge (porta 4114).
+Valide o cofre de chaves em credentials/ antes de disparar qualquer chamada de ferramenta externa ou rotina de automação.`
+    },
+    copilot: {
+      name: 'GitHub Copilot CLI',
+      provider: 'GitHub / Microsoft',
+      downloadUrl: 'https://github.com/features/copilot',
+      linkLabel: 'Download & Extensão ↗',
+      cliCommand: 'gh extension install github/gh-copilot',
+      prompt: `Clone o repositório oficial do Agent Workspace OS:
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+cd agent-workspace-os
+
+Leia as diretrizes de governança em AGENTS.md e DIRECTIVES.md.
+Execute o diagnóstico de ferramentas com python scripts/preflight_check.py e suba o painel de setup com python scripts/setup_server.py.
+Siga o SETUP_PROTOCOL.md para inicializar o workspace, validando todos os endpoints com respostas empíricas verificáveis.`
+    },
+    codex: {
+      name: 'OpenAI Codex / Terminal',
+      provider: 'OpenAI',
+      downloadUrl: 'https://platform.openai.com/docs/guides/code',
+      linkLabel: 'Portal OpenAI ↗',
+      cliCommand: null,
+      prompt: `git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+cd agent-workspace-os
+python scripts/preflight_check.py
+python scripts/setup_server.py
+
+Abra http://127.0.0.1:8765 no navegador para validar os diagnósticos de CLI e concluir a inicialização das variáveis do workspace.`
+    }
   };
 
   const TAGS = {
@@ -835,11 +973,33 @@
 
   function updateAgent(agentId) {
     currentAgent = agentId;
+    const data = AGENT_DATA[agentId];
+    if (!data) return;
+
+    // Atualiza botões do seletor
     document.querySelectorAll('.agent-pill-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-agent') === agentId);
     });
+
+    // Atualiza barra de metadados e download do agente
+    document.getElementById('agent-meta-name').textContent = data.name;
+    document.getElementById('agent-meta-provider').textContent = data.provider;
+    
+    const linkEl = document.getElementById('agent-meta-link');
+    linkEl.href = data.downloadUrl;
+    document.getElementById('agent-meta-link-text').textContent = data.linkLabel;
+
+    const cliEl = document.getElementById('agent-meta-cli');
+    if (data.cliCommand) {
+      cliEl.style.display = 'inline-flex';
+      document.getElementById('agent-meta-cli-code').textContent = data.cliCommand;
+    } else {
+      cliEl.style.display = 'none';
+    }
+
+    // Atualiza prompt
     document.getElementById('terminal-agent-tag').textContent = TAGS[agentId] || 'prompt.txt';
-    document.getElementById('terminal-prompt-text').textContent = PROMPTS[agentId] || '';
+    document.getElementById('terminal-prompt-text').textContent = data.prompt || '';
   }
 
   function showToast(message, type = 'info') {
@@ -870,16 +1030,25 @@
   });
 
   document.getElementById('btn-copy-prompt').addEventListener('click', () => {
-    const text = PROMPTS[currentAgent] || '';
+    const text = (AGENT_DATA[currentAgent] && AGENT_DATA[currentAgent].prompt) || '';
     navigator.clipboard.writeText(text).then(() => {
-      showToast('Prompt copiado para a área de transferência!', 'success');
+      showToast('Primeiro prompt copiado! Cole no chat do seu agente.', 'success');
     });
   });
 
   document.getElementById('btn-copy-git').addEventListener('click', () => {
     navigator.clipboard.writeText('git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git').then(() => {
-      showToast('Comando Git copiado!', 'success');
+      showToast('Comando git clone copiado!', 'success');
     });
+  });
+
+  document.getElementById('btn-copy-cli').addEventListener('click', () => {
+    const cliCmd = AGENT_DATA[currentAgent] && AGENT_DATA[currentAgent].cliCommand;
+    if (cliCmd) {
+      navigator.clipboard.writeText(cliCmd).then(() => {
+        showToast('Comando de instalação CLI copiado!', 'success');
+      });
+    }
   });
 
   const themeToggle = document.getElementById('theme-toggle');
