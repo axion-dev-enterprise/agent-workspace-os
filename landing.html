@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agent Workspace OS &mdash; O Sistema Operacional Canônico para Agentes de IA</title>
-  <meta name="description" content="Ambiente local-first, multi-agente e 100% open-source para coordenar Antigravity, Claude, Cursor, Hermes e Codex com co-work determinístico, WhatsApp Bridge e governança de produção.">
+  <title>Agent Workspace OS &mdash; Sistema Operacional para Agentes de IA</title>
+  <meta name="description" content="Ambiente local-first, multi-agente e open-source para coordenar Antigravity, Claude, Cursor, Hermes e Codex com co-work determinístico, WhatsApp Bridge e isolamento de credenciais.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── High-Tech Design Tokens (Luminous Precision / Hi-Tech Standard) ── */
     :root, [data-theme="light"] {
       --bg: #f8fafc;
       --bg-grid: rgba(15, 23, 42, 0.05);
@@ -89,7 +88,6 @@
       transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
     }
 
-    /* ── Topbar (Frosted Hi-Tech Glass) ─────────────────── */
     header {
       position: sticky; top: 0; z-index: 50;
       backdrop-filter: blur(16px);
@@ -119,7 +117,6 @@
     nav.top-nav a:hover { color: var(--accent); }
     .header-actions { display: flex; align-items: center; gap: 12px; }
 
-    /* ── Common Components ──────────────────────────────── */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 16px; border-radius: 8px;
@@ -181,7 +178,6 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     section { padding: 80px 0; border-bottom: 1px solid var(--border-subtle); }
 
-    /* ── Hero ───────────────────────────────────────────── */
     .hero {
       padding: 90px 0 70px;
       text-align: center;
@@ -221,7 +217,6 @@
       text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
     }
 
-    /* ── Section Titles ─────────────────────────────────── */
     .section-header { text-align: center; max-width: 700px; margin: 0 auto 48px; }
     .section-eyebrow {
       font-size: 0.76rem; font-weight: 700; color: var(--accent);
@@ -234,7 +229,6 @@
     }
     .section-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
-    /* ── Setup & Agent Selector (Hi-Tech) ────────────────── */
     .setup-box {
       background: var(--bg-surface-1);
       border: 1px solid var(--border-subtle);
@@ -298,7 +292,6 @@
       flex-wrap: wrap; gap: 14px;
     }
 
-    /* ── Benefícios / Comparativo (Hi-Tech) ─────────────── */
     .comparison-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
@@ -326,7 +319,6 @@
     }
     .comp-list li svg { flex-shrink: 0; margin-top: 3px; }
 
-    /* ── Bento Grid (Features Valiosas Hi-Tech) ──────────── */
     .bento-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
     }
@@ -360,7 +352,6 @@
       font-size: 0.76rem; color: #38bdf8; overflow-x: auto;
     }
 
-    /* ── Open Source & Liberdade Hi-Tech ────────────────── */
     .opensource-card {
       background: var(--bg-surface-1);
       border: 1px solid var(--border-subtle); border-top: 3px solid var(--accent);
@@ -376,7 +367,6 @@
       line-height: 1.65;
     }
 
-    /* ── Toast Notifications ────────────────────────────── */
     #toast-container {
       position: fixed; bottom: 24px; right: 24px; z-index: 9999;
       display: flex; flex-direction: column; gap: 10px; pointer-events: none;
@@ -397,7 +387,6 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* ── Footer ─────────────────────────────────────────── */
     footer {
       padding: 48px 0; background: var(--bg-surface-1); border-top: 1px solid var(--border-subtle);
       font-size: 0.84rem; color: var(--text-subtle);
@@ -410,7 +399,6 @@
     .footer-links a { color: var(--text-muted); text-decoration: none; font-weight: 500; }
     .footer-links a:hover { color: var(--accent); }
 
-    /* ── Responsive ─────────────────────────────────────── */
     @media (max-width: 900px) {
       .bento-grid { grid-template-columns: 1fr; }
       .bento-2col { grid-column: span 1; }
@@ -423,10 +411,8 @@
 </head>
 <body>
 
-<!-- ── Toast Container ─────────────────────────────────── -->
 <div id="toast-container"></div>
 
-<!-- ── Header / Topbar ─────────────────────────────────── -->
 <header>
   <a href="/" class="brand">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -441,14 +427,13 @@
   </a>
 
   <nav class="top-nav">
-    <a href="#setup">Setup Rápido</a>
-    <a href="#features">Features</a>
-    <a href="#diferenciais">Diferenciais</a>
-    <a href="#opensource">Open Source</a>
+    <a href="#setup">Setup</a>
+    <a href="#features">Módulos</a>
+    <a href="#diferenciais">Comparativo</a>
+    <a href="#opensource">Licença</a>
   </nav>
 
   <div class="header-actions">
-    <!-- Theme Toggle -->
     <button class="theme-toggle-btn" id="theme-toggle" title="Alternar tema Claro/Escuro" aria-label="Alternar tema">
       <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="4"/>
@@ -477,75 +462,72 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-      Abrir Painel Local
+      Painel Local (:8765)
     </a>
   </div>
 </header>
 
-<!-- ── Hero Section ───────────────────────────────────── -->
 <section class="hero">
   <div class="container">
     <div class="hero-eyebrow">
       <span class="pill pill-accent">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></svg>
-        AXION Workspace OS v2.1 &bull; Produção &bull; Hi-Tech Standard
+        v2.1.0 &bull; Kernel Local-First
       </span>
       <span class="pill pill-success">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        100% Open Source (MIT)
+        Licença MIT
       </span>
     </div>
 
     <h1 class="hero-title">
-      O Sistema Operacional Canônico para Agentes de IA Autônomos
+      Sistema Operacional Canônico para Agentes de IA Autônomos
     </h1>
 
     <p class="hero-subtitle">
-      Arquitetura local-first e determinística para coordenar Antigravity, Claude Code, Cursor, Hermes e Codex.
-      Elimine a amnésia entre sessões, garanta governança estrita e acelere seu fluxo com ferramentas de produção reais.
+      Arquitetura determinística e local-first para execução coordenada de Antigravity, Claude Code, Cursor, Hermes e Codex.
+      Persistência de tarefas entre sessões, controle estrito de arquivos e isolamento seguro de credenciais.
     </p>
 
     <div class="hero-ctas">
       <a href="#setup" class="btn btn-primary btn-lg">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Iniciar Setup com Seu Agente
+        Selecionar Agente e Iniciar
       </a>
       <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
-        Ver Código no GitHub
+        Repositório GitHub
       </a>
     </div>
 
-    <!-- Quick Stats -->
     <div class="stats-strip">
       <div class="stat-item">
         <div class="stat-val">&lt; 5ms</div>
-        <div class="stat-lbl">Preflight Check</div>
+        <div class="stat-lbl">Latência Preflight</div>
       </div>
       <div class="stat-item">
         <div class="stat-val">6 Agentes</div>
-        <div class="stat-lbl">Suporte Nativo</div>
+        <div class="stat-lbl">Runtime Unificado</div>
       </div>
       <div class="stat-item">
         <div class="stat-val">Zero Build</div>
-        <div class="stat-lbl">Local Guard</div>
+        <div class="stat-lbl">Proteção de Workspace</div>
       </div>
       <div class="stat-item">
-        <div class="stat-val">100% Soberano</div>
-        <div class="stat-lbl">Local-First / Sem Lock-in</div>
+        <div class="stat-val">Local-First</div>
+        <div class="stat-lbl">Execução Soberana</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Setup Simples com Seletor de Agentes ─────────────── -->
 <section id="setup">
   <div class="container">
     <div class="section-header">
-      <div class="section-eyebrow">Setup Rápido em 1 Minuto</div>
-      <h2 class="section-title">Configure Qualquer Agente de IA em 1 Clique</h2>
+      <div class="section-eyebrow">Inicialização</div>
+      <h2 class="section-title">Instruções de Inicialização por Agente</h2>
       <p class="section-desc">
-        Selecione o seu assistente favorito abaixo, copie o prompt otimizado e cole diretamente no chat do seu agente.
+        Selecione o agente de IA em uso para gerar a instrução de contexto calibrada para este workspace.
       </p>
     </div>
 
@@ -555,7 +537,7 @@
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
         </svg>
-        1. Selecione o Agente Alvo:
+        1. Selecionar Agente:
       </div>
 
       <div class="agent-selector-grid" id="agent-selector">
@@ -590,7 +572,7 @@
           <polyline points="4 17 10 11 4 5"/>
           <line x1="12" y1="19" x2="20" y2="19"/>
         </svg>
-        2. Prompt Otimizado para Copiar e Colar no Agente:
+        2. Prompt de Contexto para o Agente:
       </div>
 
       <div class="code-terminal">
@@ -622,74 +604,71 @@
   </div>
 </section>
 
-<!-- ── Benefícios / Diferenciais (Hi-Tech) ─────────────── -->
 <section id="diferenciais">
   <div class="container">
     <div class="section-header">
-      <div class="section-eyebrow">Engenharia vs Caos</div>
-      <h2 class="section-title">Por Que Agentes Precisam de um Workspace OS?</h2>
+      <div class="section-eyebrow">Comparativo Técnico</div>
+      <h2 class="section-title">Execução Sem Governança vs Workspace OS</h2>
       <p class="section-desc">
-        A diferença entre um agente de IA desgovernado que polui seu repositório e uma equipe autônoma de alta performance.
+        Diferenças estruturais entre execução avulsa de LLMs e um ambiente com governança determinística de workspace.
       </p>
     </div>
 
     <div class="comparison-grid">
-      <!-- Sem o OS -->
       <div class="comp-card bad">
         <div class="comp-title" style="color:var(--danger);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          Sem o Workspace OS (Caos Tradicional)
+          Execução Sem Governança
         </div>
         <ul class="comp-list">
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Amnésia entre sessões:</strong> O agente perde o contexto toda vez que uma conversa encerra.</span>
+            <span><strong>Amnésia de Sessão:</strong> Perda de contexto e decisões a cada encerramento de chat.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Conflito entre ferramentas:</strong> Cursor sobrescreve arquivos que o Claude estava editando sem sincronização.</span>
+            <span><strong>Conflito de Arquivos:</strong> Agentes concorrentes sobrescrevem edições uns dos outros sem trava.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>UI Clichê de IA ("AI Slop"):</strong> Emojis em botões, gradientes roxos fluorescentes e cópia sem sentido.</span>
+            <span><strong>Poluição de Repositório:</strong> Criação de arquivos de teste, caches e pastas dispersas na raiz.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Vazamento de credenciais:</strong> Chaves de API e tokens <code>.env</code> acidentalmente versionados no Git.</span>
+            <span><strong>Vazamento de Credenciais:</strong> Tokens de API e arquivos de ambiente versionados acidentalmente.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            <span><strong>Builds lentos locais:</strong> O agente tenta compilar pipelines pesados localmente travando a máquina.</span>
+            <span><strong>Builds Locais Travados:</strong> Execução de compilações pesadas no host local consumindo CPU e memória.</span>
           </li>
         </ul>
       </div>
 
-      <!-- Com o OS -->
       <div class="comp-card good">
         <div class="comp-title" style="color:var(--success);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Com o Agent Workspace OS (Padrão AXION)
+          Execução Sob o Workspace OS
         </div>
         <ul class="comp-list">
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span><strong>Memória Compartilhada:</strong> Fila <code>active_tasks.json</code> e quadro <code>blackboard.json</code> persistentes no disco.</span>
+            <span><strong>Persistência em Disco:</strong> Fila <code>active_tasks.json</code> e status compartilhado em <code>blackboard.json</code>.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span><strong>Co-Work Multi-Agente:</strong> Handoffs estruturados permitindo que Antigravity, Claude e Cursor colaborem no mesmo repositório.</span>
+            <span><strong>Coordenação Multi-Agente:</strong> Handoffs estruturados entre Antigravity, Claude e Cursor no mesmo repositório.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span><strong>Auditoria Anti-AI Slop:</strong> Linter nativo que impede emojis em UI, gradientes radioativos e jargões vazios.</span>
+            <span><strong>Auditoria Automatizada:</strong> Linter de qualidade e integridade executado antes de cada commit.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span><strong>Cofre Seguro Isolado:</strong> Diretório <code>credentials/</code> com sonda prévia (Whoami Probe) antes de qualquer mutação.</span>
+            <span><strong>Cofre de Credenciais:</strong> Diretório isolado com validação prévia de identidade (Whoami Probe) antes de chamadas de API.</span>
           </li>
           <li>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <span><strong>Zero Build Local:</strong> Servidor Python nativo ultrarrápido (&lt;5ms) e esteiras CI/CD remotas rastreáveis.</span>
+            <span><strong>Servidor Local Zero Dependência:</strong> Servidor Python nativo (latência &lt;5ms) com deploy automatizado em CI/CD remoto.</span>
           </li>
         </ul>
       </div>
@@ -697,82 +676,76 @@
   </div>
 </section>
 
-<!-- ── Features Mais Valiosas (Bento Grid Hi-Tech) ───────── -->
 <section id="features">
   <div class="container">
     <div class="section-header">
-      <div class="section-eyebrow">Arquitetura de Produto</div>
-      <h2 class="section-title">Features Desenvolvidas para Produção</h2>
+      <div class="section-eyebrow">Arquitetura de Módulos</div>
+      <h2 class="section-title">Componentes do Sistema</h2>
       <p class="section-desc">
-        Sem telas mockadas nem cartões conceituais vazios. Conheça as ferramentas e microsserviços reais integrados ao Workspace OS.
+        Serviços integrados que operam no ambiente de desenvolvimento para suporte às operações dos agentes.
       </p>
     </div>
 
     <div class="bento-grid">
-      <!-- Item 1 (2 cols) -->
       <div class="bento-item bento-2col">
         <div class="bento-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h6"/></svg>
         </div>
-        <h3 class="bento-title">Setup &amp; Control Dashboard Web (Porta 8765)</h3>
+        <h3 class="bento-title">Setup &amp; Control Dashboard (Porta 8765)</h3>
         <p class="bento-desc">
-          Servidor Python <code>ThreadingHTTPServer</code> nativo (zero dependências externas) com diagnóstico em tempo real de Python 3.11, Node.js v24, Git, GitHub CLI, Vercel e Cloudflare em menos de 5 milissegundos com cache em memória.
+          Servidor Python <code>ThreadingHTTPServer</code> nativo (zero dependências pip) com diagnóstico de ambiente para Python 3.11, Node.js, Git, GitHub CLI, Vercel e Cloudflare.
         </p>
         <div class="bento-preview">
           GET /api/preflight &rarr; HTTP 200 OK [3ms] (python, node, git, gh, vercel, wrangler: 100% OK)
         </div>
       </div>
 
-      <!-- Item 2 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         </div>
         <h3 class="bento-title">WhatsApp Client Bridge</h3>
         <p class="bento-desc">
-          Bridge Node.js nativa com pareamento via QR Code instantâneo. Opera em modo Monitor (grava mensagens diárias em JSONL) ou React (enfileira tarefas automáticas via comando <code>/task</code>).
+          Bridge Node.js para pareamento por QR Code. Opera em modo Monitor (gravação de mensagens em JSONL) ou React (enfileiramento de tarefas via <code>/task</code>).
         </p>
         <div class="bento-preview">
           PORT 4114 &bull; Status: qr_ready &bull; Mode: monitor / react
         </div>
       </div>
 
-      <!-- Item 3 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <h3 class="bento-title">Protocolo Co-Work Multi-Agente</h3>
+        <h3 class="bento-title">Fila de Tarefas Multi-Agente</h3>
         <p class="bento-desc">
-          Fila de tarefas compartilhada em <code>workspace/memory/active_tasks.json</code> e status global em <code>blackboard.json</code>, garantindo colaboração assíncrona com zero sobreposição.
+          Fila estruturada em <code>workspace/memory/active_tasks.json</code> e quadro de estado em <code>blackboard.json</code> com bloqueio de concorrência.
         </p>
         <div class="bento-preview">
           {"tasks": [{"id": "t1", "agent": "claude", "status": "done"}]}
         </div>
       </div>
 
-      <!-- Item 4 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
         </div>
-        <h3 class="bento-title">Auditoria Anti-AI Slop Automatizada</h3>
+        <h3 class="bento-title">Auditor de Qualidade de Código</h3>
         <p class="bento-desc">
-          Script de verificação contínua <code>audit_anti_slop.py</code> que detecta violações dos 6 vícios de IA generativa em HTML/CSS/React antes de qualquer deploy em produção.
+          Rotinas automatizadas de verificação estática que inspecionam integridade de bundles, sintaxe e conformidade de regras antes do versionamento.
         </p>
         <div class="bento-preview">
           python audit_anti_slop.py &rarr; [PASS] 0 erros
         </div>
       </div>
 
-      <!-- Item 5 (1 col) -->
       <div class="bento-item">
         <div class="bento-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </div>
         <h3 class="bento-title">Google Drive Sync &amp; RAG Local</h3>
         <p class="bento-desc">
-          Sincronização bidirecional de documentação corporativa e diretrizes de governança com indexação RAG local em <code>workspace/knowledge_base/</code> sem custo de API externa.
+          Sincronização de documentação corporativa e diretrizes de governança com indexação semântica local em <code>workspace/knowledge_base/</code>.
         </p>
         <div class="bento-preview">
           python google_drive_sync.py --sync &rarr; 100% OK
@@ -782,47 +755,44 @@
   </div>
 </section>
 
-<!-- ── Open Source & Liberdade (Hi-Tech) ────────────────── -->
 <section id="opensource">
   <div class="container">
     <div class="opensource-card">
       <div class="os-badges-row">
         <span class="pill pill-success">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
-          100% Local-First &amp; Soberano
+          Arquitetura Local-First
         </span>
         <span class="pill pill-accent">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Licença MIT Permissiva
+          Licença MIT
         </span>
         <span class="pill pill-subtle">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-          Zero Vendor Lock-In
+          Código Aberto
         </span>
       </div>
 
-      <h2 class="section-title">Open Source &amp; Soberano: Você É o Dono do Seu Código</h2>
+      <h2 class="section-title">Código Aberto sob Licença MIT</h2>
 
       <p class="os-manifesto">
-        O Agent Workspace OS não é uma plataforma SaaS proprietária com cobranças recorrentes por token.
-        É um framework de engenharia de software canônico, totalmente auditável e que roda na sua infraestrutura local ou em servidores dedicados privados.
+        O Agent Workspace OS é distribuído livremente sob a licença MIT. Todos os arquivos de configuração, scripts de automação, histórico de execuções e credenciais residem e operam exclusivamente na sua infraestrutura local ou servidor dedicado.
       </p>
 
       <div style="display:inline-flex; gap:14px; flex-wrap:wrap; justify-content:center;">
         <a href="https://github.com/axion-dev-enterprise/agent-workspace-os" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
-          Acessar Repositório no GitHub
+          Repositório GitHub
         </a>
         <a href="https://github.com/axion-dev-enterprise/agent-workspace-os/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
-          Ler Licença MIT
+          Licença MIT
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Footer ─────────────────────────────────────────── -->
 <footer>
   <div class="container footer-inner">
     <div style="display:flex; align-items:center; gap:8px;">
@@ -830,7 +800,7 @@
         <circle cx="12" cy="12" r="10"/>
         <circle cx="12" cy="12" r="4"/>
       </svg>
-      <span>&copy; 2026 AXION Enterprise. Agent Workspace OS &bull; Open Source sob licença MIT.</span>
+      <span>&copy; 2026 AXION Enterprise. Agent Workspace OS &bull; Código aberto sob licença MIT.</span>
     </div>
 
     <div class="footer-links">
@@ -842,9 +812,7 @@
   </div>
 </footer>
 
-<!-- ── Interactive Logic ──────────────────────────────── -->
 <script>
-  // Prompts por agente
   const PROMPTS = {
     antigravity: `Você é o agente Antigravity operando neste workspace. Leia obrigatoriamente D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md. Em seguida, clone ou acesse https://github.com/axion-dev-enterprise/agent-workspace-os.git, inicie o servidor python scripts/setup_server.py na porta 8765, valide o diagnóstico em /api/preflight e siga o SETUP_PROTOCOL.md para inicializar o workspace sem executar builds locais.`,
     claude: `Você é o Claude Code operando no Agent Workspace OS. Leia D:/WORKSPACE/AGENTS.md e D:/WORKSPACE/DIRECTIVES.md antes de qualquer modificação. Verifique se o servidor de setup local está ativo em http://127.0.0.1:8765, execute a verificação preflight e utilize a fila de tarefas em workspace/memory/active_tasks.json para cooperar com os outros agentes com zero falso positivo.`,
@@ -893,7 +861,6 @@
     }, 3500);
   }
 
-  // Event Delegation para o seletor de agentes
   document.getElementById('agent-selector').addEventListener('click', (e) => {
     const btn = e.target.closest('.agent-pill-btn');
     if (btn) {
@@ -902,7 +869,6 @@
     }
   });
 
-  // Copiar Prompt
   document.getElementById('btn-copy-prompt').addEventListener('click', () => {
     const text = PROMPTS[currentAgent] || '';
     navigator.clipboard.writeText(text).then(() => {
@@ -910,14 +876,12 @@
     });
   });
 
-  // Copiar Git
   document.getElementById('btn-copy-git').addEventListener('click', () => {
     navigator.clipboard.writeText('git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git').then(() => {
-      showToast('Comando Git clonagem copiado!', 'success');
+      showToast('Comando Git copiado!', 'success');
     });
   });
 
-  // Theme Toggle Logic
   const themeToggle = document.getElementById('theme-toggle');
   const sunIcon = document.getElementById('theme-icon-sun');
   const moonIcon = document.getElementById('theme-icon-moon');
@@ -939,7 +903,6 @@
     applyTheme(current === 'light' ? 'dark' : 'light');
   });
 
-  // Inicialização
   const savedTheme = localStorage.getItem('axion_theme') || 'light';
   applyTheme(savedTheme);
   updateAgent('antigravity');
