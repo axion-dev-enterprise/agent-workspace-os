@@ -385,6 +385,12 @@
       </svg>
       Workspace Config
     </button>
+    <button class="tab-btn" data-tab="tab-telemetry" role="tab">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+      </svg>
+      API OpenAI &amp; Telemetria
+    </button>
   </nav>
 
   <!-- ─────────────────────────────────────────────
@@ -806,6 +812,134 @@
           <div class="sysinfo-row"><span class="sysinfo-key">Entrada WhatsApp</span><span class="sysinfo-val">workspace/inbox/whatsapp/</span></div>
           <div class="sysinfo-row"><span class="sysinfo-key">Credenciais seguras</span><span class="sysinfo-val">credentials/</span></div>
           <div class="sysinfo-row"><span class="sysinfo-key">Status operacional</span><span class="sysinfo-val"><span class="pill pill-success">Pronto para Inicializa&#231;&#227;o</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       TAB 6 — API OpenAI & Telemetria RFC 7807
+  ────────────────────────────────────────────── -->
+  <section id="tab-telemetry" class="tab-pane">
+    <!-- Header Banner -->
+    <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(16,185,129,0.04));">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:1.05rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Proxy OpenAI-Compatible &amp; Telemetria
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">
+            API local gratuita para agentes, Cursor, Aider e SDKs oficiais com suporte a Tool Calls via OpenRouter.
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="pill pill-success" style="font-size:0.75rem;">http://127.0.0.1:8765/v1</span>
+          <button class="btn btn-secondary btn-sm" id="btn-copy-base-url" data-copy="http://127.0.0.1:8765/v1">Copiar URL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 20px;">
+      <div class="card">
+        <div class="card-desc" style="margin-bottom:4px;">Total de Requisições</div>
+        <div style="font-size:1.6rem; font-weight:700; font-family:var(--font-mono); font-variant-numeric:tabular-nums;" id="tel-total-req">0</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Chamadas interceptadas</div>
+      </div>
+      <div class="card">
+        <div class="card-desc" style="margin-bottom:4px;">Taxa de Sucesso</div>
+        <div style="font-size:1.6rem; font-weight:700; font-family:var(--font-mono); color:var(--success); font-variant-numeric:tabular-nums;" id="tel-success-rate">100.0%</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">RFC 7807 Zero 5xx</div>
+      </div>
+      <div class="card">
+        <div class="card-desc" style="margin-bottom:4px;">Latência Média (p50)</div>
+        <div style="font-size:1.6rem; font-weight:700; font-family:var(--font-mono); color:#93c5fd; font-variant-numeric:tabular-nums;" id="tel-avg-latency">0.0 ms</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Tempo de inferência</div>
+      </div>
+      <div class="card">
+        <div class="card-desc" style="margin-bottom:4px;">Tokens / Custo</div>
+        <div style="font-size:1.6rem; font-weight:700; font-family:var(--font-mono); color:var(--success); font-variant-numeric:tabular-nums;" id="tel-tokens">0</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Custo estimado: <span id="tel-cost">$0.00 USD</span></div>
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="grid">
+      <!-- Quick Integration Snippets -->
+      <div class="card">
+        <div class="card-header" style="margin-bottom:12px;">
+          <span class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Como Conectar seus Agentes e Ferramentas
+          </span>
+        </div>
+        <p class="card-desc">Aponte qualquer cliente OpenAI para a Base URL local usando o modelo gratuito:</p>
+
+        <!-- Python Example -->
+        <div style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">Python (SDK OpenAI)</span>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-py-snippet" style="font-size:0.7rem; padding:2px 8px;">Copiar</button>
+          </div>
+          <pre class="code-box" style="font-size:0.72rem;" id="code-snippet-py">from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:8765/v1",
+    api_key="sk-os-local"  # Chave arbitrária
+)
+
+response = client.chat.completions.create(
+    model="meta-llama/llama-3.3-70b-instruct:free",
+    messages=[{"role": "user", "content": "Olá, Agent Workspace OS!"}],
+    tools=[{"type": "function", "function": {"name": "get_weather", "description": "Obtém o clima"}}]
+)</pre>
+        </div>
+
+        <!-- cURL Example -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">cURL (Terminal / Bash)</span>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-curl-snippet" style="font-size:0.7rem; padding:2px 8px;">Copiar</button>
+          </div>
+          <pre class="code-box" style="font-size:0.72rem;" id="code-snippet-curl">curl http://127.0.0.1:8765/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer sk-os-local"   -d '{
+    "model": "meta-llama/llama-3.3-70b-instruct:free",
+    "messages": [{"role": "user", "content": "Teste de conexão"}]
+  }'</pre>
+        </div>
+      </div>
+
+      <!-- Settings & Live Telemetry Feed -->
+      <div class="card">
+        <div class="card-header" style="margin-bottom:12px;">
+          <span class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+            Configuração de Chave &amp; Feed
+          </span>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-telemetry">Atualizar</button>
+        </div>
+
+        <!-- Custom Key Card -->
+        <div style="padding:12px; background:#0d0d11; border:1px solid var(--card-border); border-radius:8px; margin-bottom:16px;">
+          <div style="font-size:0.8rem; font-weight:600; margin-bottom:4px;">Chave OpenRouter Personalizada (Opcional)</div>
+          <p style="font-size:0.73rem; color:var(--text-muted); margin-bottom:8px;">
+            O sistema já inclui pool de modelos gratuitos. Insira sua própria chave se desejar limites maiores ou modelos pagos.
+          </p>
+          <div style="display:flex; gap:8px;">
+            <div class="input-wrap" style="flex:1;">
+              <input type="password" id="input-openrouter-key" class="form-input" placeholder="sk-or-v1-..." style="font-size:0.78rem;">
+              <button class="eye-btn" id="btn-toggle-or-key" type="button" title="Mostrar/Ocultar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-save-or-key" style="white-space:nowrap;">Salvar Chave</button>
+          </div>
+        </div>
+
+        <!-- Live Telemetry Table -->
+        <div style="font-size:0.8rem; font-weight:600; margin-bottom:8px;">Últimas Requisições (RFC 7807 Trace)</div>
+        <div class="feed-list" id="telemetry-feed-list" style="max-height: 250px;">
+          <div style="color:var(--text-muted); font-size:0.82rem;">Nenhuma requisição interceptada ainda.</div>
         </div>
       </div>
     </div>

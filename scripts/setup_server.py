@@ -17,6 +17,12 @@ import threading
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+if os.path.dirname(__file__) not in sys.path:
+    sys.path.insert(0, os.path.dirname(__file__))
+
+from openai_proxy import get_models_list, handle_chat_completions
+from telemetry_service import get_telemetry_summary, generate_trace_id, record_metric
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 PORT = int(os.environ.get("SETUP_PORT", 8765))
@@ -377,6 +383,12 @@ class SetupHandler(BaseHTTPRequestHandler):
         elif path == "/api/config":
             self._json(load_config())
 
+        elif path in ("/v1/models", "/models"):
+            self._json(get_models_list())
+
+        elif path == "/api/telemetry":
+            self._json(get_telemetry_summary())
+
         else:
             self.send_response(404)
             self._cors()
@@ -431,6 +443,56 @@ class SetupHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 _sse(json.dumps({"line": str(e), "done": False}))
             _sse(json.dumps({"done": True}))
+            return
+
+        # ── OpenAI-Compatible Chat Completions ─────────────────
+        if path in ("/v1/chat/completions", "/chat/completions"):
+            is_stream = bool(body.get("stream", False))
+            client_ip = self.client_address[0] if hasattr(self, "client_address") else "127.0.0.1"
+            headers_dict = dict(self.headers)
+
+            if is_stream:
+                self.send_response(200)
+                self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+                self.send_header("Cache-Control", "no-cache")
+                self.send_header("X-Accel-Buffering", "no")
+                self._cors()
+                self.end_headers()
+
+                def _stream_writer(chunk):
+                    try:
+                        if isinstance(chunk, str):
+                            chunk = chunk.encode("utf-8")
+                        self.wfile.write(chunk)
+                        self.wfile.flush()
+                    except Exception:
+                        pass
+
+                handle_chat_completions(body, headers_dict, client_ip=client_ip, sse_writer=_stream_writer)
+                return
+            else:
+                res = handle_chat_completions(body, headers_dict, client_ip=client_ip)
+                status_code = res.get("status", 200)
+                self.send_response(status_code)
+                for h_k, h_v in res.get("headers", {}).items():
+                    self.send_header(h_k, h_v)
+                self._cors()
+                self.end_headers()
+                self.wfile.write(res.get("body", b"{}"))
+                return
+
+        # ── Telemetry OpenRouter Key Save ───────────────────────
+        if path == "/api/telemetry/key":
+            key_val = body.get("openrouter_api_key", "").strip()
+            try:
+                cfg = load_config(raw=True)
+                if "ai" not in cfg:
+                    cfg["ai"] = {}
+                cfg["ai"]["openrouter_api_key"] = key_val
+                save_config(cfg)
+                self._json({"ok": True, "message": "Chave OpenRouter salva com sucesso!"})
+            except Exception as e:
+                self._json({"ok": False, "error": str(e)}, status=500)
             return
 
         # ── WhatsApp Start / Stop ─────────────────────────────
@@ -550,7 +612,7 @@ class SetupHandler(BaseHTTPRequestHandler):
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Trace-ID, x-trace-id, X-Title, HTTP-Referer")
 
     def _json(self, data: dict, status: int = 200):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")

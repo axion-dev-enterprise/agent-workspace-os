@@ -20,6 +20,7 @@ auth_info_baileys/
 workspace.config.json
 workspace/inbox/
 workspace/memory/active_tasks.json
+workspace/telemetry/
 
 # Temporary files & Logs
 temp/
