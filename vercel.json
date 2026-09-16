@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/setup",
+      "destination": "/scripts/setup_dashboard.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/scripts/setup_dashboard.html"
+    },
+    {
+      "source": "/landing",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
