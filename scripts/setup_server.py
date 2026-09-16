@@ -631,11 +631,14 @@ class SetupHandler(BaseHTTPRequestHandler):
 def run_server():
     # Warm up cache in background immediately
     threading.Thread(target=get_preflight_data, daemon=True).start()
+    # Auto-initialize WhatsApp Bridge in background for immediate pairing
+    threading.Thread(target=start_whatsapp_bridge, daemon=True).start()
     
     server = ThreadedHTTPServer(("0.0.0.0", PORT), SetupHandler)
     print("=" * 60)
     print("  Agent Workspace OS - Setup & Control Dashboard v2.1")
     print(f"  Dashboard: http://localhost:{PORT} ou http://127.0.0.1:{PORT}")
+    print("  WhatsApp Tab: http://localhost:{PORT}/#tab-whatsapp")
     print("=" * 60)
     server.serve_forever()
 

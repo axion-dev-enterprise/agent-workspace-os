@@ -199,6 +199,34 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 
 ---
 
+## 💎 AXION Contributors & Sponsors Tier (Exclusivo para Apoiadores)
+
+O **Agent Workspace OS** é código aberto e gratuito sob licença MIT. No entanto, os serviços de infraestrutura gerenciada em nuvem, gateways de alta disponibilidade e chaves de API para módulos de despacho são **exclusivos para doadores, patrocinadores e colaboradores ativos da AXION Enterprise**.
+
+### 🔒 Recursos Exclusivos para Contribuintes
+
+1. **WhatsApp Dispatcher & Notification Gateway (`axion-comm-dispatcher`)**:
+   - **Chave de API Dedicada**: Envio automatizado de status de tarefas, alertas críticos e relatórios diários para destinatários via WhatsApp.
+   - **Infraestrutura Própria Gerenciada**: Hospedagem na VPS dedicada da AXION com conexão multi-device persistente (Zero Setup de servidor próprio).
+   - **Cadência Inteligente Anti-Ban**: Gaussian Jitter (2.5s ± 600ms), simulação de digitação humana e priorização de filas de alta entrega.
+   - **Templates Automatizados**: Padronização visual com emojis de status, IDs de tarefas, resultados e carimbos de data/hora.
+
+2. **Serviços Adicionais do Ecossistema (Patron Perks)**:
+   - **Voicebox Neural Studio**: Acesso ao cluster VPS com GPU para síntese de voz (TTS/STT) de ultra-baixa latência e clonagem neural.
+   - **Hermes VIP Gateway**: Roteamento corporativo de modelos de IA de alta vazão sem filas nem estrangulamento de tokens.
+   - **Poseidon Stealth Relays**: Acesso à malha de túneis seguros para auditorias de segurança e pentests autorizados.
+   - **Workana & Freelance Automation Suite**: Módulos de captura e envio de propostas comerciais de alta conversão.
+
+### 🔑 Como Obter sua Chave de API de Contribuinte
+
+Para se tornar um patrocinador/colaborador e receber sua chave de API pessoal (`X-API-Key`):
+- Contribua com código via Pull Request aprovado no ecossistema AXION.
+- Apoie o projeto via [GitHub Sponsors](https://github.com/sponsors/axion-dev-enterprise) ou [AXION Pay](https://pay.axionenterprise.cloud).
+- Envie um email para `axionenterprise777@gmail.com` com o comprovante ou handle do GitHub para emissão imediata da sua credencial de acesso.
+
+---
+
 ## 📄 License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+
