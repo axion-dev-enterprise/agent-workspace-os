@@ -26,22 +26,35 @@ DRIVE_SCRIPT      = os.path.join(WORKSPACE_ROOT, "scripts", "google_drive_sync.p
 CONFIG_FILE       = os.path.join(WORKSPACE_ROOT, "workspace.config.json")
 TEMPLATE_FILE     = os.path.join(WORKSPACE_ROOT, "workspace.config.template.json")
 DASHBOARD_HTML    = os.path.join(os.path.dirname(__file__), "setup_dashboard.html")
+LANDING_HTML      = os.path.join(WORKSPACE_ROOT, "landing.html")
 
-_html_cache: bytes | None = None
+_dashboard_cache: bytes | None = None
+_landing_cache: bytes | None = None
 _preflight_cache: dict | None = None
 _preflight_cache_time: float = 0.0
 _whatsapp_process = None
 
-def get_html() -> bytes:
-    global _html_cache
-    if _html_cache is None:
+def get_dashboard_html() -> bytes:
+    global _dashboard_cache
+    if _dashboard_cache is None:
         with open(DASHBOARD_HTML, "rb") as f:
-            _html_cache = f.read()
-    return _html_cache
+            _dashboard_cache = f.read()
+    return _dashboard_cache
+
+def get_landing_html() -> bytes:
+    global _landing_cache
+    if _landing_cache is None:
+        if os.path.exists(LANDING_HTML):
+            with open(LANDING_HTML, "rb") as f:
+                _landing_cache = f.read()
+        else:
+            return get_dashboard_html()
+    return _landing_cache
 
 def invalidate_html_cache() -> None:
-    global _html_cache
-    _html_cache = None
+    global _dashboard_cache, _landing_cache
+    _dashboard_cache = None
+    _landing_cache = None
 
 # ── helpers ──────────────────────────────────────────────────
 
@@ -275,7 +288,16 @@ class SetupHandler(BaseHTTPRequestHandler):
         query = self.path.split("?")[1] if "?" in self.path else ""
 
         if path in ("/", "/index.html"):
-            body = get_html()
+            body = get_landing_html()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self._cors()
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif path in ("/setup", "/dashboard", "/setup.html", "/dashboard.html"):
+            body = get_dashboard_html()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
