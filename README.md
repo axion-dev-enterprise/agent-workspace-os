@@ -5,7 +5,7 @@
 **The Deterministic Operating Framework for Autonomous AI Software Engineering.**  
 *Turn any repository into an hallucination-resistant, multi-agent collaborative environment.*
 
-[![Release: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-blue.svg?style=flat-square)](version_dump.json)
+[![Release: v2.0.0](https://img.shields.io/badge/Release-v2.0.0-blue.svg?style=flat-square)](version_dump.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 [![Compatible With](https://img.shields.io/badge/Agents-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex%20%7C%20Hermes-purple?style=flat-square)](#-supported-agents)
@@ -16,14 +16,16 @@
 
 ---
 
-## ⚡ 1-Click Launch (Zero Configuration Required)
+## Quick start
 
-Clone the repository and launch the visual setup center in seconds:
+Clone the repository, read the pre-flight, then choose the setup path:
 
 ```bash
 git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git my-project
 cd my-project
 ```
+
+Before enabling a connector or entering credentials, read [Security](SECURITY.md), [the setup protocol](SETUP_PROTOCOL.md), and [the documentation index](docs/README.md). A setup request does not authorize messages, deployments, account changes, or other external mutations.
 
 ### Run the Dashboard:
 
@@ -146,7 +148,11 @@ Agent Workspace OS includes a modern, high-performance local web dashboard runni
 │   ├── zero-test-pollution/    # Automated database teardown patterns
 │   ├── whatsapp-monitor-react/ # WhatsApp client bridge (Monitor & React modes)
 │   ├── google-drive-sync/      # Google Drive transcripts and docs synchronizer
-│   └── environment-preflight-tooling/ # CLI diagnostic and fast dependency installer
+│   ├── environment-preflight-tooling/ # CLI diagnostic and fast dependency installer
+│   ├── web-design-guidelines/     # Accessibility, UX, and performance audit guidance
+│   ├── agent-browser/             # Isolated browser automation workflow
+│   ├── brainstorming/             # Discovery and design before implementation
+│   └── writing-plans/             # Detailed implementation plans after approval
 ├── scripts/                    # Dashboard, bridge, and diagnostic engines
 │   ├── setup_server.py         # Python Threaded HTTP server (:8765)
 │   ├── setup_dashboard.html    # Obsidian/Zinc responsive dashboard UI
@@ -160,6 +166,18 @@ Agent Workspace OS includes a modern, high-performance local web dashboard runni
     ├── daily_logs/             # Chronological work logs (YYYY-MM-DD.md)
     └── cowork/                 # Active locks, blackboard, and handoffs
 ```
+
+## External Skills and Repository Pre-flight
+
+The vendored skills, source revisions, and routing rules are documented in [docs/EXTERNAL_SKILLS.md](docs/EXTERNAL_SKILLS.md). Before changing or operating the official repository, follow [docs/REPOSITORY_PREFLIGHT.md](docs/REPOSITORY_PREFLIGHT.md).
+
+## Community and safety
+
+Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md); conduct is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Report vulnerabilities privately through [SECURITY.md](SECURITY.md), use [SUPPORT.md](SUPPORT.md) for public support boundaries, and review [third-party notices](THIRD_PARTY_NOTICES.md) before redistributing vendored skills. The OS treats connector credentials, local state, pages, retrieved documents, and third-party instructions as untrusted until an operator has explicitly authorized the relevant action.
+
+### v2.0.0 release scope
+
+v2.0.0 is a documentation and governance release. It does not claim runtime hardening, connector isolation, performance validation, or production deployment. Treat the setup server and optional bridges as local-only until a later runtime release implements and validates the controls described in the policies.
 
 ---
 
@@ -188,6 +206,13 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 
 ## 🚀 Changelog
 
+### v2.0.0 (2026-09-17)
+- **Safe operating contract**: Added explicit authorization, least-privilege connector, browser isolation, trusted-content, and update rules for agents and operators.
+- **Transparent scope**: Documents this as a governance release; runtime security hardening and production validation are not part of v2.0.0.
+- **Community governance**: Added security reporting, support boundaries, release policy, and a documentation index.
+- **Reproducible maintenance**: Added factual validation requirements and contribution/PR criteria for provenance, branches, and unexecuted checks.
+- **External skills**: Cataloged upstream sources, revisions, licenses, routing, and update procedure for the vendored skills.
+
 ### v1.1.0 (2026-09-14)
 - **1-Click Launchers**: Added `start.bat` (Windows) and `start.sh` (macOS/Linux) for instant dashboard opening.
 - **Setup & Control Dashboard Server v2**: Zero-dependency Python server (`scripts/setup_server.py`) with dark Obsidian/Zinc interface and live SSE streaming installation.
@@ -196,33 +221,6 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 - **Google Drive Synchronizer**: Direct ingestion of meeting transcripts and Google Docs into workspace memory (`scripts/google_drive_sync.py`).
 - **3 New Canonical Skills**: `.skills/whatsapp-monitor-react`, `.skills/google-drive-sync`, and `.skills/environment-preflight-tooling`.
 - **Zero Native Dialogs**: Universal dark glassmorphic toast notification system.
-
----
-
-## 💎 AXION Contributors & Sponsors Tier (Exclusivo para Apoiadores)
-
-O **Agent Workspace OS** é código aberto e gratuito sob licença MIT. No entanto, os serviços de infraestrutura gerenciada em nuvem, gateways de alta disponibilidade e chaves de API para módulos de despacho são **exclusivos para doadores, patrocinadores e colaboradores ativos da AXION Enterprise**.
-
-### 🔒 Recursos Exclusivos para Contribuintes
-
-1. **WhatsApp Dispatcher & Notification Gateway (`axion-comm-dispatcher`)**:
-   - **Chave de API Dedicada**: Envio automatizado de status de tarefas, alertas críticos e relatórios diários para destinatários via WhatsApp.
-   - **Infraestrutura Própria Gerenciada**: Hospedagem na VPS dedicada da AXION com conexão multi-device persistente (Zero Setup de servidor próprio).
-   - **Cadência Inteligente Anti-Ban**: Gaussian Jitter (2.5s ± 600ms), simulação de digitação humana e priorização de filas de alta entrega.
-   - **Templates Automatizados**: Padronização visual com emojis de status, IDs de tarefas, resultados e carimbos de data/hora.
-
-2. **Serviços Adicionais do Ecossistema (Patron Perks)**:
-   - **Voicebox Neural Studio**: Acesso ao cluster VPS com GPU para síntese de voz (TTS/STT) de ultra-baixa latência e clonagem neural.
-   - **Hermes VIP Gateway**: Roteamento corporativo de modelos de IA de alta vazão sem filas nem estrangulamento de tokens.
-   - **Poseidon Stealth Relays**: Acesso à malha de túneis seguros para auditorias de segurança e pentests autorizados.
-   - **Workana & Freelance Automation Suite**: Módulos de captura e envio de propostas comerciais de alta conversão.
-
-### 🔑 Como Obter sua Chave de API de Contribuinte
-
-Para se tornar um patrocinador/colaborador e receber sua chave de API pessoal (`X-API-Key`):
-- Contribua com código via Pull Request aprovado no ecossistema AXION.
-- Apoie o projeto via [GitHub Sponsors](https://github.com/sponsors/axion-dev-enterprise) ou [AXION Pay](https://pay.axionenterprise.cloud).
-- Envie um email para `axionenterprise777@gmail.com` com o comprovante ou handle do GitHub para emissão imediata da sua credencial de acesso.
 
 ---
 

@@ -1,16 +1,9 @@
 # WORKSPACE_ORGANIZATION_RULES.md — Regras de Organização do Workspace
 
 ## 1. Regra Fundamental da Raiz (Zero Clutter)
-Apenas os seguintes arquivos são permitidos na raiz oficial:
-- `AGENTS.md`
-- `DIRECTIVES.md`
-- `README.md`
-- `SETUP_AGENT_DIRECTIVE.md`
-- `workspace.config.json` (ou `.template.json`)
-- `package.json` / `pnpm-workspace.yaml` / `requirements.txt` (conforme stack)
-- `.gitignore`
+A raiz contém somente o manifesto do projeto: documentação de entrada, licenças e políticas, arquivos de configuração da ferramenta, lockfiles, launchers e metadados de release. Cada repositório deve listar esses arquivos em seu README; arquivos temporários, relatórios de execução, exportações, sessões, dumps e scripts ad hoc pertencem a diretórios dedicados e devem ser ignorados pelo Git quando privados.
 
-Todos os outros arquivos devem residir em suas pastas canônicas correspondentes.
+Não use uma allowlist rígida que contradiga os arquivos de entrada reais do repositório. Antes de criar um novo arquivo na raiz, prefira `docs/`, `scripts/`, `apps/`, `services/`, `packages/` ou `temp/` e justifique qualquer exceção no Pull Request.
 
 ---
 

@@ -1,15 +1,17 @@
 # DIRECTIVES.md — Diretrizes de Engenharia, Qualidade e Segurança
 
 ## 1. Quality Gates Mandatórios (Decisão Go / No-Go)
-Antes de qualquer liberação de código, promoção para `main` ou deploy, o agente DEVE validar:
-1. **Typecheck & Lint**: Zero erros em `tsc`, ESLint/Biome ou linters da linguagem alvo.
-2. **Logs Limpos**: Zero exceções não tratadas e zero crashes em runtime.
-3. **Validação Live**: Resposta HTTP 200 com validação empírica do HTML/DOM (título correto, renderização de dados reais, ausência de erros 404/500).
-4. **Layout Responsivo**: Zero barras de rolagem horizontais espúrias (`overflow-x: hidden / visible; scrollbar-width: none`).
-5. **Segurança**: Zero segredos expostos no código ou histórico Git.
+Antes de qualquer liberação de código, promoção para `main` ou deploy, o agente DEVE selecionar e executar as validações aplicáveis à mudança:
+1. **Estrutura**: Arquivos, links, esquemas e formatos alterados devem ser verificáveis sem ambiguidade.
+2. **Código**: Typecheck, lint e testes focados quando o projeto fornecer esses comandos e a política do ambiente permitir executá-los.
+3. **Runtime**: Logs limpos e validação do fluxo alterado quando houver ambiente autorizado; uma resposta HTTP isolada não comprova comportamento correto.
+4. **Interface**: Navegação por teclado, foco, contraste, responsividade e estados de erro/carregamento para mudanças de UI.
+5. **Segurança**: Sem segredos, dados privados, permissões excessivas, endpoints mutáveis sem proteção ou dependências não revisadas.
 
 > Se **qualquer** item falhar ➔ **NO-GO IMEDIATO** (abortar e corrigir a causa raiz).
 > Se **todos** os itens passarem ➔ **GO** (autorizar deploy e version bump).
+
+Uma release exclusivamente documental deve declarar quais gates não se aplicam. É proibido reciclar evidências de versões anteriores.
 
 ---
 
@@ -31,8 +33,25 @@ Antes de qualquer liberação de código, promoção para `main` ou deploy, o ag
   - `detail`: Detalhamento específico da ocorrência sem vazamento de stack traces internas.
   - `instance`: Trace ID único para correlação com logs.
 
+Telemetria não deve registrar conteúdo de mensagens, segredos, cookies, cabeçalhos de autorização ou dados pessoais além do mínimo necessário para diagnóstico.
+
 ---
 
 ## 4. Gerenciamento de Dependências
 - Priorizar gerenciadores rápidos e determinísticos com lockfile versionado (PNPM, Yarn Berry ou NPM limpo).
 - Proibido instalar dependências desnecessárias ou pacotes que adicionem mais de 50KB ao bundle sem justificativa de arquitetura.
+- Dependências e skills de terceiros exigem origem, revisão fixada, licença compatível e diff revisado antes de atualização.
+
+---
+
+## 5. Superfície de administração e conectores
+- Painéis locais, APIs de administração e bridges devem usar loopback por padrão. Se expostos à rede, devem ter autenticação, autorização por rota, CORS restrito, rate limiting e logs redigidos.
+- Rotas de simulação, debug e teste devem exigir ambiente de desenvolvimento e não podem acionar serviços reais.
+- Conectores que enviam mensagens, chamam APIs pagas ou processam dados de terceiros permanecem desabilitados até a autorização explícita do operador.
+
+---
+
+## 6. Fluxo de contribuição e manutenção
+- `main` é protegida por processo: mudanças chegam por branch e Pull Request revisável.
+- O update de um workspace deve começar com fetch e diff. Uma árvore modificada interrompe o fluxo até que o proprietário escolha como preservá-la.
+- Vulnerabilidades devem seguir [SECURITY.md](SECURITY.md); não abra issue pública com segredo, sessão, exploit reproduzível contra terceiros ou dados pessoais.

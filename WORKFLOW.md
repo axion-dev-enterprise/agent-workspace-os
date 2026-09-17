@@ -2,6 +2,8 @@
 
 Este repositório possui dois modos formais de operação.
 
+Antes de qualquer alteração no repositório oficial, execute a checagem somente leitura em [docs/REPOSITORY_PREFLIGHT.md](docs/REPOSITORY_PREFLIGHT.md). Ela define a origem do checkout, as skills vendorizadas e o limite entre análise e mutação autorizada.
+
 ---
 
 ## 🚀 Opção 1: Setup Inicial (`SETUP_PROTOCOL.md`)

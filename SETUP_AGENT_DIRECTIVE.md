@@ -6,27 +6,28 @@
 
 ---
 
-## 🛑 REGRA MANDATÓRIA #1 DO AGENTE: NÃO FAÇA PERGUNTAS NO CHAT!
+## Regra mandatória: setup é opt-in e conectores exigem consentimento
 
-Quando o usuário solicitar **"setup"**, **"iniciar"**, **"configurar"**, ou você detectar que o workspace ainda não foi configurado (`workspace.config.json` ausente):
+Quando o usuário solicitar explicitamente **"setup"**, **"iniciar setup"** ou **"configurar workspace"**:
 
-1. **É TERMINANTEMENTE PROIBIDO**: Enviar questionários ou listas de perguntas no chat (ex: *"1. Qual o nome da empresa? 2. Qual o email?"*).
-2. **É OBRIGATÓRIO**:
+1. Não presuma que a ausência de `workspace.config.json` autoriza iniciar serviços ou coletar configurações. Explique o setup em uma frase e peça a confirmação quando o pedido não for inequívoco.
+2. Após uma solicitação explícita, é permitido:
    - Iniciar imediatamente o servidor visual Python em segundo plano:
      ```bash
      python scripts/setup_server.py
      ```
    - Responder ao usuário diretamente com uma mensagem amigável e o link:
-     > *"🚀 Iniciei o **Painel Visual de Setup & Controle** em: **http://127.0.0.1:8765**!  
+     > *"Iniciei o **Painel Visual de Setup & Controle** em: **http://127.0.0.1:8765**.
      > Acesse pelo seu navegador para:*  
      > 1. *Preencher o nome da organização, identidade Git e destino de deploy na aba **Workspace**.*  
      > 2. *Clicar em **Salvar & Inicializar Workspace** (todos os arquivos e regras serão configurados automaticamente).*  
      > 3. *Verificar as ferramentas instaladas e instalar dependências faltantes com 1 clique.*  
-     > 4. *Escanear o QR Code do WhatsApp para parear o agente.*  
+     > 4. *Opcionalmente, após autorizar o acesso, escanear o QR Code do WhatsApp para parear o agente.*
      >  
      > *(Nota: Caso esteja em um ambiente de terminal remoto sem navegador, responda 'configurar por chat' para ativar o modo conversacional fallback)."*
 
-3. **MODO FALLBACK (Apenas se solicitado)**: Somente se o usuário pedir explicitamente *"configurar por chat"*, execute as perguntas conversacionais de [SETUP_PROTOCOL.md](SETUP_PROTOCOL.md).
+3. Antes de ativar WhatsApp, Drive, OAuth, transcrição, proxy de IA ou qualquer conector, informe os dados acessados e aguarde autorização específica. Um conector não é ativado apenas porque o setup foi iniciado.
+4. **MODO FALLBACK (Apenas se solicitado)**: Somente se o usuário pedir explicitamente *"configurar por chat"*, execute as perguntas conversacionais de [SETUP_PROTOCOL.md](SETUP_PROTOCOL.md).
 
 ---
 
@@ -41,10 +42,12 @@ Quando o usuário solicitar **"setup"**, **"iniciar"**, **"configurar"**, ou voc
           NÃO EXISTE                                            JÁ EXISTE
                  │                                                     │
                  ▼                                                     ▼
-   INICIE O SERVIDOR PYTHON                              Verifique o Intento no Prompt
- `python scripts/setup_server.py`                        ┌─────────────┴─────────────┐
-        Forneça o link                                   ▼                           ▼
-   `http://127.0.0.1:8765`                       "update" / "sync"           "task" / "código"
+ Verifique se o usuário pediu setup                       Verifique o intento no prompt
+        explicitamente                                  ┌─────────────┴─────────────┐
+                 │                                     ▼                           ▼
+                 ▼                            "update" / "sync"           "task" / "código"
+ Inicie o painel somente após confirmação
+ `python scripts/setup_server.py`
                                                          │                           │
                                                          ▼                           ▼
                                               [UPDATE_PROTOCOL.md]         1. Consulte active_tasks.json

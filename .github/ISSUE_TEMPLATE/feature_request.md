@@ -14,3 +14,6 @@ Describe the solution or skill you would like to see added.
 
 **Alternatives Considered**
 Describe any alternative solutions or features you have considered.
+
+**Safety and scope**
+Describe which data, permissions, external services, or user actions the proposal requires. State whether it changes the default behavior of a connector or local service.
