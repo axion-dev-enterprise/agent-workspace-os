@@ -26,6 +26,7 @@ from telemetry_service import get_telemetry_summary, generate_trace_id, record_m
 sys.stdout.reconfigure(encoding="utf-8")
 
 PORT = int(os.environ.get("SETUP_PORT", 8765))
+BIND_ADDRESS = os.environ.get("SETUP_BIND_ADDRESS", "127.0.0.1")
 WORKSPACE_ROOT    = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 PREFLIGHT_SCRIPT  = os.path.join(WORKSPACE_ROOT, "scripts", "preflight_check.py")
 DRIVE_SCRIPT      = os.path.join(WORKSPACE_ROOT, "scripts", "google_drive_sync.py")
@@ -75,6 +76,14 @@ def sanitize_value(v: any) -> any:
         return [sanitize_value(x) for x in v]
     return v
 
+def redact_sensitive_values(v: any) -> any:
+    sensitive = ("secret", "token", "password", "api_key", "authorization", "cookie")
+    if isinstance(v, dict):
+        return {k: ("[redacted]" if any(part in k.lower() for part in sensitive) else redact_sensitive_values(value)) for k, value in v.items()}
+    if isinstance(v, list):
+        return [redact_sensitive_values(item) for item in v]
+    return sanitize_value(v)
+
 def load_config(raw: bool = False) -> dict:
     cfg = {}
     for fp in (CONFIG_FILE, TEMPLATE_FILE):
@@ -88,7 +97,7 @@ def load_config(raw: bool = False) -> dict:
     if raw:
         return cfg
     # Return sanitized version so template placeholders {{...}} are stripped
-    sanitized = sanitize_value(cfg)
+    sanitized = redact_sensitive_values(cfg)
     # Ensure current workspace root is provided if empty
     if not sanitized.get("paths", {}).get("canonical_root"):
         if "paths" not in sanitized:
@@ -97,39 +106,10 @@ def load_config(raw: bool = False) -> dict:
     return sanitized
 
 def apply_setup_initialization(cfg: dict) -> None:
-    """Atomic workspace initialization when config is saved via dashboard."""
-    replacements = {
-        "{{ORGANIZATION_NAME}}": cfg.get("organization", {}).get("name", ""),
-        "{{ORGANIZATION_SLUG}}": cfg.get("organization", {}).get("slug", ""),
-        "{{PRIMARY_DOMAIN}}": cfg.get("organization", {}).get("primary_domain", ""),
-        "{{GIT_USER_NAME}}": cfg.get("git", {}).get("user_name", ""),
-        "{{GIT_USER_EMAIL}}": cfg.get("git", {}).get("user_email", ""),
-        "{{GITHUB_ORG_HANDLE}}": cfg.get("git", {}).get("org_github_handle", ""),
-        "{{WORKSPACE_ROOT}}": cfg.get("paths", {}).get("canonical_root", WORKSPACE_ROOT),
-        "{{HEAVY_STORAGE_PATH}}": cfg.get("paths", {}).get("heavy_builds_and_cache", ""),
-        "{{VAULT_PATH}}": cfg.get("paths", {}).get("vault_path", ""),
-        "{{PRIMARY_DEPLOY_TARGET}}": cfg.get("deployment", {}).get("primary_target", ""),
-        "{{VPS_HOST_IP}}": cfg.get("deployment", {}).get("vps_host_ip", ""),
-    }
-    
-    files_to_replace = ["AGENTS.md", "DIRECTIVES.md", "docs/WORKSPACE_ORGANIZATION_RULES.md", "README.md"]
-    for rel_p in files_to_replace:
-        fp = os.path.join(WORKSPACE_ROOT, rel_p)
-        if os.path.exists(fp):
-            try:
-                with open(fp, "r", encoding="utf-8") as f:
-                    c = f.read()
-                for k, v in replacements.items():
-                    if v and not str(v).startswith("{{"):
-                        c = c.replace(k, str(v))
-                with open(fp, "w", encoding="utf-8") as f:
-                    f.write(c)
-            except Exception:
-                pass
-
+    """Create local runtime state without rewriting distribution documentation."""
     dirs = [
-        "apps", "services", "packages", "docs", "credentials",
-        "memory/daily_logs", "memory/cowork/handoffs", "workspace/inbox/whatsapp", "workspace/memory"
+        "apps", "services", "packages", "docs", "memory/daily_logs",
+        "memory/cowork/handoffs", "workspace/config", "workspace/inbox/messages", "workspace/memory"
     ]
     for d in dirs:
         os.makedirs(os.path.join(WORKSPACE_ROOT, d), exist_ok=True)
@@ -144,18 +124,18 @@ def apply_setup_initialization(cfg: dict) -> None:
         with open(blackboard_file, "w", encoding="utf-8") as f:
             json.dump({
                 "setup_completed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "organization": cfg.get("organization", {}).get("name"),
+                "workspace": cfg.get("workspace", {}).get("name"),
                 "status": "READY"
             }, f, indent=2)
 
     today_str = time.strftime("%Y-%m-%d")
     now_time = time.strftime("%H:%M:%S")
     log_file = os.path.join(WORKSPACE_ROOT, "memory", "daily_logs", f"{today_str}.md")
-    org_name = cfg.get("organization", {}).get("name", "Project")
+    workspace_name = cfg.get("workspace", {}).get("name", "Project")
     git_user = cfg.get("git", {}).get("user_name", "Developer")
     git_email = cfg.get("git", {}).get("user_email", "")
-    target = cfg.get("deployment", {}).get("primary_target", "Vercel")
-    log_entry = f"\n## [{now_time}] [setup] Workspace Initialized via Web Setup Dashboard\n- **Org**: {org_name}\n- **Git**: {git_user} <{git_email}>\n- **Target**: {target}\n- **Status**: Setup Complete.\n"
+    target = cfg.get("deployment", {}).get("primary_target", "unconfigured")
+    log_entry = f"\n## [{now_time}] [setup] Workspace initialized via local dashboard\n- **Workspace**: {workspace_name}\n- **Git identity configured**: {bool(git_user and git_email)}\n- **Target**: {target}\n- **Status**: setup complete.\n"
     try:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(log_entry)
@@ -257,36 +237,10 @@ def start_whatsapp_bridge() -> dict:
         except Exception as inst_err:
             return {"ok": False, "error": f"Falha ao instalar dependências do WhatsApp: {str(inst_err)}"}
 
-    # 2. Injetar chaves do vault ou config no ambiente do processo filho
+    # Secrets are supplied only by the caller environment or a local secret manager.
     child_env = os.environ.copy()
     child_env["WHATSAPP_PORT"] = "4114"
     
-    # Carregar groq se existir no vault local do host
-    vault_groq = "D:/WORKSPACE/SECURE/VAULT/tokens/llm/groq.env"
-    if os.path.exists(vault_groq) and not child_env.get("GROQ_API_KEY"):
-        try:
-            with open(vault_groq, "r", encoding="utf-8") as vf:
-                for line in vf:
-                    if line.strip().startswith("GROQ_API_KEY="):
-                        child_env["GROQ_API_KEY"] = line.split("=", 1)[1].strip().strip('"\'')
-                        break
-        except Exception:
-            pass
-
-    # Carregar do workspace.config.json se existir
-    if os.path.exists(CONFIG_FILE):
-        try:
-            with open(CONFIG_FILE, "r", encoding="utf-8") as cf:
-                cfg_data = json.load(cf)
-                groq_k = cfg_data.get("ai", {}).get("groq_api_key") or cfg_data.get("transcription", {}).get("groq_api_key") or cfg_data.get("groq_api_key")
-                if groq_k:
-                    child_env["GROQ_API_KEY"] = groq_k
-                openai_k = cfg_data.get("ai", {}).get("openai_api_key") or cfg_data.get("openai_api_key")
-                if openai_k:
-                    child_env["OPENAI_API_KEY"] = openai_k
-        except Exception:
-            pass
-
     try:
         _whatsapp_process = subprocess.Popen(
             [node_bin, bridge_script],
@@ -610,7 +564,10 @@ class SetupHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _cors(self):
-        self.send_header("Access-Control-Allow-Origin", "*")
+        origin = self.headers.get("Origin")
+        if origin in {f"http://127.0.0.1:{PORT}", f"http://localhost:{PORT}"}:
+            self.send_header("Access-Control-Allow-Origin", origin)
+        self.send_header("Vary", "Origin")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Trace-ID, x-trace-id, X-Title, HTTP-Referer")
 
@@ -631,10 +588,7 @@ class SetupHandler(BaseHTTPRequestHandler):
 def run_server():
     # Warm up cache in background immediately
     threading.Thread(target=get_preflight_data, daemon=True).start()
-    # Auto-initialize WhatsApp Bridge in background for immediate pairing
-    threading.Thread(target=start_whatsapp_bridge, daemon=True).start()
-    
-    server = ThreadedHTTPServer(("0.0.0.0", PORT), SetupHandler)
+    server = ThreadedHTTPServer((BIND_ADDRESS, PORT), SetupHandler)
     print("=" * 60)
     print("  Agent Workspace OS - Setup & Control Dashboard v2.1")
     print(f"  Dashboard: http://localhost:{PORT} ou http://127.0.0.1:{PORT}")

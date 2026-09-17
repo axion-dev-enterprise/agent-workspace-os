@@ -2,52 +2,50 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Agent Workspace OS Configuration Template",
   "description": "Configuracoes e placeholders a serem preenchidos pelo Agente de IA durante o onboarding inicial.",
-  "version": "2.0.0",
-  "organization": {
-    "name": "{{ORGANIZATION_NAME}}",
-    "slug": "{{ORGANIZATION_SLUG}}",
-    "primary_domain": "{{PRIMARY_DOMAIN}}"
+  "version": "2.1.0",
+  "workspace": {
+    "name": "{{WORKSPACE_NAME}}",
+    "slug": "{{WORKSPACE_SLUG}}",
+    "repository_url": "{{REPOSITORY_URL}}",
+    "default_branch": "main"
   },
   "git": {
     "user_name": "{{GIT_USER_NAME}}",
     "user_email": "{{GIT_USER_EMAIL}}",
     "default_branch": "main",
-    "org_github_handle": "{{GITHUB_ORG_HANDLE}}"
+    "remote_owner": "{{REMOTE_OWNER}}"
   },
   "paths": {
     "canonical_root": "{{WORKSPACE_ROOT}}",
     "heavy_builds_and_cache": "{{HEAVY_STORAGE_PATH}}",
-    "vault_path": "{{VAULT_PATH}}"
+    "secrets_reference": "{{SECRETS_REFERENCE}}"
   },
   "deployment": {
-    "primary_target": "{{PRIMARY_DEPLOY_TARGET}}",
-    "vps_host_ip": "{{VPS_HOST_IP}}",
-    "ssh_port": 22
+    "primary_target": "{{DEPLOYMENT_TARGET}}",
+    "requires_explicit_approval": true
   },
   "agents": {
-    "supported_platforms": [
-      "antigravity",
-      "claude",
-      "cursor",
-      "codex",
-      "hermes",
-      "copilot"
-    ],
+    "supported_platforms": ["{{AGENT_PLATFORM}}"],
     "cowork_protocol_enabled": true
   },
-  "whatsapp": {
-    "enabled": true,
+  "optional_connectors": {
+    "messaging": {
+    "enabled": false,
     "mode": "monitor",
     "port": 4114,
-    "authorized_numbers": [
-      "{{WHATSAPP_OWNER_NUMBER}}"
-    ],
-    "inbox_path": "workspace/inbox/whatsapp"
-  },
-  "google_drive": {
+    "authorized_identities": ["{{AUTHORIZED_IDENTITY}}"],
+    "inbox_path": "workspace/inbox/messages"
+    },
+    "cloud_drive": {
     "enabled": false,
-    "service_account_file": "credentials/google_service_account.json",
-    "target_folder_id": "{{GOOGLE_DRIVE_FOLDER_ID}}",
+    "credentials_reference": "{{CLOUD_DRIVE_CREDENTIALS_REFERENCE}}",
+    "target_folder_id": "{{CLOUD_DRIVE_FOLDER_ID}}",
     "sync_interval_minutes": 30
+    }
+  },
+  "privacy": {
+    "timeline_directory": "memory/daily_logs",
+    "redact_secrets": true,
+    "persist_prompt_content": false
   }
 }

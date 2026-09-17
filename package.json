@@ -1,12 +1,12 @@
 {
   "name": "agent-workspace-os",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Open Source Canonical Workspace OS for Autonomous AI Coding Agents & Multi-Agent Teams",
   "license": "MIT",
-  "author": "AXION Enterprise <axionenterprise777@gmail.com>",
+  "author": "{{MAINTAINER_NAME}} <{{MAINTAINER_EMAIL}}>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/axion-dev-enterprise/agent-workspace-os.git"
+    "url": "{{REPOSITORY_URL}}"
   },
   "scripts": {
     "dashboard": "python scripts/setup_server.py",
@@ -19,7 +19,7 @@
   "keywords": [
     "ai-agents",
     "agentic-engineering",
-    "antigravity",
+    "agent-workspace",
     "claude-code",
     "cursor",
     "workspace-os",

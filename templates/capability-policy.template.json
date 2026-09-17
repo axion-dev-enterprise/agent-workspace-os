@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "default": "disabled",
+  "capabilities": {
+    "browser_inspection": { "enabled": false, "requires_authorization": true },
+    "browser_mutation": { "enabled": false, "requires_authorization": true },
+    "source_control_publish": { "enabled": false, "requires_authorization": true },
+    "cloud_deploy": { "enabled": false, "requires_authorization": true },
+    "messaging_connector": { "enabled": false, "requires_authorization": true },
+    "drive_connector": { "enabled": false, "requires_authorization": true },
+    "model_proxy": { "enabled": false, "requires_authorization": true }
+  }
+}

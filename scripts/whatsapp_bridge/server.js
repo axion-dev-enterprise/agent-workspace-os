@@ -286,29 +286,10 @@ async function transcribeViaCloudFallback(audioPath) {
 }
 
 function resolveApiKeys() {
-  let groqKey = process.env.GROQ_API_KEY || '';
-  let openaiKey = process.env.OPENAI_API_KEY || '';
-
-  if (fs.existsSync(CONFIG_FILE)) {
-    try {
-      const cfg = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
-      groqKey = groqKey || cfg.ai?.groq_api_key || cfg.transcription?.groq_api_key || cfg.groq_api_key || '';
-      openaiKey = openaiKey || cfg.ai?.openai_api_key || cfg.openai_api_key || '';
-    } catch (_) {}
-  }
-  const vaultGroq = 'D:/WORKSPACE/SECURE/VAULT/tokens/llm/groq.env';
-  if (!groqKey && fs.existsSync(vaultGroq)) {
-    try {
-      const lines = fs.readFileSync(vaultGroq, 'utf8').split('\n');
-      for (const line of lines) {
-        if (line.trim().startsWith('GROQ_API_KEY=')) {
-          groqKey = line.split('=')[1].trim().replace(/^["']|["']$/g, '');
-          break;
-        }
-      }
-    } catch (_) {}
-  }
-  return { groqKey, openaiKey };
+  return {
+    groqKey: process.env.GROQ_API_KEY || '',
+    openaiKey: process.env.OPENAI_API_KEY || ''
+  };
 }
 
 // ── Task Queue Dispatcher ──────────────────────────────────
@@ -881,7 +862,7 @@ function handleRequest(req, res) {
 
 // ── Start Server ───────────────────────────────────────────
 const server = http.createServer(handleRequest);
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, process.env.WHATSAPP_BIND_ADDRESS || '127.0.0.1', () => {
   console.log(`WhatsApp Bridge (v2.5) running on http://127.0.0.1:${PORT}`);
   console.log(`[BOOT] Modo operacional ativo: "${state.mode}" (persistido)`);
   initBaileys();

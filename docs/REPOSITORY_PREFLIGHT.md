@@ -1,10 +1,10 @@
-# Official Repository Pre-flight
+# Repository Pre-flight
 
-Run this checklist before modifying, committing, publishing, or operating the official `axion-dev-enterprise/agent-workspace-os` repository. It is deliberately read-only until the final authorization gate.
+Run this checklist before modifying, committing, publishing, or operating the configured repository. It is deliberately read-only until the final authorization gate.
 
 ## 1. Establish the target
 
-- Confirm the working directory is the intended checkout and `origin` is `https://github.com/axion-dev-enterprise/agent-workspace-os.git`.
+- Confirm the working directory is the intended checkout and that `origin` matches `workspace.repository_url` in the local manifest.
 - Read `AGENTS.md`, `DIRECTIVES.md`, `WORKFLOW.md`, and the relevant protocol before acting.
 - Record the exact user request and identify whether it authorizes only analysis or also an external mutation.
 
@@ -18,7 +18,7 @@ git config --get user.name
 git config --get user.email
 ```
 
-Expected identity is `AXION Enterprise <axionenterprise777@gmail.com>`. A dirty worktree belongs to its author: preserve it, identify overlapping files, and do not reset, checkout, stash, or overwrite it without authorization.
+Expected identity is the installer-configured `git.user_name` and `git.user_email`. A dirty worktree belongs to its author: preserve it, identify overlapping files, and do not reset, checkout, stash, or overwrite it without authorization.
 
 ## 3. Validate vendored skills
 

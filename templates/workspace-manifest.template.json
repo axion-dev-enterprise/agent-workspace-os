@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0",
+  "workspace": {
+    "name": "{{WORKSPACE_NAME}}",
+    "slug": "{{WORKSPACE_SLUG}}",
+    "repository_url": "{{REPOSITORY_URL}}",
+    "default_branch": "{{DEFAULT_BRANCH}}"
+  },
+  "paths": {
+    "root": "{{WORKSPACE_ROOT}}",
+    "artifacts": "{{ARTIFACTS_PATH}}",
+    "secrets": "{{SECRETS_REFERENCE}}"
+  },
+  "runtime": {
+    "bind_address": "127.0.0.1",
+    "setup_port": 8765,
+    "enabled_capabilities": []
+  },
+  "privacy": {
+    "timeline_directory": "memory/daily_logs",
+    "redact_secrets": true,
+    "persist_prompt_content": false
+  }
+}
