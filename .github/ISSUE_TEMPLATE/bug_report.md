@@ -20,3 +20,6 @@ A clear and concise description of what you expected to happen.
 ```text
 Paste relevant sanitized logs here
 ```
+
+**Security notice**
+Do not include credentials, cookies, private URLs, message content, or personal data. For a security vulnerability, use the private reporting path in `SECURITY.md` instead of this template.

@@ -1,12 +1,12 @@
 {
   "projectName": "agent-workspace-os",
-  "version": "1.1.0",
-  "previousVersion": "1.0.0",
-  "releaseTag": "v1.1.0",
-  "buildTimestamp": "2026-09-14T22:52:42.139442Z",
+  "version": "2.0.0",
+  "previousVersion": "1.1.0",
+  "releaseTag": "v2.0.0",
+  "buildTimestamp": "2026-09-17T04:12:46-03:00",
   "environment": "production",
   "repositoryUrl": "https://github.com/axion-dev-enterprise/agent-workspace-os",
-  "status": "SUCCESS",
+  "status": "DOCUMENTATION_RELEASE",
   "author": {
     "name": "AXION Enterprise",
     "email": "axionenterprise777@gmail.com"
@@ -35,16 +35,16 @@
     {
       "module": "ui-notifications",
       "description": "Dark glassmorphic custom toast system replacing all browser-native dialogs (zero alert/confirm/prompt)"
+    },
+    {
+      "module": "governance-v2",
+      "description": "Public operating contract, external skill provenance, repository pre-flight, community security policy, support boundaries, and release policy"
     }
   ],
   "verification": {
-    "httpEndpoints": {
-      "GET /": 200,
-      "GET /api/preflight": 200,
-      "GET /api/config": 200,
-      "GET /api/whatsapp/status": 200
-    },
-    "jsSyntaxCheck": "PASSED (node -c, 0 errors)",
-    "pythonSyntaxCheck": "PASSED (py_compile, 0 errors)"
+    "releaseScope": "Documentation and vendored-skill governance only",
+    "structuralChecks": "Passed: JSON parse, documentation presence, skill entrypoint presence, and git diff whitespace check",
+    "runtimeChecks": "Not run for v2.0.0",
+    "deployment": "Not performed for v2.0.0"
   }
 }

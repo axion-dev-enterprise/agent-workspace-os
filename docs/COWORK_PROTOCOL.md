@@ -7,6 +7,8 @@ Este protocolo estabelece uma governança assíncrona **baseada em arquivos JSON
 2. **Visibilidade Compartilhada**: Descobertas técnicas feitas por um agente ficam imediatamente acessíveis a todos os outros.
 3. **Rastreabilidade de Turnos**: Passagens de bastão formais (*handoffs*) entre agentes.
 
+O protocolo é ativado quando há trabalho concorrente real. Ele não substitui instruções do usuário, autorização para efeitos externos ou revisão humana de mudanças que possam afetar outro agente.
+
 ---
 
 ## 2. Estrutura de Arquivos em `memory/cowork/`
@@ -36,6 +38,8 @@ Antes de modificar um módulo, o agente registra:
 ```
 Se outro agente tentar registrar uma tarefa sobrepondo `services/auth`, a operação DEVE ser retida até que o lock seja liberado com status `COMPLETED`.
 
+Locks devem conter apenas identificadores operacionais, paths e estado. Nunca inclua prompts privados, credenciais, conteúdo de mensagens, cookies ou dados de clientes. Um lock abandonado deve ser verificado com o proprietário antes de remoção.
+
 ### 2.2 Quadro Compartilhado (`blackboard.json`)
 Agentes publicam fatos técnicos validados:
 ```json
@@ -49,6 +53,8 @@ Agentes publicam fatos técnicos validados:
   "tags": ["database", "schema", "ready"]
 }
 ```
+
+Registre evidência e limitação do achado. Não publique dados privados no blackboard e não use uma entrada como prova de que uma operação externa foi autorizada.
 
 ### 2.3 Handoffs Formais (`handoffs/`)
 Documento gerado ao final de um turno ou ao transferir escopo:

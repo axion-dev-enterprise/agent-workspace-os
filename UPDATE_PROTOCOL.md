@@ -15,6 +15,7 @@
 1. **Zero Sobrescrita de Identidade**: NUNCA reverter ou sobrescrever o `workspace.config.json` do usuário nem reintroduzir placeholders `{{...}}` em um workspace já customizado.
 2. **Preservação de Código Ativo**: Modificações feitas pelo usuário em `apps/`, `services/` ou `packages/` são sagradas e jamais devem ser descartadas.
 3. **Atualização Contextual & Memória**: Toda novidade incorporada (novas skills, correções de regras) deve ser catalogada no Daily Log e no Blackboard compartilhado para que todos os agentes passem a utilizá-la imediatamente.
+4. **Aprovação de Mutação**: Fetch e diff são leitura. Stash, merge, rebase, alteração de configuração e resolução de conflito exigem solicitação ou autorização explícita do proprietário do workspace.
 
 ---
 
@@ -22,10 +23,7 @@
 
 ### Passo 1: Sondagem Prévia e Proteção de Estado
 1. Verifique se o diretório de trabalho está limpo (`git status`).
-   - Se houver arquivos modificados não commitados, faça um stash preventivo ou peça autorização para commitar:
-     ```bash
-     git stash push -m "WIP: pre-update backup"
-     ```
+   - Se houver arquivos modificados não commitados, pare e apresente os arquivos afetados. Não crie stash preventivo, não descarte alterações e não faça merge até o proprietário decidir como preservá-las.
 2. Carregue as configurações locais de `workspace.config.json` para memória (guardando o nome da organização, identidade git e caminhos locais).
 
 ### Passo 2: Buscar Novos Commits do Remoto (Fetch)
@@ -48,15 +46,12 @@ Identifique quais categorias de arquivos foram atualizadas:
 - **Documentações & Protocolos**: alterações em `docs/` ou templates
 
 ### Passo 4: Sincronização e Merge Inteligente
-1. Execute o merge das atualizações upstream:
+1. Depois da revisão e autorização explícita, execute o merge das atualizações upstream:
    ```bash
    git merge FETCH_HEAD --no-edit
    ```
 2. Se o merge atualizar `AGENTS.md` ou `DIRECTIVES.md` e reintroduzir algum placeholder novo (ex: uma nova variável criada pelo upstream), preencha o novo placeholder utilizando as variáveis já existentes em `workspace.config.json` ou pergunte apenas sobre o novo parâmetro ao usuário.
-3. Se foi feito stash no Passo 1, restaure-o:
-   ```bash
-   git stash pop
-   ```
+3. Se houver conflito, pare, descreva os arquivos e as alternativas de resolução e aguarde orientação. Nunca escolha uma resolução que descarte trabalho local sem autorização.
 
 ### Passo 5: Atualização da Memória e Contexto do Workspace
 

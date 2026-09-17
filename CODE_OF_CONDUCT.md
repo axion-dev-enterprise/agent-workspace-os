@@ -11,4 +11,4 @@ Examples of behavior that contributes to a positive environment:
 - Accepting responsibility and apologizing to those affected by our mistakes
 
 ## Enforcement
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project leadership. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to project leadership at `axionenterprise777@gmail.com` with the subject `Agent Workspace OS conduct report`. Do not include credentials, session data, or private third-party content. All complaints will be reviewed and investigated promptly and fairly.
