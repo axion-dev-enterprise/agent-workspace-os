@@ -37,53 +37,16 @@ def resolve_openrouter_key(client_auth_header=None):
     """
     Resolve OpenRouter API Key with hierarchy:
     1. Direct client authorization header (if valid and not a local placeholder)
-    2. workspace.config.json (ai.openrouter_api_key)
-    3. .env file in WORKSPACE_ROOT
-    4. Development Vault keys
+    2. Environment variables supplied by the local secret manager
     """
     if client_auth_header and client_auth_header.startswith("Bearer "):
         token = client_auth_header.split(" ", 1)[1].strip()
         if token.startswith("sk-or-") or (len(token) > 20 and not token.startswith("sk-os-")):
             return token
 
-    # 2. Check workspace.config.json
-    if os.path.exists(CONFIG_FILE):
-        try:
-            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-                cfg = json.load(f)
-                key = cfg.get("ai", {}).get("openrouter_api_key") or cfg.get("openrouter_api_key")
-                if key:
-                    return key
-        except Exception:
-            pass
-
-    # 3. Check local .env
-    env_path = os.path.join(WORKSPACE_ROOT, ".env")
-    if os.path.exists(env_path):
-        try:
-            with open(env_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    if line.strip().startswith("OPENROUTER_API_KEY="):
-                        return line.split("=", 1)[1].strip().strip('"\'')
-        except Exception:
-            pass
-
-    # 4. Check Vault paths
-    vault_paths = [
-        "D:/WORKSPACE/SECURE/VAULT/tokens/llm/openrouter.env",
-        "D:/WORKSPACE/SECURE/VAULT/tokens/openrouter/openrouter.env",
-        "D:/WORKSPACE/SECURE/VAULT/sensix/openrouter.env"
-    ]
-    for vp in vault_paths:
-        if os.path.exists(vp):
-            try:
-                with open(vp, "r", encoding="utf-8") as f:
-                    for line in f:
-                        trimmed = line.strip()
-                        if trimmed.startswith("OPENROUTER_API_KEY=") or trimmed.startswith("OPENROUTER_KEY="):
-                            return trimmed.split("=", 1)[1].strip().strip('"\'')
-            except Exception:
-                pass
+    key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_KEY")
+    if key:
+        return key
 
     return ""
 
@@ -176,10 +139,12 @@ def handle_chat_completions(req_body, req_headers, client_ip="127.0.0.1", sse_wr
     upstream_headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://axionenterprise.cloud",
-        "X-Title": "Agent Workspace OS",
+        "X-Title": os.environ.get("MODEL_PROXY_TITLE", "Agent Workspace OS"),
         "X-Trace-ID": trace_id
     }
+    referrer = os.environ.get("MODEL_PROXY_REFERER")
+    if referrer:
+        upstream_headers["HTTP-Referer"] = referrer
 
     upstream_req = urllib.request.Request(upstream_url, data=upstream_payload, headers=upstream_headers, method="POST")
 

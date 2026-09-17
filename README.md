@@ -5,10 +5,10 @@
 **The Deterministic Operating Framework for Autonomous AI Software Engineering.**  
 *Turn any repository into an hallucination-resistant, multi-agent collaborative environment.*
 
-[![Release: v2.0.0](https://img.shields.io/badge/Release-v2.0.0-blue.svg?style=flat-square)](version_dump.json)
+[![Release: v2.1.0](https://img.shields.io/badge/Release-v2.1.0-blue.svg?style=flat-square)](version_dump.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
-[![Compatible With](https://img.shields.io/badge/Agents-Claude%20%7C%20Antigravity%20%7C%20Cursor%20%7C%20Codex%20%7C%20Hermes-purple?style=flat-square)](#-supported-agents)
+[![Portable](https://img.shields.io/badge/Configuration-template--first-blue?style=flat-square)](docs/TEMPLATE_CUSTOMIZATION.md)
 
 [⚡ 1-Click Launch](#-1-click-launch) • [📋 Agent Copyboxes](#-copy-paste-prompts-for-ai-agents) • [🖥️ Web Dashboard](#-visual-web-dashboard--control-center) • [🎯 Core Principles](#-core-principles) • [🤝 Multi-Agent Cowork](#-multi-agent-cowork-protocol) • [🚀 Changelog](#-changelog)
 
@@ -18,11 +18,13 @@
 
 ## Quick start
 
-Clone the repository, read the pre-flight, then choose the setup path:
+Copy the distribution, read the pre-flight, then customize the local manifest before enabling any connector:
 
 ```bash
-git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git my-project
+git clone <your-fork-or-distribution-url> my-project
 cd my-project
+copy templates\workspace-manifest.template.json workspace\workspace-manifest.json
+copy templates\capability-policy.template.json workspace\capability-policy.json
 ```
 
 Before enabling a connector or entering credentials, read [Security](SECURITY.md), [the setup protocol](SETUP_PROTOCOL.md), and [the documentation index](docs/README.md). A setup request does not authorize messages, deployments, account changes, or other external mutations.
@@ -46,7 +48,7 @@ Already using an AI coding assistant? Copy and paste one of the prompts below di
 Please start the visual setup server (python scripts/setup_server.py) and give me the link http://127.0.0.1:8765 to configure my workspace.
 ```
 
-### 🔵 For Google Antigravity / Gemini CLI:
+### For another compatible agent:
 ```text
 Inicie o servidor de setup (python scripts/setup_server.py) e me envie o link http://127.0.0.1:8765 para eu configurar o projeto.
 ```
@@ -167,9 +169,9 @@ Agent Workspace OS includes a modern, high-performance local web dashboard runni
     └── cowork/                 # Active locks, blackboard, and handoffs
 ```
 
-## External Skills and Repository Pre-flight
+## Templates, skills, and repository pre-flight
 
-The vendored skills, source revisions, and routing rules are documented in [docs/EXTERNAL_SKILLS.md](docs/EXTERNAL_SKILLS.md). Before changing or operating the official repository, follow [docs/REPOSITORY_PREFLIGHT.md](docs/REPOSITORY_PREFLIGHT.md).
+The portable operating model is documented in [docs/TEMPLATE_CUSTOMIZATION.md](docs/TEMPLATE_CUSTOMIZATION.md). The vendored skills, source revisions, and routing rules are documented in [docs/EXTERNAL_SKILLS.md](docs/EXTERNAL_SKILLS.md). Before changing or operating a repository, follow [docs/REPOSITORY_PREFLIGHT.md](docs/REPOSITORY_PREFLIGHT.md).
 
 ## Community and safety
 

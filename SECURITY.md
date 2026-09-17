@@ -6,7 +6,7 @@ Security fixes are maintained on the latest released version of Agent Workspace 
 
 ## Reporting a vulnerability
 
-Do not open a public issue for a suspected vulnerability. Send a concise report to `axionenterprise777@gmail.com` with the subject `Agent Workspace OS security report`.
+Do not open a public issue for a suspected vulnerability. Use the security contact configured during installation (`{{SECURITY_CONTACT}}`) and include only the minimum evidence needed to reproduce the issue.
 
 Include the affected version, component or file, impact, reproduction steps that do not expose third-party data, and any suggested mitigation. Do not send API keys, passwords, session cookies, private message content, payment data, or live destructive payloads.
 

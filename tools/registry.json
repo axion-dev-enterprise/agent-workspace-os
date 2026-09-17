@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "tools": [
+    {
+      "id": "workspace-inspector",
+      "capability": "read_only",
+      "risk": "low",
+      "default": "enabled",
+      "preflight": ["read-local-rules", "confirm-workspace-root"]
+    },
+    {
+      "id": "browser-automation",
+      "capability": "browser_inspection",
+      "risk": "high",
+      "default": "disabled",
+      "preflight": ["authorize-domain", "create-isolated-session", "inspect-snapshot"]
+    },
+    {
+      "id": "source-control-publish",
+      "capability": "source_control_publish",
+      "risk": "high",
+      "default": "disabled",
+      "preflight": ["verify-identity", "inspect-diff", "confirm-target"]
+    },
+    {
+      "id": "optional-connector",
+      "capability": "messaging_connector",
+      "risk": "high",
+      "default": "disabled",
+      "preflight": ["explicit-consent", "verify-account", "describe-data-flow"]
+    }
+  ]
+}
