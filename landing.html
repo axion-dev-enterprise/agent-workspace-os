@@ -441,6 +441,26 @@
       header { padding: 12px 20px; }
       .setup-box { padding: 24px; }
     }
+    /* AXION 2026 landing layer: restrained depth, live hierarchy, no decorative noise. */
+    body { background: #09090b; color: #f4f4f5; }
+    body::before { content:""; position:fixed; inset:0; pointer-events:none; background:linear-gradient(115deg,transparent 20%,rgba(96,165,250,.045) 50%,transparent 76%); z-index:-1; }
+    .hero { min-height:640px; align-content:center; }
+    .hero-title { letter-spacing:-.065em; line-height:.96; max-width:850px; }
+    .hero-subtitle { max-width:650px; font-size:1.1rem; }
+    .hero-eyebrow { color:#60a5fa; font-family:var(--font-mono); letter-spacing:.08em; }
+    .hero-ctas .btn { transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s; }
+    .hero-ctas .btn:hover { transform:translateY(-3px); box-shadow:0 16px 34px rgba(0,0,0,.28); }
+    .bento-grid { gap:16px; }
+    .bento-item { background:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%),#121217; border-color:rgba(255,255,255,.1); border-top-color:rgba(255,255,255,.18); border-radius:14px; transition:transform .28s cubic-bezier(.16,1,.3,1),border-color .28s,box-shadow .28s; }
+    .bento-item:hover { transform:translateY(-6px); border-color:rgba(96,165,250,.5); box-shadow:0 24px 60px rgba(0,0,0,.3); }
+    .bento-preview { background:#0c0c0f; border-color:rgba(255,255,255,.1); }
+    .section-title { letter-spacing:-.055em; }
+    .feature-card, .agent-card, .step-card { background:#121217; border-color:rgba(255,255,255,.1); border-radius:12px; }
+    .feature-card:hover, .agent-card:hover, .step-card:hover { border-color:rgba(96,165,250,.48); transform:translateY(-3px); }
+    .section, .hero, .bento-item, .feature-card, .agent-card, .step-card { will-change:transform; }
+    .reveal-on-scroll { opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1); }
+    .reveal-on-scroll.is-visible { opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce) { *,*:before,*:after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
   </style>
 </head>
 <body>
@@ -1075,6 +1095,12 @@ Abra http://127.0.0.1:8765 no navegador para validar os diagnósticos de CLI e c
   const savedTheme = localStorage.getItem('axion_theme') || 'light';
   applyTheme(savedTheme);
   updateAgent('antigravity');
+  const landingObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); landingObserver.unobserve(entry.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll('.section, .bento-item, .feature-card, .agent-card, .step-card').forEach((element) => {
+    element.classList.add('reveal-on-scroll'); landingObserver.observe(element);
+  });
 </script>
 
 </body>
