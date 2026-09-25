@@ -1,5 +1,5 @@
 {
-  "scanned_at": "2026-09-25T04:54:54.652087+00:00",
+  "scanned_at": "2026-09-25T05:11:07.314045+00:00",
   "github": {
     "profile": {
       "login": "axion-dev-enterprise",
@@ -2486,8 +2486,8 @@
         "hostname": "juliana-vps",
         "ip": "100.81.231.111",
         "os": "linux",
-        "online": true,
-        "last_seen": "0001-01-01T00:00:00Z",
+        "online": false,
+        "last_seen": "2026-09-25T05:00:00.1Z",
         "exit_node": false
       },
       {
@@ -2523,68 +2523,28 @@
         "exit_node": false
       }
     ],
-    "juliana_vps_deep_audit": {
-      "uname_uptime": "Linux srv1877777 6.12.95+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.95-1 (2026-07-04) x86_64 GNU/Linux\n 01:55:14 up 52 days,  5:37,  2 users,  load average: 0.22, 0.18, 0.13",
-      "resources": "total        used        free      shared  buff/cache   available\nMem:            7945        1756         326          65        6226        6188\nSwap:              0           0           0\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        99G   23G   72G  24% /",
-      "containers": [
-        {
-          "name": "hermes-whatsapp-keeper",
-          "status": "Up 5 weeks",
-          "image": "hermes-whatsapp-keeper:latest",
-          "ports": "3000/tcp"
-        },
-        {
-          "name": "hermes-gateway-juliana",
-          "status": "Up 5 weeks (healthy)",
-          "image": "hermes-gateway-juliana:v5.1.0",
-          "ports": "127.0.0.1:8000->8000/tcp"
-        },
-        {
-          "name": "hermes-webchat",
-          "status": "Up 5 weeks (healthy)",
-          "image": "hermes-webchat:v5.1.0",
-          "ports": "0.0.0.0:80->80/tcp, [::]:80->80/tcp"
-        },
-        {
-          "name": "axion-cadvisor",
-          "status": "Up 6 weeks (healthy)",
-          "image": "3de2bd520312",
-          "ports": "100.81.231.111:8081->8080/tcp"
-        },
-        {
-          "name": "axion-alloy",
-          "status": "Up 6 weeks",
-          "image": "0f4434c92b3e",
-          "ports": "100.81.231.111:12345->12345/tcp"
-        },
-        {
-          "name": "axion-node-exporter",
-          "status": "Up 6 weeks",
-          "image": "1b4e4438faca",
-          "ports": "100.81.231.111:9100->9100/tcp"
-        },
-        {
-          "name": "hermes-postgres",
-          "status": "Up 7 weeks (healthy)",
-          "image": "postgres:16-alpine",
-          "ports": "5432/tcp"
-        },
-        {
-          "name": "hermes-redis",
-          "status": "Up 7 weeks (healthy)",
-          "image": "redis:7-alpine",
-          "ports": "6379/tcp"
+    "decommissioned_nodes": [
+      {
+        "hostname": "juliana-vps",
+        "ip": "100.81.231.111",
+        "decommissioned_at": "2026-09-25",
+        "reason": "Descomissionamento operacional solicitado.",
+        "actions_taken": [
+          "Parada graciosa de todos os 8 contêineres Docker",
+          "Desativação permanente do serviço Docker (systemctl disable --now docker)",
+          "Desconexão da Tailnet (tailscale logout - chave expirada)",
+          "Dump bit-a-bit integral do PostgreSQL hermes_db salvo no cofre E:",
+          "Tarball completo do código e configurações (/opt/hermes) salvo no cofre E:"
+        ],
+        "cold_vault": {
+          "db_dump_exists": true,
+          "db_dump_size": 88936,
+          "app_archive_exists": true,
+          "app_archive_size": 2619201,
+          "tables_count": 135
         }
-      ],
-      "storage_networks": "hermes_hermes_audit\nhermes_hermes_landings\nhermes_hermes_skills\nhermes_n8n_data\nhermes_ollama_data\nhermes_postgres_data\nhermes_redis_data\nhermes_whatsapp_sessions\nobservability-agent_alloy-data\n---\nbridge|bridge\nhermes_hermes-network|bridge\nhost|host\nnone|null\nobservability-agent_default|bridge",
-      "postgres": {
-        "table_count": "135",
-        "database_size": "15 MB"
-      },
-      "redis": {
-        "memory": "used_memory_human:1.11M"
       }
-    },
+    ],
     "vps_probes": [
       {
         "name": "axion-vps-104-207-90-167",
@@ -2648,11 +2608,11 @@
     },
     "storage": {
       "c_drive": {
-        "free_gb": 177.76,
+        "free_gb": 177.75,
         "total_gb": 222.86
       },
       "e_backup_drive": {
-        "free_gb": 928.46,
+        "free_gb": 928.06,
         "total_gb": 930.94
       }
     },
@@ -2662,17 +2622,20 @@
         "backup_2026-09-25"
       ],
       "latest_manifest": {
-        "backup_date": "2026-09-25T04:15:41.435592+00:00",
+        "backup_date": "2026-09-25T05:09:38.690627+00:00",
         "destination": "E:\\backups\\axion_enterprise\\backup_2026-09-25",
         "status": "COMPLETED",
         "modules": {
           "workspace_state": "OK",
-          "google_drive_assets_synced": 12,
+          "google_drive_assets_synced": 13,
           "github_repositories": "OK",
           "production_databases": {
             "status": "OK",
-            "size_bytes": 88941,
-            "sha256": "3942e178132bf599ab9ec756308d0477cc5a72d74600efdcaa0a3f89905395b6"
+            "mode": "DECOMMISSIONED_COLD_VAULT",
+            "database": "hermes_db",
+            "size_bytes": 88936,
+            "sha256": "b132513d1c9cd56435412fe92ac9931bead7b0fe0f51a9ebbeef4c99fbb73db0",
+            "source": "E:\\backups\\axion_enterprise\\decommission_juliana_vps_final_archive\\hermes_db_final.sql.gz"
           }
         }
       }

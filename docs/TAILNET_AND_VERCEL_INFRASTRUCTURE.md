@@ -66,17 +66,18 @@
 
 ---
 
-### 1.4 `juliana-vps` (Hermes Central — W Soluções Tecnologia)
-- **IP Tailscale**: `100.81.231.111`
+### 1.4 ~~`juliana-vps`~~ [DESCOMISSIONADO / REMOVIDO EM 2026-09-25]
+- **IP Tailscale Anterior**: `100.81.231.111`
 - **IP de Origem**: `179.197.237.20` (Conexão dedicada Brasil, Provedor Claro/Net)
-- **Sistema Operacional**: Linux x86_64
-- **Portas Abertas**: `22` (Tailscale SSH Ativo), `80` (HTTP)
-- **Latência WireGuard**: **7 ms** (Ultra-baixa latência nacional)
-- **Web Server**: Nginx v1.31.4
-- **Aplicação Ativa**:
-  - **Hermes Central** (`W Soluções Tecnologia`)
-  - Painel com tema escuro, autenticação para `Juliana`
-  - Módulos: Agente Central Executivo, Conectores Omnichannel, Cofre Seguro de Integrações
+- **Sistema Operacional**: Debian GNU/Linux 13 (Trixie) x86_64
+- **Status Operacional**: ⚪ **Descomissionado e desconectado da Tailnet** (`tailscale logout` executado com node key expirado).
+- **Ações de Descomissionamento Realizadas**:
+  - Parada e término gracioso de todos os 8 contêineres Docker (`hermes-whatsapp-keeper`, `hermes-gateway-juliana`, `hermes-webchat`, `axion-cadvisor`, `axion-alloy`, `axion-node-exporter`, `hermes-postgres`, `hermes-redis`).
+  - Serviço do Docker desabilitado no boot (`systemctl disable --now docker`).
+  - Registro DNS e Cloudflare Tunnel `juliana.axionenterprise.cloud` permanentemente removidos.
+- **Armazenamento Seguro em Cold Vault (`E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\`)**:
+  - `hermes_db_final.sql.gz` (88.936 bytes, SHA256 validado): Dump integral das 135 tabelas do PostgreSQL 16.
+  - `hermes_app_code_final.tar.gz` (2.619.201 bytes): Tarball completo de código-fonte, configs de ambiente e assets de `/opt/hermes`.
 
 ---
 

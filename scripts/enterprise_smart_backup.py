@@ -121,30 +121,35 @@ def backup_github_repos(dest_dir):
         print(f"  [!] Erro no backup do GitHub: {e}")
 
 def backup_databases(dest_dir):
-    print("[4/4] Executando dump criptografado de banco de dados em produção via Tailnet...")
+    print("[4/4] Validando e sincronizando dumps de bancos de dados em cold vault...")
     db_dir = dest_dir / "databases"
     db_dir.mkdir(parents=True, exist_ok=True)
     
+    decom_archive = BACKUP_ROOT / "decommission_juliana_vps_final_archive" / "hermes_db_final.sql.gz"
     target_file = db_dir / "hermes_db.sql.gz"
-    tailscale_bin = r"C:\Program Files\Tailscale\tailscale.exe"
     
-    try:
-        cmd = [tailscale_bin, "ssh", "root@juliana-vps", "docker exec hermes-postgres pg_dump -U hermes -d hermes_db | gzip -c"]
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        data, err = p.communicate(timeout=60)
-        
-        if p.returncode == 0 and len(data) > 1000:
-            with open(target_file, "wb") as f:
-                f.write(data)
+    # 1. Se o dump canônico de descomissionamento existir, sincroniza para o backup do dia
+    if decom_archive.exists():
+        try:
+            shutil.copy2(decom_archive, target_file)
             sha = calculate_sha256(target_file)
-            print(f"  -> Banco hermes_db exportado com sucesso ({len(data)} bytes, SHA256: {sha[:16]}...)")
-            return {"status": "OK", "size_bytes": len(data), "sha256": sha}
-        else:
-            print(f"  [!] Falha no dump do PostgreSQL: {err.decode(errors='ignore')}")
-            return {"status": "FAILED", "error": err.decode(errors='ignore')}
-    except Exception as e:
-        print(f"  [!] Erro durante execução do dump: {e}")
-        return {"status": "ERROR", "error": str(e)}
+            size = target_file.stat().st_size
+            print(f"  -> Snapshot canônico de hermes_db sincronizado ({size} bytes, SHA256: {sha[:16]}...)")
+            print("  -> Nota: Nó juliana-vps descomissionado em 25/09/2026. Snapshot definitivo preservado.")
+            return {
+                "status": "OK",
+                "mode": "DECOMMISSIONED_COLD_VAULT",
+                "database": "hermes_db",
+                "size_bytes": size,
+                "sha256": sha,
+                "source": str(decom_archive)
+            }
+        except Exception as e:
+            print(f"  [!] Erro ao copiar snapshot de descomissionamento: {e}")
+            return {"status": "ERROR", "error": str(e)}
+    else:
+        print("  [!] Arquivo de snapshot final não encontrado no cold vault.")
+        return {"status": "NOT_FOUND", "target": str(decom_archive)}
 
 def main():
     print("==================================================")

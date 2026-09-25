@@ -1,6 +1,6 @@
 # Painel de Saúde & Auto-Fix da Infraestrutura
 
-> **Última Varredura**: 2026-09-25 01:31:39 (UTC: 2026-09-25T04:31:39.480252+00:00)  
+> **Última Varredura**: 2026-09-25 02:12:47 (UTC: 2026-09-25T05:12:47.726297+00:00)  
 > **Status Global do Sistema**: 🟢 **OPERACIONAL E SAUDÁVEL**  
 
 ---
@@ -9,9 +9,8 @@
 
 | Nó / Servidor | IP Tailscale | Função | Status | Latência |
 | :--- | :--- | :--- | :--- | :--- |
-| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 197ms |
-| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 172ms |
-| `juliana-vps` | `100.81.231.111` | Hermes Central (Nginx) | 🟢 HEALTHY | 6ms |
+| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 196ms |
+| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 170ms |
 
 ---
 
@@ -28,9 +27,9 @@
 
 ## 3. Estação de Trabalho Local & Armazenamento
 
-- **Espaço em Disco (`C:`)**: 177.79 GB livres de 222.86 GB (79.8%) — Status: **HEALTHY**
-- **Unidade de Backups (`E:`)**: 928.46 GB livres de 930.94 GB (99.7%) — Status: **HEALTHY**
-- **Último Backup Offline Verificado**: `2026-09-25T04:15:41.435592+00:00` (Integridade: **COMPLETED**)
+- **Espaço em Disco (`C:`)**: 177.75 GB livres de 222.86 GB (79.8%) — Status: **HEALTHY**
+- **Unidade de Backups (`E:`)**: 928.06 GB livres de 930.94 GB (99.7%) — Status: **HEALTHY**
+- **Último Backup Offline Verificado**: `2026-09-25T05:09:38.690627+00:00` (Integridade: **COMPLETED**)
 - **Ações de Auto-Fix Executadas**: Nenhuma intervenção necessária (sistema íntegro)
 
 ---

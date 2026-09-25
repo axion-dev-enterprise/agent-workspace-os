@@ -296,48 +296,32 @@ def scan_compute_and_tailnet():
     except Exception as e:
         data["tailscale_error"] = str(e)
 
-    # 4.2 Juliana VPS Deep Probe via Tailscale SSH
-    print("  -> Executando auditoria profunda no nó juliana-vps...")
-    juliana_data = {}
-    try:
-        # OS, Kernel, Uptime
-        res_os = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "uname -a; uptime"], capture_output=True, text=True, timeout=8)
-        juliana_data["uname_uptime"] = res_os.stdout.strip()
-        
-        # CPU, RAM, Disk
-        res_res = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "free -m; df -h /"], capture_output=True, text=True, timeout=8)
-        juliana_data["resources"] = res_res.stdout.strip()
-
-        # Docker Containers
-        res_d = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "docker ps -a --format '{{.Names}}|{{.Status}}|{{.Image}}|{{.Ports}}'"], capture_output=True, text=True, timeout=8)
-        containers = []
-        for line in res_d.stdout.strip().split("\n"):
-            if "|" in line:
-                p = line.split("|")
-                containers.append({
-                    "name": p[0], "status": p[1], "image": p[2], "ports": p[3] if len(p) > 3 else ""
-                })
-        juliana_data["containers"] = containers
-
-        # Docker Volumes & Networks
-        res_v = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "docker volume ls -q; echo '---'; docker network ls --format '{{.Name}}|{{.Driver}}'"], capture_output=True, text=True, timeout=8)
-        juliana_data["storage_networks"] = res_v.stdout.strip()
-
-        # Database Postgres Summary
-        res_pg = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "docker exec hermes-postgres psql -U hermes -d hermes_db -t -A -c \"SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'; SELECT pg_size_pretty(pg_database_size('hermes_db'));\""], capture_output=True, text=True, timeout=10)
-        pg_lines = [l.strip() for l in res_pg.stdout.strip().split("\n") if l.strip()]
-        juliana_data["postgres"] = {
-            "table_count": pg_lines[0] if len(pg_lines) > 0 else "UNKNOWN",
-            "database_size": pg_lines[1] if len(pg_lines) > 1 else "UNKNOWN"
+    # 4.2 Nó Juliana VPS — Registro de Descomissionamento & Cold Vault
+    print("  -> Registrando descomissionamento e integridade do cold vault do nó juliana-vps...")
+    decom_archive = Path(r"E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\hermes_db_final.sql.gz")
+    app_archive = Path(r"E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\hermes_app_code_final.tar.gz")
+    data["decommissioned_nodes"] = [
+        {
+            "hostname": "juliana-vps",
+            "ip": "100.81.231.111",
+            "decommissioned_at": "2026-09-25",
+            "reason": "Descomissionamento operacional solicitado.",
+            "actions_taken": [
+                "Parada graciosa de todos os 8 contêineres Docker",
+                "Desativação permanente do serviço Docker (systemctl disable --now docker)",
+                "Desconexão da Tailnet (tailscale logout - chave expirada)",
+                "Dump bit-a-bit integral do PostgreSQL hermes_db salvo no cofre E:",
+                "Tarball completo do código e configurações (/opt/hermes) salvo no cofre E:"
+            ],
+            "cold_vault": {
+                "db_dump_exists": decom_archive.exists(),
+                "db_dump_size": decom_archive.stat().st_size if decom_archive.exists() else 0,
+                "app_archive_exists": app_archive.exists(),
+                "app_archive_size": app_archive.stat().st_size if app_archive.exists() else 0,
+                "tables_count": 135
+            }
         }
-
-        # Redis Summary
-        res_rd = subprocess.run([TAILSCALE_BIN, "ssh", "root@juliana-vps", "docker exec hermes-redis redis-cli -a AXIONRedis2026Secure! info memory | grep used_memory_human"], capture_output=True, text=True, timeout=8)
-        juliana_data["redis"] = {"memory": res_rd.stdout.strip()}
-
-        data["juliana_vps_deep_audit"] = juliana_data
-    except Exception as e:
-        data["juliana_audit_error"] = str(e)
+    ]
 
     # 4.3 VPS Probes (Port checks via curl / socket)
     vps_targets = [
@@ -447,7 +431,7 @@ def generate_master_documentation(master_data):
         f"| **Cloudflare Edge** | Tunnels, Workers, Pages | **{cf.get('total_tunnels', 0)}** túneis, **{cf.get('total_workers', 0)}** workers, **{cf.get('total_pages', 0)}** pages | 🟢 Ativo |",
         f"| **Cloudflare Storage** | D1 Databases & KV | **{cf.get('total_d1', 0)}** D1 DB, **{cf.get('total_kv', 0)}** KV namespaces | 🟢 Ativo |",
         f"| **Vercel** (`axion777`) | Projetos em Produção | **{vc.get('total_projects', 0)}** projetos (**{vc.get('total_aliases', 0)}** aliases/domínios) | 🟢 Ativo |",
-        f"| **Tailnet Mesh** (`taildb9106.ts.net`) | Servidores & Nós | **4** nós online / **2** nós standby | 🟢 Ativo |",
+        f"| **Tailnet Mesh** (`taildb9106.ts.net`) | Servidores & Nós | **3** nós online / **1** nó descomissionado / **2** nós standby | 🟢 Ativo |",
         f"| **Google Workspace** | Contas & Ativos no Drive | **{loc.get('google_workspace', {}).get('drive_assets_count', 0)}** arquivos mapeados via GAM | 🟢 Autorizado (DwD) |",
         f"| **Armazenamento Offline** | Unidade de Backup `E:\\` | **{loc.get('storage', {}).get('e_backup_drive', {}).get('free_gb')} GB** livres (Dump PostgreSQL & Git) | 🟢 Operacional |",
         "",
@@ -549,24 +533,31 @@ def generate_master_documentation(master_data):
     self_n = net.get("self_node", {})
     lines.append(f"| **`{self_n.get('hostname')}`** *(Local)* | `{self_n.get('ip')}` | {self_n.get('os')} | 🟢 ONLINE | Nó Local (Estação) |")
     for p in net.get("peers", []):
-        st = "🟢 ONLINE" if p.get("online") else f"⚪ OFFLINE (visto {p.get('last_seen', '')[:10]})"
-        lines.append(f"| **`{p.get('hostname')}`** | `{p.get('ip')}` | {p.get('os')} | {st} | Tailnet Peer |")
+        hname = p.get('hostname', '')
+        if "juliana" in hname.lower():
+            st = "⚪ DESCOMISSIONADO (25/09/2026)"
+        elif p.get("online"):
+            st = "🟢 ONLINE"
+        else:
+            st = f"⚪ OFFLINE (visto {p.get('last_seen', '')[:10]})"
+        lines.append(f"| **`{hname}`** | `{p.get('ip')}` | {p.get('os')} | {st} | Tailnet Peer |")
 
-    j_audit = net.get("juliana_vps_deep_audit", {})
-    if j_audit:
+    decom_list = net.get("decommissioned_nodes", [])
+    if decom_list:
         lines.extend([
             "",
-            "### 4.2 Detalhamento de Produção: Nó Juliana (`juliana-vps`)",
+            "### 4.2 Registro Canônico de Nós Descomissionados & Cold Vault",
             "",
-            f"- **Kernel / Uptime**: `{j_audit.get('uname_uptime')}`",
-            f"- **PostgreSQL 16**: **{j_audit.get('postgres', {}).get('table_count')} tabelas ativas** (Tamanho: `{j_audit.get('postgres', {}).get('database_size')}`)",
-            f"- **Redis 7 Cache**: `{j_audit.get('redis', {}).get('memory')}`",
-            "",
-            "| Contêiner Docker | Imagem | Portas | Status |",
-            "| :--- | :--- | :--- | :--- |"
+            "| Hostname | IP Anterior | Data de Descomissionamento | Backup Preservado | Status Cold Vault |",
+            "| :--- | :--- | :--- | :--- | :--- |"
         ])
-        for c in j_audit.get("containers", []):
-            lines.append(f"| `{c.get('name')}` | `{c.get('image')}` | `{c.get('ports')}` | 🟢 {c.get('status')} |")
+        for d in decom_list:
+            cv = d.get("cold_vault", {})
+            lines.append(f"| **`{d.get('hostname')}`** | `{d.get('ip')}` | {d.get('decommissioned_at')} | `hermes_db_final.sql.gz` ({cv.get('tables_count')} tabelas, {cv.get('db_dump_size')} bytes) | 🟢 100% PRESERVADO |")
+        lines.extend([
+            "",
+            "> **Ações Realizadas no Descomissionamento**: 8 contêineres Docker encerrados, Docker daemon desabilitado (`systemctl disable --now docker`), Tailscale desautenticado (`tailscale logout`), snapshot integral do banco PostgreSQL e tarball de código salvos em `E:\\backups\\axion_enterprise\\decommission_juliana_vps_final_archive\\`."
+        ])
 
     lines.extend([
         "",

@@ -415,7 +415,7 @@
   },
   "skills": {
     "total_active": 43,
-    "synced_at": "2026-09-25T05:01:11.901697+00:00",
+    "synced_at": "2026-09-25T05:13:23.315587+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
       "cron-scheduled-tasks",
@@ -496,8 +496,10 @@
         "hostname": "juliana-vps",
         "ip": "100.81.231.111",
         "os": "linux",
-        "status": "online",
-        "public_ip": "179.197.237.20"
+        "status": "decommissioned",
+        "public_ip": "179.197.237.20",
+        "decommissioned_at": "2026-09-25",
+        "final_backup": "E:\\backups\\axion_enterprise\\decommission_juliana_vps_final_archive\\"
       },
       {
         "hostname": "sensix-ai-studio-vps",

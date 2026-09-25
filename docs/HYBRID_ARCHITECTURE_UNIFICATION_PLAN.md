@@ -38,11 +38,11 @@ flowchart TD
         Tunnel["WireGuard Mesh (taildb9106.ts.net)"]
     end
 
-    subgraph Compute ["3. Nós Computacionais & Aplicações"]
+    subgraph Compute ["3. Nós Computacionais & Armazenamento"]
         Vercel["Aplicações SaaS SSR (axion-flow, axion-pay)"]
         VPS1["AXION VPS (API Core, Auth Gateway, Hooks)"]
         VPS2["Debian VPS (PostgreSQL, Celery Tasks, Voice Engine)"]
-        VPS3["Juliana VPS (Hermes Central - Baixa Latência Brasil)"]
+        Vault["Cold Vault Storage (E: Backups, Dumps & Git)"]
     end
 
     DNS --> WAF
@@ -52,7 +52,7 @@ flowchart TD
     GW -.->|Túnel Seguro sem IPs Públicos| Tunnel
     Tunnel --> VPS1
     Tunnel --> VPS2
-    Tunnel --> VPS3
+    Tunnel -.->|Replicação & Telemetria| Vault
 ```
 
 ---
@@ -65,11 +65,11 @@ flowchart TD
 
 ### Etapa 2: Padronização de Frontends
 * **Aplicações Críticas / SSR**: Manter na Vercel (`axion-flow`, `axion-pay`, `vercel-ai-gateway-demo`) aproveitando React Server Components (Next.js 15).
-* **Landing Pages e Sites Institucionais**: Consolidar no Cloudflare Pages (`landing-page-teste-w-solucoes`, `proxion-hub`, `axion-landing`), reduzindo custos com tráfego e garantindo CDN global ilimitada.
+* **Landing Pages e Sites Institucionais**: Consolidar no Cloudflare Pages (`landing-page-teste-w-solucoes`, `axion-landing`), reduzindo custos com tráfego e garantindo CDN global ilimitada.
 
-### Etapa 3: Roteamento de Voz para o Nó Brasileiro de 7ms
-* **Ação**: Direcionar o endpoint `voice.axionenterprise.cloud` e o bridge do WhatsApp (`axion-comm`) para rodar em container Docker no nó `juliana-vps` (100.81.231.111).
-* **Benefício**: Redução do delay de áudio e WebRTC de ~200ms para **7ms**, transformando a experiência do cliente final em tempo real.
+### Etapa 3: Consolidação de Microsserviços e Gateway de Comunicação
+* **Ação**: Com o descomissionamento formal do nó `juliana-vps` em 25/09/2026, consolidar os microsserviços centrais (`voice.axionenterprise.cloud` e instâncias do WhatsApp Gateway) no cluster de contêineres do nó `debian-2vcpu` ou nova instância de alta performance.
+* **Benefício**: Redução de custos com infraestrutura dispersa, centralização da governança de logs e manutenção dos dados históricos preservados em cold storage (E:\).
 
 ### Etapa 4: Gateway de Autenticação Unificado (SSO / JWT)
 * **Ação**: Centralizar a emissão e validação de tokens JWT no serviço `auth.axionenterprise.cloud`.

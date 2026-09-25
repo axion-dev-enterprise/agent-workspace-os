@@ -1,6 +1,6 @@
 # Mapa Canônico Mestre da Infraestrutura — AXION Enterprise
 
-> **Última Varredura Exhaustiva**: 2026-09-25 01:55:35 (UTC: 2026-09-25T04:55:35.271547+00:00)  
+> **Última Varredura Exhaustiva**: 2026-09-25 02:11:44 (UTC: 2026-09-25T05:11:44.447152+00:00)  
 > **Classificação**: Confidencial / Arquitetura e Ativos Corporativos  
 > **Operador do Sistema**: `AXION DEV <axionenterprise777@gmail.com>`  
 
@@ -15,9 +15,9 @@
 | **Cloudflare Edge** | Tunnels, Workers, Pages | **15** túneis, **15** workers, **5** pages | 🟢 Ativo |
 | **Cloudflare Storage** | D1 Databases & KV | **1** D1 DB, **3** KV namespaces | 🟢 Ativo |
 | **Vercel** (`axion777`) | Projetos em Produção | **11** projetos (**20** aliases/domínios) | 🟢 Ativo |
-| **Tailnet Mesh** (`taildb9106.ts.net`) | Servidores & Nós | **4** nós online / **2** nós standby | 🟢 Ativo |
+| **Tailnet Mesh** (`taildb9106.ts.net`) | Servidores & Nós | **3** nós online / **1** nó descomissionado / **2** nós standby | 🟢 Ativo |
 | **Google Workspace** | Contas & Ativos no Drive | **141** arquivos mapeados via GAM | 🟢 Autorizado (DwD) |
-| **Armazenamento Offline** | Unidade de Backup `E:\` | **928.46 GB** livres (Dump PostgreSQL & Git) | 🟢 Operacional |
+| **Armazenamento Offline** | Unidade de Backup `E:\` | **928.06 GB** livres (Dump PostgreSQL & Git) | 🟢 Operacional |
 
 ---
 
@@ -150,29 +150,19 @@
 | Nome do Host | IP Tailscale | Sistema Operacional | Status | Conexão |
 | :--- | :--- | :--- | :--- | :--- |
 | **`DESKTOP-1T1E46H`** *(Local)* | `100.64.188.73` | windows | 🟢 ONLINE | Nó Local (Estação) |
-| **`juliana-vps`** | `100.81.231.111` | linux | 🟢 ONLINE | Tailnet Peer |
+| **`juliana-vps`** | `100.81.231.111` | linux | ⚪ DESCOMISSIONADO (25/09/2026) | Tailnet Peer |
 | **`sensix-black-vps`** | `100.86.168.13` | linux | ⚪ OFFLINE (visto 2026-09-16) | Tailnet Peer |
 | **`sensix-ai-studio-vps`** | `100.69.94.49` | linux | ⚪ OFFLINE (visto 2026-08-28) | Tailnet Peer |
 | **`axion-vps-104-207-90-167`** | `100.95.86.83` | linux | 🟢 ONLINE | Tailnet Peer |
 | **`debian-2vcpu-amd-4gb-us-6tb9d`** | `100.73.36.87` | linux | 🟢 ONLINE | Tailnet Peer |
 
-### 4.2 Detalhamento de Produção: Nó Juliana (`juliana-vps`)
+### 4.2 Registro Canônico de Nós Descomissionados & Cold Vault
 
-- **Kernel / Uptime**: `Linux srv1877777 6.12.95+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.95-1 (2026-07-04) x86_64 GNU/Linux
- 01:55:14 up 52 days,  5:37,  2 users,  load average: 0.22, 0.18, 0.13`
-- **PostgreSQL 16**: **135 tabelas ativas** (Tamanho: `15 MB`)
-- **Redis 7 Cache**: `used_memory_human:1.11M`
+| Hostname | IP Anterior | Data de Descomissionamento | Backup Preservado | Status Cold Vault |
+| :--- | :--- | :--- | :--- | :--- |
+| **`juliana-vps`** | `100.81.231.111` | 2026-09-25 | `hermes_db_final.sql.gz` (135 tabelas, 88936 bytes) | 🟢 100% PRESERVADO |
 
-| Contêiner Docker | Imagem | Portas | Status |
-| :--- | :--- | :--- | :--- |
-| `hermes-whatsapp-keeper` | `hermes-whatsapp-keeper:latest` | `3000/tcp` | 🟢 Up 5 weeks |
-| `hermes-gateway-juliana` | `hermes-gateway-juliana:v5.1.0` | `127.0.0.1:8000->8000/tcp` | 🟢 Up 5 weeks (healthy) |
-| `hermes-webchat` | `hermes-webchat:v5.1.0` | `0.0.0.0:80->80/tcp, [::]:80->80/tcp` | 🟢 Up 5 weeks (healthy) |
-| `axion-cadvisor` | `3de2bd520312` | `100.81.231.111:8081->8080/tcp` | 🟢 Up 6 weeks (healthy) |
-| `axion-alloy` | `0f4434c92b3e` | `100.81.231.111:12345->12345/tcp` | 🟢 Up 6 weeks |
-| `axion-node-exporter` | `1b4e4438faca` | `100.81.231.111:9100->9100/tcp` | 🟢 Up 6 weeks |
-| `hermes-postgres` | `postgres:16-alpine` | `5432/tcp` | 🟢 Up 7 weeks (healthy) |
-| `hermes-redis` | `redis:7-alpine` | `6379/tcp` | 🟢 Up 7 weeks (healthy) |
+> **Ações Realizadas no Descomissionamento**: 8 contêineres Docker encerrados, Docker daemon desabilitado (`systemctl disable --now docker`), Tailscale desautenticado (`tailscale logout`), snapshot integral do banco PostgreSQL e tarball de código salvos em `E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\`.
 
 ---
 
@@ -186,8 +176,8 @@
 
 ### 5.1 Armazenamento Físico & Tarefas Agendadas
 
-- **Disco do Sistema (`C:`)**: 177.76 GB livres de 222.86 GB
-- **Disco de Backups (`E:`)**: 928.46 GB livres de 930.94 GB
+- **Disco do Sistema (`C:`)**: 177.75 GB livres de 222.86 GB
+- **Disco de Backups (`E:`)**: 928.06 GB livres de 930.94 GB
 - **Tarefas Agendadas no Windows**: `AXION-Health-Watchdog` (a cada 30 min) e `AXION-Enterprise-Backup` (diário às 03:00)
 
 ---

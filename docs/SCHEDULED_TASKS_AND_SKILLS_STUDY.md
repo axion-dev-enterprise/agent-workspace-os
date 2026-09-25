@@ -61,12 +61,13 @@ A matriz operacional da AXION Enterprise foi expandida para **43 skills canônic
   - `-AllowStartIfOnBatteries`: Garante execução contínua mesmo em perfis de economia de energia.
   - `-StartWhenAvailable`: Se o computador estiver desligado no horário do gatilho (ex: 03:00), a tarefa é executada assim que o sistema for ligado (catch-up automático).
 
-### 3.2 Camada 2: Systemd Timers (Nó `juliana-vps` — Debian 13)
-- **Vantagem Principal**: Substitui com superioridade o daemon crontab tradicional.
+### 3.2 Camada 2: Systemd Timers (Nós VPS Linux — debian-2vcpu & axion-vps)
+- **Vantagem Principal**: Substitui com superioridade o daemon crontab tradicional em servidores Linux dedicados.
 - **Benefícios**:
   - `RandomizedDelaySec=300`: Evita picos simultâneos de CPU.
   - `Persistent=true`: Executa tarefas perdidas caso o servidor tenha reiniciado.
   - Integração nativa de logs via `journalctl -u <service>`.
+- **Nota Operacional**: O nó `juliana-vps` foi formalmente descomissionado em 25/09/2026, tendo todos os seus contêineres parados, serviço Docker desabilitado e chaves expiradas. Timers Linux passam a ter como alvo prioritário os nós ativos `debian-2vcpu` e `axion-vps`.
 
 ### 3.3 Camada 3: Cloudflare Edge Cron Triggers
 - **Vantagem Principal**: Automações serverless sem necessidade de servidor ligado. Executam diretamente na rede global da Cloudflare.
@@ -84,7 +85,7 @@ A matriz operacional da AXION Enterprise foi expandida para **43 skills canônic
 - **Frequência**: A cada **30 minutos**
 - **Comando**: `python.exe C:\workspace\scripts\health_monitor_autofix.py`
 - **Ações**:
-  - Testa pings na Tailnet (`juliana-vps`, `axion-vps`, `debian-2vcpu`).
+  - Testa pings na Tailnet (`axion-vps`, `debian-2vcpu`).
   - Testa endpoints de produção HTTP 200 (Vercel, Tailnet Gateway).
   - Mede espaço livre nos discos C: e E:.
   - Valida data do último backup offline.
@@ -98,7 +99,7 @@ A matriz operacional da AXION Enterprise foi expandida para **43 skills canônic
   - Copia estado do workspace, 43 skills e documentação.
   - Sincroniza atas e documentos prioritários do Google Drive via GAM 7.
   - Atualiza réplicas git dos 5 repositórios centrais do GitHub.
-  - Extrai dump binário criptografado do PostgreSQL 16 (`hermes_db.sql.gz`) via Tailscale SSH.
+  - Valida e sincroniza snapshot canônico de banco de dados (`hermes_db_final.sql.gz`) preservado no cofre frio `E:\backups\axion_enterprise\`.
   - Gera manifesto com verificação SHA256 na pasta `E:\backups\axion_enterprise\backup_YYYY-MM-DD\`.
 
 ### 4.3 Tarefa 3: `AXION-Backup-Rotation-Prune` *(Recomendada / Especificada)*
@@ -121,28 +122,29 @@ A matriz operacional da AXION Enterprise foi expandida para **43 skills canônic
   - Verifica tempo restante de expiração do registro dos domínios.
   - Emite aviso preventivo no painel caso qualquer certificado expire em menos de 21 dias ou renovação automática do Cloudflare falhe.
 
-### 4.5 Tarefa 5: `postgres-maintenance.timer` *(Recomendada para Nó Juliana)*
-- **Plataforma**: Systemd Timer no nó Linux `juliana-vps` (100.81.231.111)
+### 4.5 Tarefa 5: `postgres-maintenance.timer` *(Recomendada para Nó de Banco Ativo)*
+- **Plataforma**: Systemd Timer no nó Linux de dados (`debian-2vcpu-amd-4gb-us-6tb9d`)
 - **Frequência**: Semanal aos domingos às **02:00 AM**
-- **Comando**: `docker exec hermes-postgres psql -U hermes -d hermes_db -c "VACUUM (ANALYZE);"`
+- **Comando**: `docker exec postgres psql -U axion -d main_db -c "VACUUM (ANALYZE);"`
 - **Ações**:
-  - Atualiza as estatísticas do otimizador de consultas do PostgreSQL para todas as 135 tabelas.
-  - Recupera espaço em disco de tuplas mortas geradas por operações de chat e mensagens de WhatsApp.
+  - Atualiza as estatísticas do otimizador de consultas do PostgreSQL.
+  - Recupera espaço em disco de tuplas mortas.
   - Impede inchaço (table bloat) e mantém consultas em milissegundos.
+  - *(Nota: No nó aposentado juliana-vps, todas as 135 tabelas foram previamente vacuumed e persistidas no cold vault).*
 
-### 4.6 Tarefa 6: `whatsapp-keeper-watchdog.timer` *(Recomendada para Nó Juliana)*
-- **Plataforma**: Systemd Timer no nó Linux `juliana-vps` (100.81.231.111)
+### 4.6 Tarefa 6: `comm-gateway-watchdog.timer` *(Recomendada para Cluster de Comunicação)*
+- **Plataforma**: Systemd Timer no nó de microserviços (`debian-2vcpu`)
 - **Frequência**: A cada **15 minutos**
 - **Comando**: Script bash testando `curl -s -f http://127.0.0.1:8000/healthz`
 - **Ações**:
-  - Testa se o gateway Express e a sessão do WhatsApp Keeper estão responsivos.
-  - Se o endpoint retornar erro ou timeout (socket travado), executa `docker restart hermes-whatsapp-keeper hermes-gateway-juliana`.
-  - Garante auto-recuperação do canal WhatsApp sem intervenção humana.
+  - Testa se o gateway Express e sessões ativas de mensageria estão responsivos.
+  - Se o endpoint retornar erro ou timeout, executa reinício ordenado dos contêineres.
+  - Garante auto-recuperação de canais de atendimento sem intervenção humana.
 
 ---
 
 ## 5. Próximos Passos Recomendados
 
 1. **Implementar o script `scripts/backup_rotation_prune.py`** para formalizar a política de retenção na unidade `E:\`.
-2. **Implementar a rotina de VACUUM periódica no PostgreSQL** via Systemd Timer no nó `juliana-vps` para preservar a saúde do banco `hermes_db`.
+2. **Consolidar os microserviços restantes no nó `debian-2vcpu`** com monitoramento contínuo via `AXION-Health-Watchdog`.
 3. **Manter o registro de skills sincronizado** sempre que novas competências forem desenvolvidas.

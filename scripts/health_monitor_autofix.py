@@ -28,8 +28,7 @@ ctx.verify_mode = ssl.CERT_NONE
 
 NODES = [
     {"name": "axion-vps-104-207-90-167", "ip": "100.95.86.83", "role": "Traefik Gateway & API"},
-    {"name": "debian-2vcpu-amd-4gb-us-6tb9d", "ip": "100.73.36.87", "role": "PostgreSQL & Flow Engine"},
-    {"name": "juliana-vps", "ip": "100.81.231.111", "role": "Hermes Central (Nginx)"}
+    {"name": "debian-2vcpu-amd-4gb-us-6tb9d", "ip": "100.73.36.87", "role": "PostgreSQL & Flow Engine"}
 ]
 
 WEB_ENDPOINTS = [
