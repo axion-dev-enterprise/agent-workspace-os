@@ -1,0 +1,2691 @@
+{
+  "scanned_at": "2026-09-25T04:54:54.652087+00:00",
+  "github": {
+    "profile": {
+      "login": "axion-dev-enterprise",
+      "id": 261520627,
+      "node_id": "U_kgDOD5Z88w",
+      "avatar_url": "https://avatars.githubusercontent.com/u/261520627?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/axion-dev-enterprise",
+      "html_url": "https://github.com/axion-dev-enterprise",
+      "followers_url": "https://api.github.com/users/axion-dev-enterprise/followers",
+      "following_url": "https://api.github.com/users/axion-dev-enterprise/following{/other_user}",
+      "gists_url": "https://api.github.com/users/axion-dev-enterprise/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/axion-dev-enterprise/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/axion-dev-enterprise/subscriptions",
+      "organizations_url": "https://api.github.com/users/axion-dev-enterprise/orgs",
+      "repos_url": "https://api.github.com/users/axion-dev-enterprise/repos",
+      "events_url": "https://api.github.com/users/axion-dev-enterprise/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/axion-dev-enterprise/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "name": "AXION DEV",
+      "company": "@AXION-ENTERPRISE ",
+      "blog": "https://axionenterprise.cloud/",
+      "location": null,
+      "email": "axionenterprise777@gmail.com",
+      "hireable": true,
+      "bio": null,
+      "twitter_username": null,
+      "public_repos": 6,
+      "public_gists": 2,
+      "followers": 1,
+      "following": 0,
+      "created_at": "2026-02-13T22:22:58Z",
+      "updated_at": "2026-09-24T18:44:43Z"
+    },
+    "repositories": [
+      {
+        "createdAt": "2026-07-28T14:04:12Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Monorepo AXION â€” apps, services, packages",
+        "diskUsage": 371774,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-monorepo",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-09-21T16:12:51Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-06T20:05:30Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-monorepo"
+      },
+      {
+        "createdAt": "2026-09-13T12:25:16Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "The Deterministic Operating Framework for Autonomous AI Software Engineering.",
+        "diskUsage": 498,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "agent-workspace-os",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "pushedAt": "2026-09-18T09:01:29Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-18T09:01:30Z",
+        "url": "https://github.com/axion-dev-enterprise/agent-workspace-os"
+      },
+      {
+        "createdAt": "2026-09-03T01:01:56Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[MONOREPO DEV] Sites e Aplicativos de Clientes AXION Enterprise (Estuda Junto, Edna Grahl, PositiveMind, etc.)",
+        "diskUsage": 158631,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "axion-client-apps",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-17T00:04:48Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-17T00:04:52Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-client-apps"
+      },
+      {
+        "createdAt": "2026-09-12T23:58:42Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "ExtraÃ§Ã£o inteligente de conteÃºdo de qualquer site via anÃ¡lise de HAR com IA",
+        "diskUsage": 20,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "har-content-extractor",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "pushedAt": "2026-09-12T23:58:51Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-13T00:13:48Z",
+        "url": "https://github.com/axion-dev-enterprise/har-content-extractor"
+      },
+      {
+        "createdAt": "2026-09-12T23:32:28Z",
+        "defaultBranchRef": {
+          "name": "master"
+        },
+        "description": "",
+        "diskUsage": 78,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-financeiro",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "pushedAt": "2026-09-12T23:54:07Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-12T23:54:10Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-financeiro"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:11Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR PAY] Portal Frontend SPA & Checkout de Pagamentos (pay.axionenterprise.cloud)",
+        "diskUsage": 10775,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "axion-pay",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-12T22:58:51Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-12T22:58:55Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pay"
+      },
+      {
+        "createdAt": "2026-09-12T22:41:32Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Plataforma de disparo transacional via Brevo, cloaker defensivo, open tracking 1x1, UTMs e Meta CAPI",
+        "diskUsage": 50,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "gads-mail-engine",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-12T22:41:39Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-12T22:41:42Z",
+        "url": "https://github.com/axion-dev-enterprise/gads-mail-engine"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:08Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR FLOW] Plataforma AutÃ´noma de Agentes & IA Multi-Tenant (agents.axionenterprise.cloud)",
+        "diskUsage": 65812,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-flow",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "pushedAt": "2026-09-09T04:44:03Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-09T04:44:11Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-flow"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:19Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR VPS] Infraestrutura CanÃ´nica, Docker Compose, AutomaÃ§Ãµes e Scripts de Deploy VPS",
+        "diskUsage": 4266,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-vps",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-09-05T13:34:42Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-05T13:34:52Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-vps"
+      },
+      {
+        "createdAt": "2026-09-04T20:23:34Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "",
+        "diskUsage": 771,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": false,
+        "name": "vr-sso-portal-clone",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-04T21:23:53Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-04T21:23:57Z",
+        "url": "https://github.com/axion-dev-enterprise/vr-sso-portal-clone"
+      },
+      {
+        "createdAt": "2026-09-03T02:05:13Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR VOICE] Runtime Neural TTS/STT, FastMCP Server, WebRTC & Agente de Voz AutÃƒÂ´nomo",
+        "diskUsage": 37186,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-voice",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-03T02:49:47Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:54Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-voice"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:16Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR DATA] App Data â€” Pipelines de Dados, Analytics, BI e RelatÃ³rios Automatizados",
+        "diskUsage": 153,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-data",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-09-03T02:49:44Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:53Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-data"
+      },
+      {
+        "createdAt": "2026-08-04T15:31:18Z",
+        "defaultBranchRef": {
+          "name": "master"
+        },
+        "description": "[MONOREPO SENSIX] Ecossistema Completo Sensix (Storefront, Models, OP Black, AtacadÃ£o, Bots Telegram e AXION HOT)",
+        "diskUsage": 37005,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "sensix",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "pushedAt": "2026-09-03T02:49:43Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:48Z",
+        "url": "https://github.com/axion-dev-enterprise/sensix"
+      },
+      {
+        "createdAt": "2026-09-03T02:18:04Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR SECURITY] Painel de Auditoria de Vulnerabilidades, Relays e TÃƒÂºneis Defensivos",
+        "diskUsage": 14,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-security",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "pushedAt": "2026-09-03T02:49:42Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:59Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-security"
+      },
+      {
+        "createdAt": "2026-09-03T02:16:11Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR OPS] Telemetria IsomÃƒÂ³rfica, Coletor RFC 7807, Grafana, Prometheus e Kuma",
+        "diskUsage": 28,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-observability",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "pushedAt": "2026-09-03T02:49:41Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:56Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-observability"
+      },
+      {
+        "createdAt": "2026-09-03T02:16:38Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR PDV] Sistema Offline-First para Varejo FÃƒÂ­sico, Frente de Caixa e Retaguarda",
+        "diskUsage": 7203,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-pdv",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-09-03T02:49:40Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:46Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pdv"
+      },
+      {
+        "createdAt": "2026-09-03T02:15:55Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR HUB] Registry de Conectores de Agentes, Webhooks SatÃƒÂ©lites e IntegraÃƒÂ§ÃƒÂµes Externas",
+        "diskUsage": 415,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-hub",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-09-03T02:49:39Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:52Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-hub"
+      },
+      {
+        "createdAt": "2026-09-03T02:15:35Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "[SETOR COMM] Gateway de Mensageria, Baileys WhatsApp Bridge, Filas de Envio & Dispatch",
+        "diskUsage": 53,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-comm",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-09-03T02:49:37Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:49:45Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-comm"
+      },
+      {
+        "createdAt": "2026-07-28T12:52:04Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Auto-criado do backup mirror",
+        "diskUsage": 5513,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "axion-pdv-system",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-07-30T00:05:11Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:36:39Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pdv-system"
+      },
+      {
+        "createdAt": "2026-07-28T12:52:07Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Auto-criado do backup mirror",
+        "diskUsage": 84,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "google-oauth-gateway",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-07-29T20:25:27Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:36:47Z",
+        "url": "https://github.com/axion-dev-enterprise/google-oauth-gateway"
+      },
+      {
+        "createdAt": "2026-07-28T12:52:15Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Auto-criado do backup mirror",
+        "diskUsage": 58,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "axion-main-api",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-07-28T13:25:52Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:36:41Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-main-api"
+      },
+      {
+        "createdAt": "2026-07-28T12:52:12Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Auto-criado do backup mirror",
+        "diskUsage": 170,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "axion-agencia-hub",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "pushedAt": "2026-07-28T12:52:49Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:36:43Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-agencia-hub"
+      },
+      {
+        "createdAt": "2026-07-28T12:52:09Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Auto-criado do backup mirror",
+        "diskUsage": 10,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "axion-status",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "pushedAt": "2026-07-28T12:52:47Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:36:45Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-status"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:14Z",
+        "defaultBranchRef": {
+          "name": "master"
+        },
+        "description": "App Auth â€” autenticaÃ§Ã£o/autorizaÃ§Ã£o",
+        "diskUsage": 4,
+        "forkCount": 0,
+        "isArchived": false,
+        "isPrivate": true,
+        "name": "axion-auth",
+        "primaryLanguage": null,
+        "pushedAt": "2026-07-28T12:52:35Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T02:48:03Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-auth"
+      },
+      {
+        "createdAt": "2026-07-28T12:35:05Z",
+        "defaultBranchRef": {
+          "name": "main"
+        },
+        "description": "Source of Truth â€” regras, arquitetura, processos, RAG",
+        "diskUsage": 328,
+        "forkCount": 0,
+        "isArchived": true,
+        "isPrivate": true,
+        "name": "axion-docs",
+        "primaryLanguage": null,
+        "pushedAt": "2026-07-28T12:40:47Z",
+        "stargazerCount": 0,
+        "updatedAt": "2026-09-03T01:55:09Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-docs"
+      }
+    ],
+    "total_repositories": 25,
+    "private_count": 19,
+    "public_count": 6,
+    "archived_count": 6
+  },
+  "cloudflare": {
+    "account_id": "a79a584696834139a2b70ec306f5705c",
+    "zones": [
+      {
+        "id": "ee5ca653ddcb0ea528e3f18042bfff3c",
+        "name": "axionenterprise.cloud",
+        "status": "active",
+        "name_servers": [
+          "leia.ns.cloudflare.com",
+          "neil.ns.cloudflare.com"
+        ],
+        "dns_records_count": 100,
+        "dns_records": [
+          {
+            "id": "6d883eafcf76bff210003c56d53d6c44",
+            "type": "A",
+            "name": "agents.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "4df9c4c2bfd276f2a7aaef8ee58554b3",
+            "type": "A",
+            "name": "agent-studio.axionenterprise.cloud",
+            "content": "179.245.213.107",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e0061825fe6d2503f81d9a773a3fb62a",
+            "type": "A",
+            "name": "ai-backup.axionenterprise.cloud",
+            "content": "209.74.71.89",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "a4e512fd5687dd224be23d585f8e7c58",
+            "type": "A",
+            "name": "api.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "4dea60058611a0819267559d94c5dd81",
+            "type": "A",
+            "name": "api-painel.axionenterprise.cloud",
+            "content": "209.74.85.44",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b05067a1c068e2f60af989df69741792",
+            "type": "A",
+            "name": "auth.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8b249830644516e2c8e4c50cd141c226",
+            "type": "A",
+            "name": "*.axionenterprise.cloud",
+            "content": "76.76.21.21",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "622da0907db135aaa5585cc5fe59c122",
+            "type": "A",
+            "name": "axion-test.axionenterprise.cloud",
+            "content": "94.141.97.89",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e06adbc6228423babb32ff86d03e5b16",
+            "type": "A",
+            "name": "bridge.axionenterprise.cloud",
+            "content": "209.74.86.11",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "562eebe9875bfdc539d0b46a3afe2430",
+            "type": "A",
+            "name": "casa.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "83b13f6ddcd9f19496100ce36e7c86ef",
+            "type": "A",
+            "name": "casa-preview.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e9d32ea1c868f2bfe9601848579f6975",
+            "type": "A",
+            "name": "chat-studio.axionenterprise.cloud",
+            "content": "179.245.213.107",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "bf9d93d9ebd4448434270a4bba97b604",
+            "type": "A",
+            "name": "db.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "26f7a257285d6ce90885ff69f1e7a1a1",
+            "type": "A",
+            "name": "failover.axionenterprise.cloud",
+            "content": "104.207.81.41",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "88c0c80334c7f3bb2a7dbe98e6ad10e6",
+            "type": "A",
+            "name": "flow-dashboard.axionenterprise.cloud",
+            "content": "203.161.47.97",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c2b731a1a72a55466122bf7c872b0e29",
+            "type": "A",
+            "name": "gramaticalizando.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5c9cac05b78ce395802e575594a9d8d5",
+            "type": "A",
+            "name": "hermes.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0b8203fd7cee518d1b37e3a5afc3e66e",
+            "type": "A",
+            "name": "hooks.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "befa2052c276ba8f06386a6f1b38632f",
+            "type": "A",
+            "name": "hot.axionenterprise.cloud",
+            "content": "104.207.90.113",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "76ef5c081c49598b5ea60ccb21706bc8",
+            "type": "A",
+            "name": "imap.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "cf10580dbd89ec0c98f5d59b95136cb1",
+            "type": "A",
+            "name": "jose.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8684d8ebd01ae4d92204c0376b9f6c6f",
+            "type": "A",
+            "name": "mail.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "bc0cd18eeee3093750b8b87aa702f357",
+            "type": "A",
+            "name": "pop.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "291d54fea673834d2c55854346b262c1",
+            "type": "A",
+            "name": "preview.casa.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f03d950599c6c78fc765fd2948bc3190",
+            "type": "A",
+            "name": "pulse.axionenterprise.cloud",
+            "content": "209.74.86.11",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "9d799d6c08459fd3050d6c157c122631",
+            "type": "A",
+            "name": "qualidade-aps.axionenterprise.cloud",
+            "content": "216.24.57.1",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "bfa71a5ead0f7294ebe90a7f74ee17db",
+            "type": "A",
+            "name": "registry.axionenterprise.cloud",
+            "content": "104.207.90.167",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "52fad8ee5cfb1aee14696bad4c905aa5",
+            "type": "A",
+            "name": "sales.flow.axionenterprise.cloud",
+            "content": "94.141.97.89",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8773be1e4950158fcdcb87cda4d7aa18",
+            "type": "A",
+            "name": "sensix-models.axionenterprise.cloud",
+            "content": "104.207.89.36",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "82ce4b5a5786bc504233a6fd355a129a",
+            "type": "A",
+            "name": "sentinel.axionenterprise.cloud",
+            "content": "104.207.81.191",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8ba64a2d0b096dfa7a89d68dcf060669",
+            "type": "A",
+            "name": "shared.axionenterprise.cloud",
+            "content": "209.74.71.89",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "1f03fd6ca7fc1e9813beac10d9d67389",
+            "type": "A",
+            "name": "smtp.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "4f0fdf31ad66ea55378ff2b3ddce200a",
+            "type": "A",
+            "name": "tasks.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "31b00d10d3e4b42241bdf665d8675998",
+            "type": "A",
+            "name": "test-miguel.axionenterprise.cloud",
+            "content": "45.133.17.86",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "9bfff5d894a8ffbae02be2d80d923b8f",
+            "type": "A",
+            "name": "voice.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "ae6dfbc87cef69699d75b2441d004302",
+            "type": "A",
+            "name": "vpn.axionenterprise.cloud",
+            "content": "104.207.81.41",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "ab939f0f5b35d263addbc0e053b056ec",
+            "type": "A",
+            "name": "waba.axionenterprise.cloud",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "fb2abe4b380a34ffc77443e5a91109d2",
+            "type": "A",
+            "name": "webhook.axionenterprise.cloud",
+            "content": "76.76.21.21",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "84b6ae21309a00840c504cd4cbfb57a5",
+            "type": "CNAME",
+            "name": "admin.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0371f90f5b59688e5b83f72d51b276c5",
+            "type": "CNAME",
+            "name": "admin.simonello.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0639d8b15c51469becb9bcdb29afcb31",
+            "type": "CNAME",
+            "name": "ai.axionenterprise.cloud",
+            "content": "axion-ia-panel.vercel.app",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e5a4af907cfbf8a2c5ed394f7a4b624d",
+            "type": "CNAME",
+            "name": "api-contingencia.axionenterprise.cloud",
+            "content": "axion-vps-api-contingencia.vercel.app",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "79d652f0fa573dbba753c62396c699b5",
+            "type": "CNAME",
+            "name": "api.desiree.axionenterprise.cloud",
+            "content": "ab0ddaf0-042b-42fa-ad9a-fde3f7c2f5d5.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "7d8e47c24f65248bccdd162617e0e09d",
+            "type": "CNAME",
+            "name": "api.pay.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c04c622fb86c7a8b7a09a45109662b7d",
+            "type": "CNAME",
+            "name": "api.simonello.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "9b659a3637742ee29124581df2a8f9bc",
+            "type": "CNAME",
+            "name": "axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f55a022d36f03bafdc1f9053f228ff20",
+            "type": "CNAME",
+            "name": "bipador.axionenterprise.cloud",
+            "content": "771a2dfc-0f22-454d-8f89-65e99e369550.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "034f63c97e5264f7c313a4f40264828f",
+            "type": "CNAME",
+            "name": "bot.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8ac1cd8182dcd57ef660bce7fe896e32",
+            "type": "CNAME",
+            "name": "bot.simonello.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5760eda5be72e52b262cddbc9a6485ea",
+            "type": "CNAME",
+            "name": "brain.axionenterprise.cloud",
+            "content": "api.axionenterprise.cloud",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c93abb4af1d78504691fbd8a82302ff5",
+            "type": "CNAME",
+            "name": "brevo1._domainkey.axionenterprise.cloud",
+            "content": "b1.axionenterprise-cloud.dkim.brevo.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8537eaeab2d9b84481158a04a7b5128b",
+            "type": "CNAME",
+            "name": "brevo2._domainkey.axionenterprise.cloud",
+            "content": "b2.axionenterprise-cloud.dkim.brevo.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c8e9a67653b1f0b42de08c7121ceef09",
+            "type": "CNAME",
+            "name": "dashboard-aps.axionenterprise.cloud",
+            "content": "809186ad-e312-4d6c-b3d0-9564bc880756.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "040d6a8ae48520a9d2e5f6dcafa43752",
+            "type": "CNAME",
+            "name": "data.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "18a97087b8b695190f0cadebb45417f8",
+            "type": "CNAME",
+            "name": "desiree.axionenterprise.cloud",
+            "content": "ab0ddaf0-042b-42fa-ad9a-fde3f7c2f5d5.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e450c95bd292dada444e64361891146a",
+            "type": "CNAME",
+            "name": "dev.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "6bb358d2dce8b59a5a5273daa3615a32",
+            "type": "CNAME",
+            "name": "docs.axionenterprise.cloud",
+            "content": "axion-dev-enterprise.github.io",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "005d1b7d60180e42d5f6e99f6a59751e",
+            "type": "CNAME",
+            "name": "events.axionenterprise.cloud",
+            "content": "api.axionenterprise.cloud",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f1f54b80ee1e4a7c047bcf926544ef07",
+            "type": "CNAME",
+            "name": "facebusca-routes.axionenterprise.cloud",
+            "content": "facebusca-routes-app.pages.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "791815e70d683809aaad56edd087faf4",
+            "type": "CNAME",
+            "name": "financeiro.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "750ca8b7f5cef4aa35c8f0f25370840b",
+            "type": "CNAME",
+            "name": "flow.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "628967e0a413a04aa6bc47f9849c5266",
+            "type": "CNAME",
+            "name": "gateway.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "d1881cd70826b56e73766c15cf1496f1",
+            "type": "CNAME",
+            "name": "google-oauth.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "6f6b4980c0d7f44b825a08063a20e761",
+            "type": "CNAME",
+            "name": "hub.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f582d1d9c8b6d7bcf0483dae35a40575",
+            "type": "CNAME",
+            "name": "ide.axionenterprise.cloud",
+            "content": "eaac50598f68c277.vercel-dns-017.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "dd1c0e115eeeba8d6bff9fac115c9c86",
+            "type": "CNAME",
+            "name": "ig-webhook.axionenterprise.cloud",
+            "content": "8bfda0ca-c18c-484b-b2ea-976c01f67873.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "fc87ae594818f359b8c5a552abfe6030",
+            "type": "CNAME",
+            "name": "img.axionenterprise.cloud",
+            "content": "axionenterprise-cloud.img.brand.brevosend.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "4b32cfe0794c53aab8cf0b0069c31446",
+            "type": "CNAME",
+            "name": "img.no-reply.axionenterprise.cloud",
+            "content": "no-reply-axionenterprise-cloud.img.brand.brevosend.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0a54f49e9496be40f9d66398321b541a",
+            "type": "CNAME",
+            "name": "landing.axionenterprise.cloud",
+            "content": "axion-landing.pages.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e0527c4f5444921d718d70f26ee34304",
+            "type": "CNAME",
+            "name": "login.axionenterprise.cloud",
+            "content": "5bc9feef-80d0-42ae-985a-4bafd334a370.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "3ee49f2a08085007c9fee8a4debdf5fc",
+            "type": "CNAME",
+            "name": "meta-oauth.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "847f785e0c6061f990a8a8abf92e46ac",
+            "type": "CNAME",
+            "name": "mimo.axionenterprise.cloud",
+            "content": "771a2dfc-0f22-454d-8f89-65e99e369550.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0be0cb5234e0c78508279a341da3ffe5",
+            "type": "CNAME",
+            "name": "models.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "886763a328c081e95ea5cdbd437550b4",
+            "type": "CNAME",
+            "name": "n8n.axionenterprise.cloud",
+            "content": "72ccd81e-bf61-4e58-b827-8db367691e9c.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "a504492679195bdbf9e05700bea27023",
+            "type": "CNAME",
+            "name": "no-reply.axionenterprise.cloud",
+            "content": "no-reply-axionenterprise-cloud.brand.brevosend.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "9b4b8dfd496b5c2d3f4e089928dc13f8",
+            "type": "CNAME",
+            "name": "oauth.axionenterprise.cloud",
+            "content": "809186ad-e312-4d6c-b3d0-9564bc880756.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b5b29177d9f21d090cffbf68c8e41032",
+            "type": "CNAME",
+            "name": "orchestrator.axionenterprise.cloud",
+            "content": "72c896fe54227309.vercel-dns-017.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "e5b5f7c0c3045615e58760807cb70715",
+            "type": "CNAME",
+            "name": "os.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "90dbe6cbaaaa1217eb4654954855dd04",
+            "type": "CNAME",
+            "name": "osint.axionenterprise.cloud",
+            "content": "653798d5-1b60-4f06-acdf-1aedc2c64dea.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c0a01c89f22f0b1eb32434b0d3ce81fb",
+            "type": "CNAME",
+            "name": "painel.axionenterprise.cloud",
+            "content": "painel-axion.pages.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "ddb92bae518afbd4c40331007b835aec",
+            "type": "CNAME",
+            "name": "pay.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b128ca37ddc83de347c3c4a069020c47",
+            "type": "CNAME",
+            "name": "pdv.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "35ef956536c45801d38743e6f33a987c",
+            "type": "CNAME",
+            "name": "pontotec.axionenterprise.cloud",
+            "content": "1bd7f753-edea-4e30-94ad-bc5fb48cfb13.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "2482800b8dd9a345ed88669712f69cec",
+            "type": "CNAME",
+            "name": "pontotecc.axionenterprise.cloud",
+            "content": "28aadd71-9d58-4a0f-84cb-666da996959f.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "6b329f7cbb1b381158b4276caabb3b90",
+            "type": "CNAME",
+            "name": "poseidon.axionenterprise.cloud",
+            "content": "poseidon.reserva-iagobarreto.workers.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "cdd3684af45d09cb2ced7fd6cd728824",
+            "type": "CNAME",
+            "name": "qr.axionenterprise.cloud",
+            "content": "axion-qr-system.reserva-iagobarreto.workers.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "65c29e9a7a4d246d58a8c0b03cf1824d",
+            "type": "CNAME",
+            "name": "r.axionenterprise.cloud",
+            "content": "axionenterprise-cloud.r.brand.brevosend.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5b63335605dd1cc308aa9a1c59ab9c9b",
+            "type": "CNAME",
+            "name": "r.no-reply.axionenterprise.cloud",
+            "content": "no-reply-axionenterprise-cloud.r.brand.brevosend.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c3397e711695ffebd62b9078d5d04876",
+            "type": "CNAME",
+            "name": "sensix.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "98cd2f929bfa976ff998999b89d80729",
+            "type": "CNAME",
+            "name": "sicrety.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b781e32a0a20c506e93fec9eacf07710",
+            "type": "CNAME",
+            "name": "siebraflow.axionenterprise.cloud",
+            "content": "72ccd81e-bf61-4e58-b827-8db367691e9c.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "bdbbcfc92b6db323cd2289a3e1101cfe",
+            "type": "CNAME",
+            "name": "ssh.axionenterprise.cloud",
+            "content": "1836db77-219c-4dda-b729-42d30bd2c9e2.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "3030ace45bbcd53851beadd2f1817da7",
+            "type": "CNAME",
+            "name": "status.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "1e87a7d65df4469a4f6043166c22c8f9",
+            "type": "CNAME",
+            "name": "storage.axionenterprise.cloud",
+            "content": "14c1ef48-273d-46b2-b576-94cd8a540cf8.cfargotunnel.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "2ef59e21056ae45289d41e4e3330d19a",
+            "type": "CNAME",
+            "name": "vps.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "054d0350aaa03eaab4f06fea8d81ef4f",
+            "type": "CNAME",
+            "name": "workspace.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "2f935ed78ece3804ecc573ed7272f814",
+            "type": "CNAME",
+            "name": "www.axionenterprise.cloud",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "2bce8d32d431fc77e15eeae15dc75bf0",
+            "type": "CNAME",
+            "name": "www.qualidade-aps.axionenterprise.cloud",
+            "content": "base44.onrender.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5bb8d69f76be8a92c09f7dba4356f468",
+            "type": "MX",
+            "name": "axionenterprise.cloud",
+            "content": "mail.axionenterprise.cloud",
+            "proxied": false,
+            "ttl": 1,
+            "priority": 20
+          },
+          {
+            "id": "785ca0f44fae53545f4ae7a5bc7bfcd4",
+            "type": "MX",
+            "name": "axionenterprise.cloud",
+            "content": "alt3.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 10
+          }
+        ]
+      },
+      {
+        "id": "cddc53eb007e17db5f91400234e5fb0e",
+        "name": "axionflow.my",
+        "status": "active",
+        "name_servers": [
+          "leia.ns.cloudflare.com",
+          "neil.ns.cloudflare.com"
+        ],
+        "dns_records_count": 16,
+        "dns_records": [
+          {
+            "id": "a977a12bac5d17ac9e2b5eb45376537e",
+            "type": "A",
+            "name": "agents.axionflow.my",
+            "content": "104.207.81.20",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "1a2bf28a71afb34c5fb851be7c56fdb8",
+            "type": "A",
+            "name": "ana.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b807c33ba042ed1b3036870a83510027",
+            "type": "A",
+            "name": "annetom.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "8a706ffac3a87ed0c1952df536772d68",
+            "type": "A",
+            "name": "axion.axionflow.my",
+            "content": "45.133.17.86",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "672c2aacbc91f1f533bc1e818f7ed97c",
+            "type": "A",
+            "name": "axionflow.my",
+            "content": "192.0.2.1",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f15984f830afc4d05eee09c1fc9d6722",
+            "type": "A",
+            "name": "cris.axionflow.my",
+            "content": "45.133.17.86",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "93b00b2c29981c16e78dc5f25d4f2af5",
+            "type": "A",
+            "name": "dashboard.axionflow.my",
+            "content": "209.74.85.44",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "ca42cfea8ea5050c2e3a3b446f631c23",
+            "type": "A",
+            "name": "joao-alquimista.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c22710fd2d05b2da0ff8a25bb9e3f1ed",
+            "type": "A",
+            "name": "joao.axionflow.my",
+            "content": "209.74.85.44",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c191d4bc01dca6ce55d6589604c455d2",
+            "type": "A",
+            "name": "kronix.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "cf85e4e5416f6e12b1966d534e9d68f2",
+            "type": "A",
+            "name": "leonardo-cora.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "312190d1b950fc1c0212757de323af42",
+            "type": "A",
+            "name": "lucas.axionflow.my",
+            "content": "209.74.85.44",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "92d95c8890b9e4914f62e974ea5ec708",
+            "type": "A",
+            "name": "lucas-mateus.axionflow.my",
+            "content": "92.246.130.250",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "31579a46d7171c7327d4331eefb61cd7",
+            "type": "CNAME",
+            "name": "models.axionflow.my",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "56de6869b6087ca9799f78e2a0036595",
+            "type": "CNAME",
+            "name": "webhook.axionflow.my",
+            "content": "reserva-iagobarreto.workers.dev",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f66f6525fa1980abdf3b23484520c099",
+            "type": "CNAME",
+            "name": "www.axionflow.my",
+            "content": "axionflow.my",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          }
+        ]
+      },
+      {
+        "id": "7cae6d24fbb358f1c69a515ed7b57b55",
+        "name": "axiontemp777.buzz",
+        "status": "active",
+        "name_servers": [
+          "leia.ns.cloudflare.com",
+          "neil.ns.cloudflare.com"
+        ],
+        "dns_records_count": 7,
+        "dns_records": [
+          {
+            "id": "d26918d87993a8ec306f2e287c22215a",
+            "type": "A",
+            "name": "agents.axiontemp777.buzz",
+            "content": "104.207.81.120",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "806c759cdb893215c7f1e133eea7a009",
+            "type": "A",
+            "name": "axiontemp777.buzz",
+            "content": "192.0.2.1",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "b3e9977b35873a882bd6868e48b9cf01",
+            "type": "A",
+            "name": "axiontemp777.buzz",
+            "content": "34.216.117.25",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "56021df69a39f4f316b73d1e9de1ec79",
+            "type": "A",
+            "name": "trydelta-api.axiontemp777.buzz",
+            "content": "62.72.63.194",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "66f1f39b7636a60da6c14914f44a17a0",
+            "type": "A",
+            "name": "trydelta.axiontemp777.buzz",
+            "content": "62.72.63.194",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "664a85e0eac0533c05c01a57fe40506a",
+            "type": "CNAME",
+            "name": "models.axiontemp777.buzz",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0669a400393035242272da860088bf13",
+            "type": "CNAME",
+            "name": "www.axiontemp777.buzz",
+            "content": "axiontemp777.buzz",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          }
+        ]
+      },
+      {
+        "id": "1060f59415119c4a6bf1adc175a9e17d",
+        "name": "icesvaliant.shop",
+        "status": "active",
+        "name_servers": [
+          "leia.ns.cloudflare.com",
+          "neil.ns.cloudflare.com"
+        ],
+        "dns_records_count": 14,
+        "dns_records": [
+          {
+            "id": "c82dbdf843faeba87f3db6f14d01e792",
+            "type": "A",
+            "name": "icesvaliant.shop",
+            "content": "76.76.21.21",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5bdee2ad5d9fb5eb478acde683399500",
+            "type": "CNAME",
+            "name": "ftp.icesvaliant.shop",
+            "content": "icesvaliant.shop",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "11f81aab3379a65637fc1091bd5c56b8",
+            "type": "CNAME",
+            "name": "mail.icesvaliant.shop",
+            "content": "icesvaliant.shop",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "952b2b3869a72dee908a560e1c17f24f",
+            "type": "CNAME",
+            "name": "models.icesvaliant.shop",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "c18ce9158bc1d98749a1dbd3bfbf1bad",
+            "type": "CNAME",
+            "name": "www.icesvaliant.shop",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "ff5a6c58f3ba51ac6fcd55408611a3fc",
+            "type": "MX",
+            "name": "icesvaliant.shop",
+            "content": "aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 1
+          },
+          {
+            "id": "53b8d13bc8219a598fc33d93575312dd",
+            "type": "MX",
+            "name": "icesvaliant.shop",
+            "content": "alt1.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 5
+          },
+          {
+            "id": "ec2b2a7b7be2f98435bd2ef7dc6d5691",
+            "type": "MX",
+            "name": "icesvaliant.shop",
+            "content": "alt4.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 10
+          },
+          {
+            "id": "7fa3f65f5a075cffaa30814eaa088528",
+            "type": "MX",
+            "name": "icesvaliant.shop",
+            "content": "alt3.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 10
+          },
+          {
+            "id": "23d9b1de6e6cad3032d18a12fb4faa83",
+            "type": "MX",
+            "name": "icesvaliant.shop",
+            "content": "alt2.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 5
+          },
+          {
+            "id": "9e09dcdb1eacf31a71776d28ef822534",
+            "type": "TXT",
+            "name": "icesvaliant.shop",
+            "content": "\"v=spf1 include:_spf.google.com ~all\"",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": null
+          },
+          {
+            "id": "437b7031edfd54e8b830dd3b4036cbfd",
+            "type": "TXT",
+            "name": "icesvaliant.shop",
+            "content": "\"google-site-verification=0akg2rjSZLfuWsyx_pLhNPdzMar1Qp6muh6kZRknqag\"",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": null
+          },
+          {
+            "id": "d7ebb5031a5cb77c55052b1113f25ba5",
+            "type": "TXT",
+            "name": "_vercel.icesvaliant.shop",
+            "content": "vc-domain-verify=www.icesvaliant.shop,800113fa51313b42e945",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "60f60a6f4c5836df1e9923316bf3165f",
+            "type": "TXT",
+            "name": "_vercel.icesvaliant.shop",
+            "content": "vc-domain-verify=icesvaliant.shop,d80f3b9d10970f52f15d",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          }
+        ]
+      },
+      {
+        "id": "2aef2e7b4257c469a8c5fba93c0de05d",
+        "name": "psicologaednagrahl.com.br",
+        "status": "active",
+        "name_servers": [
+          "leonard.ns.cloudflare.com",
+          "tess.ns.cloudflare.com"
+        ],
+        "dns_records_count": 11,
+        "dns_records": [
+          {
+            "id": "30e4e838dc2518f26b7b5d77f18a6a90",
+            "type": "A",
+            "name": "psicologaednagrahl.com.br",
+            "content": "76.76.21.21",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "833fd83bc9ef7591c79b41a84d4cfb79",
+            "type": "CNAME",
+            "name": "autoconfig.psicologaednagrahl.com.br",
+            "content": "autoconfig.mail.hostinger.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5796331f60e5b69be6ca6784f357beaf",
+            "type": "CNAME",
+            "name": "autodiscover.psicologaednagrahl.com.br",
+            "content": "autodiscover.mail.hostinger.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "f2ef237188dad6d33c24e5439ef0945c",
+            "type": "CNAME",
+            "name": "hostingermail-a._domainkey.psicologaednagrahl.com.br",
+            "content": "hostingermail-a.dkim.mail.hostinger.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "0e104b0aaaaf868e517e8bac9cbe7209",
+            "type": "CNAME",
+            "name": "hostingermail-b._domainkey.psicologaednagrahl.com.br",
+            "content": "hostingermail-b.dkim.mail.hostinger.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "7eca3e99bfaf34c7e790ab53bd92e806",
+            "type": "CNAME",
+            "name": "hostingermail-c._domainkey.psicologaednagrahl.com.br",
+            "content": "hostingermail-c.dkim.mail.hostinger.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "91549ca363e8ea86c4893d9b43c86c4e",
+            "type": "CNAME",
+            "name": "www.psicologaednagrahl.com.br",
+            "content": "cname.vercel-dns.com",
+            "proxied": true,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "88cc013d872d24e3f9a4e4f14d46934b",
+            "type": "MX",
+            "name": "psicologaednagrahl.com.br",
+            "content": "mx1.hostinger.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": 5
+          },
+          {
+            "id": "df3641fd47e03ce6fd39b75bce8479f6",
+            "type": "MX",
+            "name": "psicologaednagrahl.com.br",
+            "content": "mx2.hostinger.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": 10
+          },
+          {
+            "id": "4198b751473aa7f3c8c8ca89b0e0b34c",
+            "type": "TXT",
+            "name": "_dmarc.psicologaednagrahl.com.br",
+            "content": "\"v=DMARC1; p=none\"",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "a20b057de597dc1e2a9f3c5d32c03fe3",
+            "type": "TXT",
+            "name": "psicologaednagrahl.com.br",
+            "content": "\"v=spf1 include:_spf.mail.hostinger.com ~all\"",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          }
+        ]
+      },
+      {
+        "id": "0fda358a02c95c03bdc4659ce4ef2d04",
+        "name": "yannascimentoads.com",
+        "status": "active",
+        "name_servers": [
+          "leia.ns.cloudflare.com",
+          "neil.ns.cloudflare.com"
+        ],
+        "dns_records_count": 10,
+        "dns_records": [
+          {
+            "id": "2a712dfbc37e42daf95e6f359f936675",
+            "type": "A",
+            "name": "yannascimentoads.com",
+            "content": "76.76.21.21",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "763ef926ab43406de36236eac0efa6bf",
+            "type": "CNAME",
+            "name": "models.yannascimentoads.com",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "5aa270662dd1878f484630785605e578",
+            "type": "CNAME",
+            "name": "www.yannascimentoads.com",
+            "content": "cname.vercel-dns.com",
+            "proxied": false,
+            "ttl": 1,
+            "priority": null
+          },
+          {
+            "id": "64544569b9dc441da283966f0f62e30d",
+            "type": "MX",
+            "name": "yannascimentoads.com",
+            "content": "alt1.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 5
+          },
+          {
+            "id": "a6e4230bc67eb7a02266f2cb66d882c5",
+            "type": "MX",
+            "name": "yannascimentoads.com",
+            "content": "alt2.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 5
+          },
+          {
+            "id": "63b0b71af699b229b7361d8d8a59ae1e",
+            "type": "MX",
+            "name": "yannascimentoads.com",
+            "content": "alt4.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 10
+          },
+          {
+            "id": "fedcbeffc2d9891399a00c9c68f9ac17",
+            "type": "MX",
+            "name": "yannascimentoads.com",
+            "content": "alt3.aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 10
+          },
+          {
+            "id": "6732c063c68317691f756e428f73b116",
+            "type": "MX",
+            "name": "yannascimentoads.com",
+            "content": "aspmx.l.google.com",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": 1
+          },
+          {
+            "id": "31d4783087839de0b22a06a617a5d6ab",
+            "type": "TXT",
+            "name": "yannascimentoads.com",
+            "content": "\"v=spf1 include:_spf.google.com ~all\"",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": null
+          },
+          {
+            "id": "5f5ad750852c27a509b7542df062333d",
+            "type": "TXT",
+            "name": "yannascimentoads.com",
+            "content": "\"google-site-verification=s5xq92fhK97MRvBQQZxM_sjVMXIIsAstQaeWr2f_sLY\"",
+            "proxied": false,
+            "ttl": 3600,
+            "priority": null
+          }
+        ]
+      }
+    ],
+    "total_zones": 6,
+    "total_dns_records": 158,
+    "tunnels": [
+      {
+        "id": "72ccd81e-bf61-4e58-b827-8db367691e9c",
+        "name": "Automação AXION",
+        "status": "down",
+        "created_at": "2026-03-21T20:51:23.811544Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "ab0ddaf0-042b-42fa-ad9a-fde3f7c2f5d5",
+        "name": "Terço de Noiva - Desiree",
+        "status": "inactive",
+        "created_at": "2026-03-27T02:23:57.995590Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "5bc9feef-80d0-42ae-985a-4bafd334a370",
+        "name": "axion-auth",
+        "status": "down",
+        "created_at": "2026-04-05T02:47:14.192131Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "809186ad-e312-4d6c-b3d0-9564bc880756",
+        "name": "axion-oauth",
+        "status": "down",
+        "created_at": "2026-03-26T03:53:33.283520Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "653798d5-1b60-4f06-acdf-1aedc2c64dea",
+        "name": "axion-osint-tunnel",
+        "status": "down",
+        "created_at": "2026-07-22T02:16:15.457503Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "16ca17a1-aa8d-4581-a45f-c2646d6178a3",
+        "name": "axion-poseidon",
+        "status": "inactive",
+        "created_at": "2026-07-21T13:06:42.099555Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "1836db77-219c-4dda-b729-42d30bd2c9e2",
+        "name": "axion-ssh",
+        "status": "down",
+        "created_at": "2026-04-21T13:14:28.308023Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "9a34f331-d49d-4f13-81df-f1255c249175",
+        "name": "axion-ssh-fixed",
+        "status": "inactive",
+        "created_at": "2026-05-17T05:34:56.484548Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "44d7e5a5-445b-45f8-9ca9-d2a4f149f18b",
+        "name": "axion-ssh-new",
+        "status": "inactive",
+        "created_at": "2026-05-17T05:29:04.584965Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "1bd7f753-edea-4e30-94ad-bc5fb48cfb13",
+        "name": "axion-tunnel",
+        "status": "inactive",
+        "created_at": "2026-03-25T23:23:52.722277Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "8bfda0ca-c18c-484b-b2ea-976c01f67873",
+        "name": "ig-webhook",
+        "status": "down",
+        "created_at": "2026-03-27T03:09:00.971735Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "771a2dfc-0f22-454d-8f89-65e99e369550",
+        "name": "mimo-demo",
+        "status": "down",
+        "created_at": "2026-03-27T13:52:48.730504Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "28aadd71-9d58-4a0f-84cb-666da996959f",
+        "name": "pontotecc-web",
+        "status": "down",
+        "created_at": "2026-03-30T18:13:17.212871Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "14c1ef48-273d-46b2-b576-94cd8a540cf8",
+        "name": "simonello",
+        "status": "down",
+        "created_at": "2026-03-23T21:58:27.235588Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      },
+      {
+        "id": "1bfbaf29-46eb-48ff-85e7-65675d65631d",
+        "name": "trydelta",
+        "status": "down",
+        "created_at": "2026-03-27T08:50:10.958812Z",
+        "conns_active_at": null,
+        "tun_type": "cfd_tunnel"
+      }
+    ],
+    "total_tunnels": 15,
+    "workers": [
+      {
+        "id": "ana-proxy",
+        "created_on": "2026-04-28T23:00:30.599539Z",
+        "modified_on": "2026-04-28T23:00:30.599539Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-404-gateway",
+        "created_on": "2026-07-21T06:43:27.209391Z",
+        "modified_on": "2026-09-09T04:30:22.596826Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-flow-homepage",
+        "created_on": "2026-05-25T22:54:59.848484Z",
+        "modified_on": "2026-05-25T22:55:13.677709Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-flow-proxy",
+        "created_on": "2026-05-25T22:23:01.476375Z",
+        "modified_on": "2026-05-25T22:23:01.476375Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-github-auth",
+        "created_on": "2026-04-04T19:50:41.163015Z",
+        "modified_on": "2026-04-04T20:04:34.024603Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-lead-webhook",
+        "created_on": "2026-07-09T19:17:52.060568Z",
+        "modified_on": "2026-07-09T19:18:30.819217Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-meta-webhook",
+        "created_on": "2026-07-09T19:26:02.995493Z",
+        "modified_on": "2026-07-09T19:43:34.253026Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-qr-system",
+        "created_on": "2026-06-01T11:31:57.985984Z",
+        "modified_on": "2026-06-01T11:32:04.940116Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-temp-landing",
+        "created_on": "2026-05-25T22:21:26.202143Z",
+        "modified_on": "2026-05-25T22:23:00.402351Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "axion-vps-proxy",
+        "created_on": "2026-07-23T15:21:23.108447Z",
+        "modified_on": "2026-07-23T16:25:09.460269Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "mp-payroll-worker",
+        "created_on": "2026-04-04T19:56:14.390624Z",
+        "modified_on": "2026-04-04T20:11:02.981969Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "pdv-worker",
+        "created_on": "2026-06-01T13:36:59.450879Z",
+        "modified_on": "2026-06-01T21:47:40.496634Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "poseidon",
+        "created_on": "2026-07-21T13:07:45.671857Z",
+        "modified_on": "2026-07-21T13:07:49.002Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "sicrety-edge-proxy",
+        "created_on": "2026-08-20T15:19:24.489832Z",
+        "modified_on": "2026-08-20T15:19:24.489832Z",
+        "usage_model": "standard"
+      },
+      {
+        "id": "vps-axion-api",
+        "created_on": "2026-07-22T03:00:33.011653Z",
+        "modified_on": "2026-07-22T03:10:00.738514Z",
+        "usage_model": "standard"
+      }
+    ],
+    "total_workers": 15,
+    "pages": [
+      {
+        "name": "axion-status",
+        "domains": [
+          "axion-status.pages.dev"
+        ],
+        "production_branch": "main",
+        "created_on": "2026-06-01T10:47:27.162044Z",
+        "subdomain": "axion-status.pages.dev"
+      },
+      {
+        "name": "axion-landing",
+        "domains": [
+          "axion-landing.pages.dev"
+        ],
+        "production_branch": "main",
+        "created_on": "2026-06-01T09:50:00.27839Z",
+        "subdomain": "axion-landing.pages.dev"
+      },
+      {
+        "name": "axion-flow",
+        "domains": [
+          "axion-flow.pages.dev"
+        ],
+        "production_branch": "master",
+        "created_on": "2026-05-29T05:01:02.750059Z",
+        "subdomain": "axion-flow.pages.dev"
+      },
+      {
+        "name": "facebusca-routes-app",
+        "domains": [
+          "facebusca-routes-app.pages.dev",
+          "facebusca-routes.axionenterprise.cloud"
+        ],
+        "production_branch": "main",
+        "created_on": "2026-04-12T05:34:09.542277Z",
+        "subdomain": "facebusca-routes-app.pages.dev"
+      },
+      {
+        "name": "painel-axion",
+        "domains": [
+          "painel-axion.pages.dev",
+          "painel.axionenterprise.cloud"
+        ],
+        "production_branch": "main",
+        "created_on": "2026-04-04T06:54:57.302053Z",
+        "subdomain": "painel-axion.pages.dev"
+      }
+    ],
+    "total_pages": 5,
+    "d1_databases": [
+      {
+        "uuid": "ee34dc06-2416-405d-b717-694650f580b9",
+        "name": "vps-axion-db",
+        "num_tables": 0,
+        "database_size": null,
+        "created_at": "2026-07-22T02:56:00.934Z"
+      }
+    ],
+    "total_d1": 1,
+    "kv_namespaces": [
+      {
+        "id": "12c59d643a6f4bb8b7e2a5e3b1c5953a",
+        "title": "AXION_TELEMETRY",
+        "supports_url_encoding": true
+      },
+      {
+        "id": "360ca2ef6fb0488891e9fa7e9d4be9b7",
+        "title": "QR_KV",
+        "supports_url_encoding": true
+      },
+      {
+        "id": "b9af499f70d14796a81515e651a0f577",
+        "title": "AXION_LEADS",
+        "supports_url_encoding": true
+      }
+    ],
+    "total_kv": 3
+  },
+  "vercel": {
+    "team": "axion777",
+    "projects": [
+      {
+        "name": "landing-page-teste-w-solucoes",
+        "production_url": "https://landing-page-teste-w-solucoes.vercel.app",
+        "framework": "HTML / Estático",
+        "title": "AXION Enterprise — Inovação & Automação Inteligente",
+        "status_code": 200
+      },
+      {
+        "name": "landing-page-teste",
+        "production_url": "https://landing-page-teste-woad.vercel.app",
+        "framework": "HTML / Estático",
+        "title": "AXION Enterprise — Inovação & Automação Inteligente",
+        "status_code": 200
+      },
+      {
+        "name": "ifood-dashboard",
+        "production_url": "https://ifood-dashboard-tau.vercel.app",
+        "framework": "HTML / Estático",
+        "title": "Empório Caraíva — Dashboard iFood & Plano de Ação",
+        "status_code": 200
+      },
+      {
+        "name": "meta-gpt-worker",
+        "production_url": "https://meta-gpt-worker.vercel.app",
+        "framework": "Tailwind CSS / SPA",
+        "title": "Positive Mind - Gestão de Marketing",
+        "status_code": 200
+      },
+      {
+        "name": "axion-vps-api-contingencia",
+        "production_url": "https://axion-vps-api-contingencia.vercel.app",
+        "framework": "Desconhecido",
+        "title": "HTTP Error 404: Not Found",
+        "status_code": "Erro/Inativo"
+      },
+      {
+        "name": "axion-flow",
+        "production_url": "https://axion-flow-gamma.vercel.app",
+        "framework": "Next.js (React)",
+        "title": "AXION FLOW — Sistema Comercial Autônomo",
+        "status_code": 200
+      },
+      {
+        "name": "axion-flow-homepage",
+        "production_url": "https://axion-flow-homepage.vercel.app",
+        "framework": "HTML / Estático",
+        "title": "AXION FLOW — Automação Comercial com IA | Capture e Converta Leads 24/7",
+        "status_code": 200
+      },
+      {
+        "name": "axion-conferencia-pecas",
+        "production_url": "https://axion-conferencia-pecas.vercel.app",
+        "framework": "HTML / Estático",
+        "title": "My Google AI Studio App",
+        "status_code": 200
+      },
+      {
+        "name": "growth-accelerator-main",
+        "production_url": "https://yannascimentoads.com",
+        "framework": "Vite / React (Vite)",
+        "title": "Yan Nascimento | Gestor de Tráfego Pago para Negócios Locais",
+        "status_code": 200
+      },
+      {
+        "name": "rosireis-atelier",
+        "production_url": "https://rosireis.com.br",
+        "framework": "HTML / Estático",
+        "title": "Loja online de Atelier Rosi Reis",
+        "status_code": 200
+      },
+      {
+        "name": "vercel-ai-gateway-demo",
+        "production_url": "https://vercel-ai-gateway-demo-axion777.vercel.app",
+        "framework": "Next.js (React)",
+        "title": "Login – Vercel",
+        "status_code": 200
+      }
+    ],
+    "total_projects": 11,
+    "aliases": [
+      {
+        "source": "landing-page-teste-g2shnguek-axion777.vercel.app",
+        "alias": "landing-page-teste.vercel.app"
+      },
+      {
+        "source": "landing-page-teste-w-solucoes-a3esnndzc-axion777.vercel.app",
+        "alias": "landing-page-teste-w-solucoes-axion777.vercel.app"
+      },
+      {
+        "source": "landing-page-teste-w-solucoes-hppe6fdqn-axion777.vercel.app",
+        "alias": "landing-page-teste-w-solucoes.vercel.app"
+      },
+      {
+        "source": "landing-page-teste-d9wof3s36-axion777.vercel.app",
+        "alias": "landing-page-teste-axion777.vercel.app"
+      },
+      {
+        "source": "landing-page-teste-d9wof3s36-axion777.vercel.app",
+        "alias": "landing-page-teste-woad.vercel.app"
+      },
+      {
+        "source": "ifood-dashboard-menh8dyyq-axion777.vercel.app",
+        "alias": "ifood-dashboard-axionenterprise777-1846-axion777.vercel.app"
+      },
+      {
+        "source": "ifood-dashboard-menh8dyyq-axion777.vercel.app",
+        "alias": "ifood-dashboard-axion777.vercel.app"
+      },
+      {
+        "source": "ifood-dashboard-menh8dyyq-axion777.vercel.app",
+        "alias": "ifood-dashboard-tau.vercel.app"
+      },
+      {
+        "source": "meta-gpt-worker-g6ppyngmw-axion777.vercel.app",
+        "alias": "meta-gpt-worker-axion777.vercel.app"
+      },
+      {
+        "source": "meta-gpt-worker-g6ppyngmw-axion777.vercel.app",
+        "alias": "meta-gpt-worker.vercel.app"
+      },
+      {
+        "source": "meta-gpt-worker-g6ppyngmw-axion777.vercel.app",
+        "alias": "meta-gpt-worker-axionenterprise777-1846-axion777.vercel.app"
+      },
+      {
+        "source": "axion-vps-api-contingencia-qllvnjp7t-axion777.vercel.app",
+        "alias": "api-contingencia.axionenterprise.cloud"
+      },
+      {
+        "source": "axion-vps-api-contingencia-qllvnjp7t-axion777.vercel.app",
+        "alias": "axion-vps-api-contingencia-axion777.vercel.app"
+      },
+      {
+        "source": "axion-vps-api-contingencia-qllvnjp7t-axion777.vercel.app",
+        "alias": "axion-vps-api-contingencia-axionenterprise777-1846-axion777.vercel.app"
+      },
+      {
+        "source": "axion-vps-api-contingencia-qllvnjp7t-axion777.vercel.app",
+        "alias": "axion-vps-api-contingencia.vercel.app"
+      },
+      {
+        "source": "axion-flow-rlxljxw7v-axion777.vercel.app",
+        "alias": "axion-flow-gamma.vercel.app"
+      },
+      {
+        "source": "axion-flow-rlxljxw7v-axion777.vercel.app",
+        "alias": "axion-flow-axionenterprise777-1846-axion777.vercel.app"
+      },
+      {
+        "source": "axion-flow-rlxljxw7v-axion777.vercel.app",
+        "alias": "axion-flow-axion777.vercel.app"
+      },
+      {
+        "source": "axion-flow-homepage-341ngtq7q-axion777.vercel.app",
+        "alias": "axion-flow-homepage-axionenterprise777-1846-axion777.vercel.app"
+      },
+      {
+        "source": "axion-flow-homepage-341ngtq7q-axion777.vercel.app",
+        "alias": "axion-flow-homepage-axion777.vercel.app"
+      }
+    ],
+    "total_aliases": 20
+  },
+  "compute_tailnet": {
+    "self_node": {
+      "hostname": "DESKTOP-1T1E46H",
+      "ip": "100.64.188.73",
+      "os": "windows"
+    },
+    "peers": [
+      {
+        "hostname": "juliana-vps",
+        "ip": "100.81.231.111",
+        "os": "linux",
+        "online": true,
+        "last_seen": "0001-01-01T00:00:00Z",
+        "exit_node": false
+      },
+      {
+        "hostname": "sensix-black-vps",
+        "ip": "100.86.168.13",
+        "os": "linux",
+        "online": false,
+        "last_seen": "2026-09-16T03:51:18.1Z",
+        "exit_node": false
+      },
+      {
+        "hostname": "sensix-ai-studio-vps",
+        "ip": "100.69.94.49",
+        "os": "linux",
+        "online": false,
+        "last_seen": "2026-08-28T09:08:58.1Z",
+        "exit_node": false
+      },
+      {
+        "hostname": "axion-vps-104-207-90-167",
+        "ip": "100.95.86.83",
+        "os": "linux",
+        "online": true,
+        "last_seen": "0001-01-01T00:00:00Z",
+        "exit_node": false
+      },
+      {
+        "hostname": "debian-2vcpu-amd-4gb-us-6tb9d",
+        "ip": "100.73.36.87",
+        "os": "linux",
+        "online": true,
+        "last_seen": "0001-01-01T00:00:00Z",
+        "exit_node": false
+      }
+    ],
+    "juliana_vps_deep_audit": {
+      "uname_uptime": "Linux srv1877777 6.12.95+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.95-1 (2026-07-04) x86_64 GNU/Linux\n 01:55:14 up 52 days,  5:37,  2 users,  load average: 0.22, 0.18, 0.13",
+      "resources": "total        used        free      shared  buff/cache   available\nMem:            7945        1756         326          65        6226        6188\nSwap:              0           0           0\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        99G   23G   72G  24% /",
+      "containers": [
+        {
+          "name": "hermes-whatsapp-keeper",
+          "status": "Up 5 weeks",
+          "image": "hermes-whatsapp-keeper:latest",
+          "ports": "3000/tcp"
+        },
+        {
+          "name": "hermes-gateway-juliana",
+          "status": "Up 5 weeks (healthy)",
+          "image": "hermes-gateway-juliana:v5.1.0",
+          "ports": "127.0.0.1:8000->8000/tcp"
+        },
+        {
+          "name": "hermes-webchat",
+          "status": "Up 5 weeks (healthy)",
+          "image": "hermes-webchat:v5.1.0",
+          "ports": "0.0.0.0:80->80/tcp, [::]:80->80/tcp"
+        },
+        {
+          "name": "axion-cadvisor",
+          "status": "Up 6 weeks (healthy)",
+          "image": "3de2bd520312",
+          "ports": "100.81.231.111:8081->8080/tcp"
+        },
+        {
+          "name": "axion-alloy",
+          "status": "Up 6 weeks",
+          "image": "0f4434c92b3e",
+          "ports": "100.81.231.111:12345->12345/tcp"
+        },
+        {
+          "name": "axion-node-exporter",
+          "status": "Up 6 weeks",
+          "image": "1b4e4438faca",
+          "ports": "100.81.231.111:9100->9100/tcp"
+        },
+        {
+          "name": "hermes-postgres",
+          "status": "Up 7 weeks (healthy)",
+          "image": "postgres:16-alpine",
+          "ports": "5432/tcp"
+        },
+        {
+          "name": "hermes-redis",
+          "status": "Up 7 weeks (healthy)",
+          "image": "redis:7-alpine",
+          "ports": "6379/tcp"
+        }
+      ],
+      "storage_networks": "hermes_hermes_audit\nhermes_hermes_landings\nhermes_hermes_skills\nhermes_n8n_data\nhermes_ollama_data\nhermes_postgres_data\nhermes_redis_data\nhermes_whatsapp_sessions\nobservability-agent_alloy-data\n---\nbridge|bridge\nhermes_hermes-network|bridge\nhost|host\nnone|null\nobservability-agent_default|bridge",
+      "postgres": {
+        "table_count": "135",
+        "database_size": "15 MB"
+      },
+      "redis": {
+        "memory": "used_memory_human:1.11M"
+      }
+    },
+    "vps_probes": [
+      {
+        "name": "axion-vps-104-207-90-167",
+        "ip": "100.95.86.83",
+        "public_ip": "104.207.90.167",
+        "port_status": {
+          "tailnet_80": "OPEN",
+          "tailnet_443": "OPEN",
+          "tailnet_8080": "OPEN"
+        }
+      },
+      {
+        "name": "debian-2vcpu-amd-4gb-us-6tb9d",
+        "ip": "100.73.36.87",
+        "public_ip": "104.207.81.120",
+        "port_status": {
+          "tailnet_80": "OPEN",
+          "tailnet_443": "OPEN",
+          "tailnet_5432": "TIMEOUT"
+        }
+      }
+    ]
+  },
+  "google_and_local": {
+    "google_workspace": {
+      "domain": "axionenterprise.cloud",
+      "customer_id": "C03xtme8f",
+      "admin": "iago@axionenterprise.cloud",
+      "delegation_status": "FULLY_AUTHORIZED",
+      "drive_assets_count": 141,
+      "shared_drives_count": 1,
+      "users": [
+        {
+          "email": "dev@axionenterprise.cloud",
+          "full_name": "Axionenterprise Dev",
+          "is_admin": false,
+          "creation_time": "2026-08-13T00:17:00Z",
+          "last_login": "Never",
+          "suspended": false,
+          "aliases": [],
+          "recovery_email": "",
+          "recovery_phone": "",
+          "org_unit": "/"
+        },
+        {
+          "email": "iago@axionenterprise.cloud",
+          "full_name": "Iago Barreto",
+          "is_admin": true,
+          "creation_time": "2026-07-15T16:46:53Z",
+          "last_login": "2026-09-21T03:26:51Z",
+          "suspended": false,
+          "aliases": [
+            "vendas@axionenterprise.cloud",
+            "1"
+          ],
+          "recovery_email": "kurtalexanderwolf@gmail.com",
+          "recovery_phone": "+5511988045139",
+          "org_unit": "/"
+        }
+      ]
+    },
+    "storage": {
+      "c_drive": {
+        "free_gb": 177.76,
+        "total_gb": 222.86
+      },
+      "e_backup_drive": {
+        "free_gb": 928.46,
+        "total_gb": 930.94
+      }
+    },
+    "backup_vault": {
+      "exists": true,
+      "available_backups": [
+        "backup_2026-09-25"
+      ],
+      "latest_manifest": {
+        "backup_date": "2026-09-25T04:15:41.435592+00:00",
+        "destination": "E:\\backups\\axion_enterprise\\backup_2026-09-25",
+        "status": "COMPLETED",
+        "modules": {
+          "workspace_state": "OK",
+          "google_drive_assets_synced": 12,
+          "github_repositories": "OK",
+          "production_databases": {
+            "status": "OK",
+            "size_bytes": 88941,
+            "sha256": "3942e178132bf599ab9ec756308d0477cc5a72d74600efdcaa0a3f89905395b6"
+          }
+        }
+      }
+    },
+    "scheduled_tasks": [
+      {
+        "TaskName": "AXION-Enterprise-Backup",
+        "State": 3
+      },
+      {
+        "TaskName": "AXION-Health-Watchdog",
+        "State": 3
+      }
+    ]
+  }
+}
