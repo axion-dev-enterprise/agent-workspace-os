@@ -107,6 +107,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | Escopo da Tarefa | Skill Mandatória | Arquivo Canônico |
 | :--- | :--- | :--- |
 | **Edge & Serverless** | `cloudflare-edge-ops` | [`.agents/skills/cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
+| **Geral / Utilitário** | `cron-scheduled-tasks` | [`.agents/skills/cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **IA & Engenharia de Agentes** | `elevenlabs-tts-voiceover` | [`.agents/skills/elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
 | **Backend & APIs** | `fastapi-async-api` | [`.agents/skills/fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
 | **Google Workspace** | `gam-ops` | [`.agents/skills/gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |
@@ -142,6 +143,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **UI/UX & Design** | `tailwind-shadcn-ux` | [`.agents/skills/tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
 | **DevOps & CI/CD** | `terraform-iac-automation` | [`.agents/skills/terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **2D/3D & Animações** | `threejs-gsap-animation` | [`.agents/skills/threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
+| **Geral / Utilitário** | `vercel-deployment-ops` | [`.agents/skills/vercel-deployment-ops/SKILL.md`](file:///C:/workspace/.agents/skills/vercel-deployment-ops/SKILL.md) |
 | **Nós VPS & Docker** | `vps-docker-orchestration` | [`.agents/skills/vps-docker-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/vps-docker-orchestration/SKILL.md) |
 | **Automação & Scraping** | `web-scraping-crawling` | [`.agents/skills/web-scraping-crawling/SKILL.md`](file:///C:/workspace/.agents/skills/web-scraping-crawling/SKILL.md) |
 | **Segurança & Pentest** | `web-security-pentest` | [`.agents/skills/web-security-pentest/SKILL.md`](file:///C:/workspace/.agents/skills/web-security-pentest/SKILL.md) |

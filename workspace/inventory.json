@@ -414,10 +414,11 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 41,
-    "synced_at": "2026-09-25T04:56:37.902455+00:00",
+    "total_active": 43,
+    "synced_at": "2026-09-25T05:01:11.901697+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
+      "cron-scheduled-tasks",
       "elevenlabs-tts-voiceover",
       "fastapi-async-api",
       "gam-ops",
@@ -453,6 +454,7 @@
       "tailwind-shadcn-ux",
       "terraform-iac-automation",
       "threejs-gsap-animation",
+      "vercel-deployment-ops",
       "vps-docker-orchestration",
       "web-scraping-crawling",
       "web-security-pentest",
