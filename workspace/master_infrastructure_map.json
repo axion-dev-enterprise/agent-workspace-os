@@ -1,5 +1,5 @@
 {
-  "scanned_at": "2026-09-25T05:11:07.314045+00:00",
+  "scanned_at": "2026-09-25T05:19:02.369703+00:00",
   "github": {
     "profile": {
       "login": "axion-dev-enterprise",
@@ -2642,11 +2642,19 @@
     },
     "scheduled_tasks": [
       {
+        "TaskName": "AXION-Backup-Rotation-Prune",
+        "State": 3
+      },
+      {
         "TaskName": "AXION-Enterprise-Backup",
         "State": 3
       },
       {
         "TaskName": "AXION-Health-Watchdog",
+        "State": 3
+      },
+      {
+        "TaskName": "AXION-SSL-Domain-Sentinel",
         "State": 3
       }
     ]

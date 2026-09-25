@@ -1,6 +1,6 @@
 # Painel de Saúde & Auto-Fix da Infraestrutura
 
-> **Última Varredura**: 2026-09-25 02:12:47 (UTC: 2026-09-25T05:12:47.726297+00:00)  
+> **Última Varredura**: 2026-09-25 02:18:43 (UTC: 2026-09-25T05:18:43.518683+00:00)  
 > **Status Global do Sistema**: 🟢 **OPERACIONAL E SAUDÁVEL**  
 
 ---
@@ -9,8 +9,8 @@
 
 | Nó / Servidor | IP Tailscale | Função | Status | Latência |
 | :--- | :--- | :--- | :--- | :--- |
-| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 196ms |
-| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 170ms |
+| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 193ms |
+| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 168ms |
 
 ---
 

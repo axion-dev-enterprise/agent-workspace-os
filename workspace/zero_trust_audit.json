@@ -1,0 +1,74 @@
+{
+  "audited_at": "2026-09-25T05:18:34.626958+00:00",
+  "hosts": [
+    {
+      "name": "axion-vps-104-207-90-167",
+      "role": "Traefik Ingress Gateway & API Core",
+      "public_ip": "104.207.90.167",
+      "tailnet_ip": "100.95.86.83",
+      "public_ports": {
+        "80": "OPEN",
+        "443": "OPEN",
+        "8080": "CLOSED/FILTERED",
+        "22": "CLOSED/FILTERED",
+        "5432": "CLOSED/FILTERED",
+        "6379": "CLOSED/FILTERED"
+      },
+      "tailnet_ports": {
+        "80": "OPEN",
+        "443": "OPEN",
+        "8080": "OPEN",
+        "22": "CLOSED/FILTERED",
+        "5432": "CLOSED/FILTERED",
+        "6379": "CLOSED/FILTERED"
+      },
+      "assigned_domains": [
+        "api.axionenterprise.cloud",
+        "auth.axionenterprise.cloud",
+        "casa.axionenterprise.cloud",
+        "hooks.axionenterprise.cloud"
+      ],
+      "exposed_public_ports": [
+        80,
+        443
+      ]
+    },
+    {
+      "name": "debian-2vcpu-amd-4gb-us-6tb9d",
+      "role": "Database, Celery Tasks & Flow Engine",
+      "public_ip": "104.207.81.120",
+      "tailnet_ip": "100.73.36.87",
+      "public_ports": {
+        "80": "OPEN",
+        "443": "OPEN",
+        "22": "CLOSED/FILTERED",
+        "5432": "CLOSED/FILTERED",
+        "6379": "CLOSED/FILTERED",
+        "8000": "CLOSED/FILTERED"
+      },
+      "tailnet_ports": {
+        "80": "OPEN",
+        "443": "OPEN",
+        "22": "CLOSED/FILTERED",
+        "5432": "CLOSED/FILTERED",
+        "6379": "CLOSED/FILTERED",
+        "8000": "CLOSED/FILTERED"
+      },
+      "assigned_domains": [
+        "db.axionenterprise.cloud",
+        "agents.axionenterprise.cloud",
+        "tasks.axionenterprise.cloud"
+      ],
+      "exposed_public_ports": [
+        80,
+        443
+      ]
+    }
+  ],
+  "recommendations": [
+    "Configurar UFW em axion-vps para permitir apenas tráfego vindo da interface tailscale0 e Cloudflare IP ranges.",
+    "Fechar portas administrativas (8080/Traefik Dashboard) na internet pública, tornando acessível apenas via Tailscale MagicDNS ou Cloudflare Zero Trust Access.",
+    "Garantir que a porta 5432 (PostgreSQL) permaneça escutando exclusivamente em 127.0.0.1 ou na interface tailscale0.",
+    "Consolidar o roteamento de saída para utilizar cloudflared com protocolo quic/http2."
+  ]
+}

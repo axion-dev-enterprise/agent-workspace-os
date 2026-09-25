@@ -414,10 +414,11 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 43,
-    "synced_at": "2026-09-25T05:13:23.315587+00:00",
+    "total_active": 46,
+    "synced_at": "2026-09-25T05:20:47.190411+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
+      "cloudflare-zero-trust-tunnels",
       "cron-scheduled-tasks",
       "elevenlabs-tts-voiceover",
       "fastapi-async-api",
@@ -437,6 +438,7 @@
       "pdf-generation-puppeteer",
       "playwright-e2e-testing",
       "postgresql-advanced-optimization",
+      "postgresql-dba-maintenance",
       "prisma-drizzle-orm",
       "prometheus-grafana-metrics",
       "prompt-engineering-jailbreak-defense",
@@ -459,6 +461,7 @@
       "web-scraping-crawling",
       "web-security-pentest",
       "web-vitals-performance",
+      "whatsapp-baileys-bot-ops",
       "whisper-stt-neural-voice"
     ]
   },

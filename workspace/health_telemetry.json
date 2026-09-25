@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-09-25T05:12:47.726297+00:00",
+  "timestamp": "2026-09-25T05:18:43.518683+00:00",
   "tailnet_nodes": [
     {
       "name": "axion-vps-104-207-90-167",
       "ip": "100.95.86.83",
       "role": "Traefik Gateway & API",
       "status": "HEALTHY",
-      "latency": "196ms"
+      "latency": "193ms"
     },
     {
       "name": "debian-2vcpu-amd-4gb-us-6tb9d",
       "ip": "100.73.36.87",
       "role": "PostgreSQL & Flow Engine",
       "status": "HEALTHY",
-      "latency": "170ms"
+      "latency": "168ms"
     }
   ],
   "web_endpoints": [

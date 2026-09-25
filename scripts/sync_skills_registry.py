@@ -76,7 +76,14 @@ DOMAIN_MAP = {
     "pytest-mocking-fixtures": ("Testing & QA", "Testes unitários e de integração em Python com Pytest, fixtures parametrizadas, mocking e cobertura"),
     "web-scraping-crawling": ("Automação & Scraping", "Extração de dados resiliente, bypass de anti-bot, Playwright headless, Beautiful Soup e rotação de proxies"),
     "seo-technical-structured-data": ("SEO & Performance", "SEO técnico, Schema.org JSON-LD, metatags OpenGraph/Twitter, sitemaps XML e indexação no Google"),
-    "pdf-generation-puppeteer": ("Automação de Documentos", "Geração de relatórios PDF pixel-perfect a partir de HTML/CSS com Puppeteer/Playwright e print styles")
+    "pdf-generation-puppeteer": ("Automação de Documentos", "Geração de relatórios PDF pixel-perfect a partir de HTML/CSS com Puppeteer/Playwright e print styles"),
+
+    # 8. SRE, Cloud & Specialized Operations
+    "cron-scheduled-tasks": ("Automação & SRE", "Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows"),
+    "vercel-deployment-ops": ("DevOps & Deploy", "Gestão do escopo axion777, 11 projetos em produção, preview branches, domains e rollback"),
+    "postgresql-dba-maintenance": ("Databases & Caching", "Manutenção preventiva de PostgreSQL 15/16, VACUUM ANALYZE, index bloat, pooling e queries lentas"),
+    "cloudflare-zero-trust-tunnels": ("Segurança & Rede", "Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access"),
+    "whatsapp-baileys-bot-ops": ("Comunicação & Mensageria", "Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks")
 }
 
 def parse_frontmatter(content: str):
@@ -219,6 +226,22 @@ def update_inventory_json(skills):
     except Exception as e:
         print(f"[!] Erro ao atualizar {INVENTORY_JSON_PATH}: {e}")
 
+def mirror_to_global_skills(skills):
+    """Mirrors all skills to ~/.gemini/antigravity/skills/"""
+    GLOBAL_SKILLS_DIR.mkdir(parents=True, exist_ok=True)
+    mirrored_count = 0
+    for s in skills:
+        src_file = Path(s["full_path"])
+        dest_dir = GLOBAL_SKILLS_DIR / s["name"]
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest_file = dest_dir / "SKILL.md"
+        try:
+            dest_file.write_text(src_file.read_text(encoding="utf-8"), encoding="utf-8")
+            mirrored_count += 1
+        except Exception as e:
+            print(f"[!] Erro ao espelhar {s['name']} globalmente: {e}")
+    print(f"[OK] Espelhadas {mirrored_count} skills globalmente em: {GLOBAL_SKILLS_DIR}")
+
 def main():
     print("=== Sincronizador Canônico de Skills AXION ===")
     skills = scan_skills()
@@ -227,6 +250,7 @@ def main():
     update_skills_registry_md(skills)
     update_agents_md(skills)
     update_inventory_json(skills)
+    mirror_to_global_skills(skills)
     print("=== Sincronização Concluída com Sucesso! ===")
 
 if __name__ == "__main__":
