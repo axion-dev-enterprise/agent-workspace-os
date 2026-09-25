@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-09-25T03:57:33.805189+00:00",
+  "tailnet_nodes": [
+    {
+      "name": "axion-vps-104-207-90-167",
+      "ip": "100.95.86.83",
+      "role": "Traefik Gateway & API",
+      "status": "HEALTHY",
+      "latency": "199ms"
+    },
+    {
+      "name": "debian-2vcpu-amd-4gb-us-6tb9d",
+      "ip": "100.73.36.87",
+      "role": "PostgreSQL & Flow Engine",
+      "status": "HEALTHY",
+      "latency": "171ms"
+    },
+    {
+      "name": "juliana-vps",
+      "ip": "100.81.231.111",
+      "role": "Hermes Central (Nginx)",
+      "status": "HEALTHY",
+      "latency": "5ms"
+    }
+  ],
+  "web_endpoints": [
+    {
+      "name": "AXION Flow (Vercel)",
+      "url": "https://axion-flow-gamma.vercel.app",
+      "status": "HEALTHY",
+      "code": 200
+    },
+    {
+      "name": "AXION Flow Homepage (Vercel)",
+      "url": "https://axion-flow-homepage.vercel.app",
+      "status": "HEALTHY",
+      "code": 200
+    },
+    {
+      "name": "Proxion Hub (Custom Domain)",
+      "url": "https://proxionmidia.com",
+      "status": "HEALTHY",
+      "code": 200
+    },
+    {
+      "name": "Yan Nascimento Ads (Vite)",
+      "url": "https://yannascimentoads.com",
+      "status": "HEALTHY",
+      "code": 200
+    },
+    {
+      "name": "Traefik Dashboard (Tailnet Internal)",
+      "url": "http://100.95.86.83:8080",
+      "status": "HEALTHY",
+      "code": 200
+    }
+  ],
+  "workstation_resources": {
+    "status": "HEALTHY",
+    "c_drive": {
+      "free_gb": 177.79,
+      "total_gb": 222.86,
+      "percent_free": 79.8
+    },
+    "e_backup_drive": {
+      "exists": true,
+      "free_gb": 929.1,
+      "total_gb": 930.94,
+      "percent_free": 99.8
+    },
+    "backup_verification": {
+      "status": "COMPLETED",
+      "last_backup": "2026-09-25T03:56:40.175464+00:00"
+    }
+  },
+  "auto_fix_actions": []
+}

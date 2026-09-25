@@ -415,7 +415,7 @@
   },
   "skills": {
     "total_active": 41,
-    "synced_at": "2026-09-25T03:37:29.070656+00:00",
+    "synced_at": "2026-09-25T03:58:12.596876+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
       "elevenlabs-tts-voiceover",
@@ -470,12 +470,45 @@
       "os": "windows"
     },
     "nodes": [
-      { "hostname": "desktop-1t1e46h", "ip": "100.64.188.73", "os": "windows", "status": "online" },
-      { "hostname": "axion-vps-104-207-90-167", "ip": "100.95.86.83", "os": "linux", "status": "online", "public_ip": "104.207.90.167" },
-      { "hostname": "debian-2vcpu-amd-4gb-us-6tb9d", "ip": "100.73.36.87", "os": "linux", "status": "online", "public_ip": "104.207.81.120" },
-      { "hostname": "juliana-vps", "ip": "100.81.231.111", "os": "linux", "status": "online", "public_ip": "179.197.237.20" },
-      { "hostname": "sensix-ai-studio-vps", "ip": "100.69.94.49", "os": "linux", "status": "offline" },
-      { "hostname": "sensix-black-vps", "ip": "100.86.168.13", "os": "linux", "status": "offline" }
+      {
+        "hostname": "desktop-1t1e46h",
+        "ip": "100.64.188.73",
+        "os": "windows",
+        "status": "online"
+      },
+      {
+        "hostname": "axion-vps-104-207-90-167",
+        "ip": "100.95.86.83",
+        "os": "linux",
+        "status": "online",
+        "public_ip": "104.207.90.167"
+      },
+      {
+        "hostname": "debian-2vcpu-amd-4gb-us-6tb9d",
+        "ip": "100.73.36.87",
+        "os": "linux",
+        "status": "online",
+        "public_ip": "104.207.81.120"
+      },
+      {
+        "hostname": "juliana-vps",
+        "ip": "100.81.231.111",
+        "os": "linux",
+        "status": "online",
+        "public_ip": "179.197.237.20"
+      },
+      {
+        "hostname": "sensix-ai-studio-vps",
+        "ip": "100.69.94.49",
+        "os": "linux",
+        "status": "offline"
+      },
+      {
+        "hostname": "sensix-black-vps",
+        "ip": "100.86.168.13",
+        "os": "linux",
+        "status": "offline"
+      }
     ]
   }
 }
