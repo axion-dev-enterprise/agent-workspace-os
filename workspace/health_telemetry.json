@@ -1,26 +1,26 @@
 {
-  "timestamp": "2026-09-25T03:57:33.805189+00:00",
+  "timestamp": "2026-09-25T04:16:45.478751+00:00",
   "tailnet_nodes": [
     {
       "name": "axion-vps-104-207-90-167",
       "ip": "100.95.86.83",
       "role": "Traefik Gateway & API",
       "status": "HEALTHY",
-      "latency": "199ms"
+      "latency": "192ms"
     },
     {
       "name": "debian-2vcpu-amd-4gb-us-6tb9d",
       "ip": "100.73.36.87",
       "role": "PostgreSQL & Flow Engine",
       "status": "HEALTHY",
-      "latency": "171ms"
+      "latency": "168ms"
     },
     {
       "name": "juliana-vps",
       "ip": "100.81.231.111",
       "role": "Hermes Central (Nginx)",
       "status": "HEALTHY",
-      "latency": "5ms"
+      "latency": "4ms"
     }
   ],
   "web_endpoints": [
@@ -64,13 +64,13 @@
     },
     "e_backup_drive": {
       "exists": true,
-      "free_gb": 929.1,
+      "free_gb": 928.46,
       "total_gb": 930.94,
-      "percent_free": 99.8
+      "percent_free": 99.7
     },
     "backup_verification": {
       "status": "COMPLETED",
-      "last_backup": "2026-09-25T03:56:40.175464+00:00"
+      "last_backup": "2026-09-25T04:15:41.435592+00:00"
     }
   },
   "auto_fix_actions": []

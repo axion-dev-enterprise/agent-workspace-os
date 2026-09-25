@@ -101,19 +101,50 @@ def backup_github_repos(dest_dir):
         if res.returncode == 0:
             repos = json.loads(res.stdout)
             print(f"  -> {len(repos)} repositórios identificados para backup...")
+            git_env = os.environ.copy()
+            git_env["GIT_TERMINAL_PROMPT"] = "0"
             for r in repos[:5]: # Backups dos 5 repositórios principais do monorepo e agentes
                 rname = r["name"]
                 rpath = repo_dir / rname
-                if not rpath.exists():
-                    print(f"     Clonando {rname}...")
-                    subprocess.run(["gh", "repo", "clone", f"axion-dev-enterprise/{rname}", str(rpath), "--", "--depth", "1"], capture_output=True)
-                else:
-                    print(f"     Atualizando {rname}...")
-                    subprocess.run(["git", "-C", str(rpath), "pull", "--ff-only"], capture_output=True)
+                try:
+                    if not rpath.exists():
+                        print(f"     Clonando {rname}...")
+                        subprocess.run(["gh", "repo", "clone", f"axion-dev-enterprise/{rname}", str(rpath), "--", "--depth", "1"], capture_output=True, timeout=60, env=git_env)
+                    else:
+                        print(f"     Atualizando {rname}...")
+                        subprocess.run(["git", "-C", str(rpath), "pull", "--ff-only"], capture_output=True, timeout=30, env=git_env)
+                except Exception as e_repo:
+                    print(f"     [!] Erro ao sincronizar {rname}: {e_repo}")
         else:
             print("  [!] Não foi possível listar repositórios via gh CLI.")
     except Exception as e:
         print(f"  [!] Erro no backup do GitHub: {e}")
+
+def backup_databases(dest_dir):
+    print("[4/4] Executando dump criptografado de banco de dados em produção via Tailnet...")
+    db_dir = dest_dir / "databases"
+    db_dir.mkdir(parents=True, exist_ok=True)
+    
+    target_file = db_dir / "hermes_db.sql.gz"
+    tailscale_bin = r"C:\Program Files\Tailscale\tailscale.exe"
+    
+    try:
+        cmd = [tailscale_bin, "ssh", "root@juliana-vps", "docker exec hermes-postgres pg_dump -U hermes -d hermes_db | gzip -c"]
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        data, err = p.communicate(timeout=60)
+        
+        if p.returncode == 0 and len(data) > 1000:
+            with open(target_file, "wb") as f:
+                f.write(data)
+            sha = calculate_sha256(target_file)
+            print(f"  -> Banco hermes_db exportado com sucesso ({len(data)} bytes, SHA256: {sha[:16]}...)")
+            return {"status": "OK", "size_bytes": len(data), "sha256": sha}
+        else:
+            print(f"  [!] Falha no dump do PostgreSQL: {err.decode(errors='ignore')}")
+            return {"status": "FAILED", "error": err.decode(errors='ignore')}
+    except Exception as e:
+        print(f"  [!] Erro durante execução do dump: {e}")
+        return {"status": "ERROR", "error": str(e)}
 
 def main():
     print("==================================================")
@@ -127,6 +158,7 @@ def main():
     state_dir = backup_workspace_state(dest_dir)
     drive_count = backup_google_drive(dest_dir)
     backup_github_repos(dest_dir)
+    db_status = backup_databases(dest_dir)
     
     # Gera Manifesto Criptográfico
     manifest = {
@@ -136,7 +168,8 @@ def main():
         "modules": {
             "workspace_state": "OK",
             "google_drive_assets_synced": drive_count,
-            "github_repositories": "OK"
+            "github_repositories": "OK",
+            "production_databases": db_status
         }
     }
     
