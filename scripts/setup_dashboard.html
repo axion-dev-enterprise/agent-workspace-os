@@ -1038,15 +1038,25 @@ response = client.chat.completions.create(
   // ── Button Loading State ───────────────────────────────────
   function setLoading(btn, isLoading, loadingText) {
     if (!btn) return;
+    if (btn._loadingTimer) {
+      clearTimeout(btn._loadingTimer);
+      btn._loadingTimer = null;
+    }
     if (isLoading) {
-      btn.dataset.origHtml = btn.innerHTML;
+      if (!btn.dataset.origHtml) btn.dataset.origHtml = btn.innerHTML;
       btn.dataset.origWidth = btn.offsetWidth + 'px';
       btn.style.minWidth = btn.dataset.origWidth;
       btn.disabled = true;
       btn.innerHTML = SPINNER_SVG + (loadingText ? ' ' + escHtml(loadingText) : '');
+      btn._loadingTimer = setTimeout(function() {
+        setLoading(btn, false);
+      }, 7000);
     } else {
       btn.disabled = false;
-      if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+      if (btn.dataset.origHtml) {
+        btn.innerHTML = btn.dataset.origHtml;
+        delete btn.dataset.origHtml;
+      }
       btn.style.minWidth = '';
     }
   }
@@ -1258,11 +1268,23 @@ response = client.chat.completions.create(
   if (btnGithubLogin) {
     btnGithubLogin.addEventListener('click', function() {
       var self = this; setLoading(self, true);
-      fetch('/api/oauth/github', { method: 'POST' }).then(function() {
-        showToast('Navegador aberto para autenticação GitHub. Complete o login e clique em Atualizar Status.', 'info');
-      }).catch(function(err) {
-        showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
-      }).finally(function() { setLoading(self, false); });
+      fetch('/api/oauth/github', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.url) {
+            window.open(data.url, '_blank');
+            if (data.code) {
+              try { navigator.clipboard.writeText(data.code); } catch(e){}
+              showToast('Código copiado: ' + data.code + '! Cole na página do GitHub aberta.', 'success');
+            } else {
+              showToast('Página do GitHub aberta no navegador.', 'info');
+            }
+          } else {
+            showToast('Erro ao obter link do GitHub', 'error');
+          }
+        }).catch(function(err) {
+          showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
+        }).finally(function() { setLoading(self, false); });
     });
   }
 
@@ -1271,11 +1293,18 @@ response = client.chat.completions.create(
   if (btnVercelLogin) {
     btnVercelLogin.addEventListener('click', function() {
       var self = this; setLoading(self, true);
-      fetch('/api/oauth/vercel', { method: 'POST' }).then(function() {
-        showToast('Navegador aberto para autenticação Vercel. Complete o login e clique em Atualizar Status.', 'info');
-      }).catch(function(err) {
-        showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
-      }).finally(function() { setLoading(self, false); });
+      fetch('/api/oauth/vercel', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.url) {
+            window.open(data.url, '_blank');
+            showToast('Página de autorização da Vercel aberta no navegador!', 'success');
+          } else {
+            showToast('Erro ao obter link da Vercel', 'error');
+          }
+        }).catch(function(err) {
+          showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
+        }).finally(function() { setLoading(self, false); });
     });
   }
 

@@ -15,6 +15,8 @@ import urllib.error
 import socketserver
 import threading
 import time
+import re
+import queue
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 if os.path.dirname(__file__) not in sys.path:
@@ -31,9 +33,9 @@ WORKSPACE_ROOT    = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."
 PREFLIGHT_SCRIPT  = os.path.join(WORKSPACE_ROOT, "scripts", "preflight_check.py")
 DRIVE_SCRIPT      = os.path.join(WORKSPACE_ROOT, "scripts", "google_drive_sync.py")
 CONFIG_FILE       = os.path.join(WORKSPACE_ROOT, "workspace.config.json")
-TEMPLATE_FILE     = os.path.join(WORKSPACE_ROOT, "workspace.config.template.json")
+TEMPLATE_FILE     = os.path.join(WORKSPACE_ROOT, "templates", "workspace.config.template.json") if os.path.exists(os.path.join(WORKSPACE_ROOT, "templates", "workspace.config.template.json")) else os.path.join(WORKSPACE_ROOT, "workspace.config.template.json")
 DASHBOARD_HTML    = os.path.join(os.path.dirname(__file__), "setup_dashboard.html")
-LANDING_HTML      = os.path.join(WORKSPACE_ROOT, "landing.html")
+LANDING_HTML      = os.path.join(WORKSPACE_ROOT, "apps", "landing", "landing.html") if os.path.exists(os.path.join(WORKSPACE_ROOT, "apps", "landing", "landing.html")) else os.path.join(WORKSPACE_ROOT, "landing.html")
 
 _dashboard_cache: bytes | None = None
 _landing_cache: bytes | None = None
@@ -276,6 +278,85 @@ def stop_whatsapp_bridge() -> dict:
             return {"ok": False, "error": str(e)}
     return {"ok": True, "message": "Bridge não estava em execução."}
 
+_oauth_processes: dict = {}
+
+def kill_process_tree(p):
+    if p and p.poll() is None:
+        try:
+            if sys.platform == "win32":
+                subprocess.run(["taskkill", "/F", "/T", "/PID", str(p.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            else:
+                p.terminate()
+        except Exception:
+            pass
+
+def start_github_oauth() -> dict:
+    if "github" in _oauth_processes:
+        kill_process_tree(_oauth_processes["github"])
+
+    try:
+        p = subprocess.Popen(['gh', 'auth', 'login', '--web'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
+        _oauth_processes["github"] = p
+        q = queue.Queue()
+        def reader():
+            try:
+                for line in iter(p.stderr.readline, ''):
+                    q.put(line)
+            except Exception:
+                pass
+        t = threading.Thread(target=reader, daemon=True)
+        t.start()
+
+        code = None
+        url = "https://github.com/login/device"
+        t0 = time.time()
+        while time.time() - t0 < 3.5:
+            try:
+                line = q.get(timeout=0.4)
+                m = re.search(r'([A-Z0-9]{4}-[A-Z0-9]{4})', line)
+                if m:
+                    code = m.group(1)
+                    break
+            except queue.Empty:
+                pass
+        return {"ok": True, "url": url, "code": code}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "url": "https://github.com/login/device"}
+
+def start_vercel_oauth() -> dict:
+    if "vercel" in _oauth_processes:
+        kill_process_tree(_oauth_processes["vercel"])
+
+    try:
+        p = subprocess.Popen('vercel login github', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        _oauth_processes["vercel"] = p
+        q = queue.Queue()
+        def reader():
+            try:
+                for line in iter(p.stdout.readline, ''):
+                    q.put(line)
+            except Exception:
+                pass
+        t = threading.Thread(target=reader, daemon=True)
+        t.start()
+
+        url = None
+        t0 = time.time()
+        while time.time() - t0 < 4.0:
+            try:
+                line = q.get(timeout=0.4)
+                m = re.search(r'(https://vercel\.com/oauth/device\?user_code=[A-Z0-9-]+)', line)
+                if m:
+                    url = m.group(1)
+                    break
+            except queue.Empty:
+                pass
+        if not url:
+            url = "https://vercel.com/login"
+        return {"ok": True, "url": url}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "url": "https://vercel.com/login"}
+
 INSTALL_COMMANDS: dict[str, str] = {
     "python":   "winget install --id Python.Python.3.11 --exact --accept-source-agreements --accept-package-agreements",
     "node":     "winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements",
@@ -510,24 +591,14 @@ class SetupHandler(BaseHTTPRequestHandler):
 
         # ── GitHub OAuth ──────────────────────────────────────
         if path == "/api/oauth/github":
-            subprocess.Popen(
-                "gh auth login --web", shell=True,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
-            self._json({"started": True})
+            res = start_github_oauth()
+            self._json(res)
             return
 
         # ── Vercel OAuth ──────────────────────────────────────
         if path == "/api/oauth/vercel":
-            subprocess.Popen(
-                "vercel login", shell=True,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
-            self._json({"started": True})
+            res = start_vercel_oauth()
+            self._json(res)
             return
 
         # ── Drive sync ───────────────────────────────────────

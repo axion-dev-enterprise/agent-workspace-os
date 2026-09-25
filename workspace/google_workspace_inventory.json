@@ -1,0 +1,1046 @@
+{
+  "generated_at": "2026-09-25T03:07:18.430999+00:00",
+  "domain_info": {
+    "primary_domain": "axionenterprise.cloud",
+    "customer_id": "C03xtme8f",
+    "country": "BR",
+    "language": "pt-BR",
+    "admin_contact": "Iago Barreto",
+    "admin_email": "iago@axionenterprise.cloud",
+    "secondary_admin_email": "kurtalexanderwolf@gmail.com"
+  },
+  "users": [
+    {
+      "email": "dev@axionenterprise.cloud",
+      "full_name": "Axionenterprise Dev",
+      "is_admin": false,
+      "creation_time": "2026-08-13T00:17:00Z",
+      "last_login": "Never",
+      "suspended": false,
+      "aliases": [],
+      "recovery_email": "",
+      "recovery_phone": "",
+      "org_unit": "/"
+    },
+    {
+      "email": "iago@axionenterprise.cloud",
+      "full_name": "Iago Barreto",
+      "is_admin": true,
+      "creation_time": "2026-07-15T16:46:53Z",
+      "last_login": "2026-09-21T03:26:51Z",
+      "suspended": false,
+      "aliases": [
+        "vendas@axionenterprise.cloud",
+        "1"
+      ],
+      "recovery_email": "kurtalexanderwolf@gmail.com",
+      "recovery_phone": "+5511988045139",
+      "org_unit": "/"
+    }
+  ],
+  "shared_drives": [
+    {
+      "id": "0AARPf88V8uuyUk9PVA",
+      "name": "AXION",
+      "created_time": "2026-07-15T16:55:38Z",
+      "org_unit": "/"
+    }
+  ],
+  "organizational_units": [
+    {
+      "name": "Workspace Guests",
+      "path": "/Workspace Guests"
+    }
+  ],
+  "groups": [],
+  "total_drive_assets": 141,
+  "drive_assets": [
+    {
+      "id": "1PBCtuIGj1ONotPABAAvS4rHHKctiacG4eE99zuCCr6A",
+      "name": "Reunião iniciada às 2026/09/24 15:15 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-24T18:59:31Z",
+      "size_bytes": "8000"
+    },
+    {
+      "id": "18susTkyoqEe7oVKRaP60XvELSGJGmPqh",
+      "name": "ytq-tkai-gsy - 2026/09/24 15:15 GMT-03:00",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-09-24T18:59:10Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1Xzh1YY3nRLwH0yvkByM26BNYGV6dau4C",
+      "name": "Google Meet",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-09-24T07:30:49Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1nlz9mT81bdISrKiQxveKUcq_yDECjfNfJLR4NbCljrg",
+      "name": "Reunião sem título - 2026/09/09 19:05 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-09T22:09:42Z",
+      "size_bytes": "3163"
+    },
+    {
+      "id": "1aovwH4msMMFnF5SWIxFvSfoqtlxR3SlRgr0j3n5XOmU",
+      "name": "Reunião iniciada às 2026/09/09 19:04 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-09T22:09:03Z",
+      "size_bytes": "2940"
+    },
+    {
+      "id": "1wZG26CkNSrpx6e9up_yqzkjLQdzn_L8h_8FiZaoHEpY",
+      "name": "Reunião iniciada às 2026/09/03 13:28 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-04T17:08:46Z",
+      "size_bytes": "18208"
+    },
+    {
+      "id": "10qWbusbrrGA0-wWqEUXMLp-ZyHC8CdlL",
+      "name": "cge-ugfn-hef (2026-09-03 13:28 GMT-3)",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-09-03T18:15:00Z",
+      "size_bytes": "342201313"
+    },
+    {
+      "id": "1lOLaTft1NdVKtZJZAYe3VaMBGP0WbsEL",
+      "name": "cge-ugfn-hef (2026-09-03 13:28 GMT-3)",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-09-03T17:53:09Z",
+      "size_bytes": "58459264"
+    },
+    {
+      "id": "1GNU7Am29MQUndYS0YBV_RnmA-dryA8Ym",
+      "name": "cge-ugfn-hef (2026-09-03 13:28 GMT-3)",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-09-03T16:41:57Z",
+      "size_bytes": "131711"
+    },
+    {
+      "id": "1IncYEGe937qLDPqTyG-W8-nYf00y3pRpvP3NSZcPyJ8",
+      "name": "Reunião iniciada às 2026/09/01 22:35 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-02T02:18:44Z",
+      "size_bytes": "9821"
+    },
+    {
+      "id": "1xfcM5vFX49tChCvAZRGRt7SI34kNiZAH_XyLuUGdtxw",
+      "name": "Reunião iniciada às 2026/09/01 19:50 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-09-01T23:34:19Z",
+      "size_bytes": "5967"
+    },
+    {
+      "id": "1r9us1E_UsV_Zw6x6f19lC__XKyD1LmkTOJ6-0xeemRw",
+      "name": "Reunião iniciada às 2026/08/28 11:54 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-28T17:09:50Z",
+      "size_bytes": "8437"
+    },
+    {
+      "id": "17DeQEUgeFFIQAqhL9YDOG9nP-KXzM4l6XuXR_O9T44g",
+      "name": "Reunião iniciada às 2026/08/28 10:01 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-28T14:55:15Z",
+      "size_bytes": "28392"
+    },
+    {
+      "id": "1GxTQ9rUkzk7LdngUUbQ8DcgdD83w-QMY",
+      "name": "gpo-itmu-yri (2026-08-28 10:01 GMT-3)",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-08-28T14:46:15Z",
+      "size_bytes": "239698347"
+    },
+    {
+      "id": "1UKeY-CPKBNROoWnWnxjsNmwO4zUluWN8",
+      "name": "Projeto Aplicadores — Architecture Control",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-08-26T04:37:31Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1diabUI7--9ktYJZwCMpfIEKPHvrC_MM7_70dgIORddk",
+      "name": "WELCOME — Projeto Aplicadores — Comece Aqui",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T04:29:12Z",
+      "size_bytes": "12052"
+    },
+    {
+      "id": "1HX5fnUj4JXTlSXJ-O6TqjUPHgIRsUC3CkKrhvBufD6w",
+      "name": "06 — Roadmap Técnico e Entregas — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T04:11:46Z",
+      "size_bytes": "4878"
+    },
+    {
+      "id": "1Mn4_PtFKDrf9Kwt49j_draTesoxPdVk6PQLww7ANkk4",
+      "name": "07 — Backlog Técnico, QA e CI-CD — v0.1",
+      "mime_type": "application/vnd.google-apps.spreadsheet",
+      "modified_date": "2026-08-26T04:09:26Z",
+      "size_bytes": "7465"
+    },
+    {
+      "id": "1dA3DhWfD0Fmd6eJRUrfpD3RNFcrcNv7HpzcG0sM67WU",
+      "name": "README — Projeto Aplicadores — Architecture Control",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T04:05:04Z",
+      "size_bytes": "6512"
+    },
+    {
+      "id": "1pPfHY8vP_4ZA9oG1dx1rhIYD05J3rM7b7h3cxBodhLs",
+      "name": "04 — Interface Contract — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:37:49Z",
+      "size_bytes": "2530"
+    },
+    {
+      "id": "1VgtJnTF8fmwwHjvYoXhhKq856LdtIk9FDlXzolvJ9E0",
+      "name": "05 — Validation Pipeline — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:37:46Z",
+      "size_bytes": "2801"
+    },
+    {
+      "id": "16DC1Jc_vACDLKQJnJ_8HuOtZeW7thiKUO3GoXhHrR5I",
+      "name": "02 — Motion Baseline — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:37:42Z",
+      "size_bytes": "2617"
+    },
+    {
+      "id": "1xIsUeQqKBUV1UAg8M7W1zy-lT7Pr_zveQmBlMyNKYdA",
+      "name": "03 — Machine State Model — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:37:39Z",
+      "size_bytes": "2637"
+    },
+    {
+      "id": "16BTJ3a3uVljzrGN2hfHyRIqNeXrMpSMW2V1cpBlNgnI",
+      "name": "01 — Architecture Baseline — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:37:36Z",
+      "size_bytes": "2561"
+    },
+    {
+      "id": "1TVfoJcIoz5lPWnvVa7ALEQmgTuevBDYBF1DyzT8Ft1M",
+      "name": "00 — Architecture Control Pack — v0.1",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-08-26T03:29:22Z",
+      "size_bytes": "6692"
+    },
+    {
+      "id": "1UcyA6VZaDLw0xyzUhpf_Qwh62qk8C0V_",
+      "name": "scripts__gerar_relatorio_pdf.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-08-26T02:38:41Z",
+      "size_bytes": "6754"
+    },
+    {
+      "id": "1kPxdwXrbfTQCq-l0kdbKwgTYO3EO8q98",
+      "name": "Relatório de receita.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:37Z",
+      "size_bytes": "226"
+    },
+    {
+      "id": "1E93mlrSO0jdvzSm5uODTxlWodqkObujI",
+      "name": "Relatório de pentest — Estado do Pará.pdf",
+      "mime_type": "application/pdf",
+      "modified_date": "2026-08-26T02:38:33Z",
+      "size_bytes": "7037"
+    },
+    {
+      "id": "1UP5WsnZajTfI2HANB_mY5bhfmUYGHvFt",
+      "name": "Relatório executivo mensal.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:30Z",
+      "size_bytes": "440"
+    },
+    {
+      "id": "1JXyfEtfvT0fXqqJZMBQguPOd1waNHe4o",
+      "name": "scripts__axion_drive_backup_legacy.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-08-26T02:38:26Z",
+      "size_bytes": "2827"
+    },
+    {
+      "id": "1tDUFiSdKYw5B_idQ6bgLAcwOju0aRgtb",
+      "name": "Proposta comercial.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:22Z",
+      "size_bytes": "346"
+    },
+    {
+      "id": "1_2ss9-0EY16uuK72H5uF8GZ_6YuXBazx",
+      "name": "Política de privacidade.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:19Z",
+      "size_bytes": "288"
+    },
+    {
+      "id": "11G9bu9a1voSW0gXMEXLER4Pw0XBXGMNj",
+      "name": "Briefing da AXION.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:15Z",
+      "size_bytes": "172"
+    },
+    {
+      "id": "1hN9cGKszB2FHcLQT9aLWSzPuskMNqcqT",
+      "name": "Paleta de cores.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:11Z",
+      "size_bytes": "112"
+    },
+    {
+      "id": "1Ba-i0yLdF9gFlliXT1bBgLnbsXgDK6fE",
+      "name": "Termos de uso.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:38:06Z",
+      "size_bytes": "354"
+    },
+    {
+      "id": "1Kky2LC7N4LJaaKi7-v9tJaSyyoygXXwm",
+      "name": "Autorização para teste de segurança.pdf",
+      "mime_type": "application/pdf",
+      "modified_date": "2026-08-26T02:38:02Z",
+      "size_bytes": "3263"
+    },
+    {
+      "id": "1HrTD7_Sq5miEIajeaoKfucGrq6bEmpHL",
+      "name": "Pacote do cliente.zip",
+      "mime_type": "application/x-zip-compressed",
+      "modified_date": "2026-08-26T02:37:55Z",
+      "size_bytes": "136370"
+    },
+    {
+      "id": "1xPIdoDFznU4u2sEcciXtKYUVKDkrDW-U",
+      "name": "Arquitetura da AXION.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:37:50Z",
+      "size_bytes": "309"
+    },
+    {
+      "id": "1ja77529rrKvhsxRg6X3gxpm_cf6rXhxD",
+      "name": "Relatório diário AXION — 17-07-2026 — versão 3.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:27:13Z",
+      "size_bytes": "811"
+    },
+    {
+      "id": "1dRWEWhFiMhFMpkZV3zOrFvia5wWhfmO1",
+      "name": "Relatório diário AXION — 17-07-2026 — versão 2.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:27:10Z",
+      "size_bytes": "833"
+    },
+    {
+      "id": "1wLdho_0O4seSUSu-TJIgqTIIT1cEekRK",
+      "name": "Relatório diário AXION — 17-07-2026 — principal.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:27:07Z",
+      "size_bytes": "802"
+    },
+    {
+      "id": "1QL0NuR8H75T8x8Xej5uuPN0Q_Fk9-zmw",
+      "name": "Relatório diário AXION — 19-07-2026.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:27:03Z",
+      "size_bytes": "778"
+    },
+    {
+      "id": "1wXqqVOhOgYt3z8x5I4BFORbuosDdegjj744z8OBIxE0",
+      "name": "Yan Nascimento — Projeto QuintoAndar",
+      "mime_type": "application/vnd.google-apps.vid",
+      "modified_date": "2026-08-26T02:26:59Z",
+      "size_bytes": "104631708"
+    },
+    {
+      "id": "15NWsYaH1KO5oBhZJbBWdFrpZpC8h6IHx",
+      "name": "Vídeo 1000536929.mp4",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-08-26T02:26:54Z",
+      "size_bytes": "19052811"
+    },
+    {
+      "id": "1VyoQQ0wanveG-PJdDKj-cSbTN9GUrFOW",
+      "name": "Reuniões",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-08-26T02:26:50Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1sAQoBTkvfJ-5e2FD72_RRIbSI55wfDEYS3HRtfxEMuc",
+      "name": "Vídeo — 21-08-2026",
+      "mime_type": "application/vnd.google-apps.vid",
+      "modified_date": "2026-08-26T02:26:44Z",
+      "size_bytes": "301613"
+    },
+    {
+      "id": "13SxzSj93QMacApKtUkFQNphLozrYfj1G",
+      "name": "Relatório diário AXION — 20-07-2026.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-08-26T02:26:36Z",
+      "size_bytes": "797"
+    },
+    {
+      "id": "1rlvocpc3NB9O4iU1KWGg0Kv_E_hgv3aD",
+      "name": "Dados e Marketing",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-08-26T02:26:31Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1dPGhN-h4jH_oKM3xi_bzoFetaCXAUF9_",
+      "name": "Relatórios",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-08-26T02:26:26Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1IxH-7K18fdzkOjh1H3E9s0wd15I_tUry",
+      "name": "Tecnologia",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-08-26T02:26:22Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1uAU7mxRQkMfHIn6jPGksfIXl-MaJhQrVwy-M415kIxI",
+      "name": "Reunião iniciada às 2026/07/28 20:37 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-29T00:02:44Z",
+      "size_bytes": "5402"
+    },
+    {
+      "id": "1e48FFOOpoIYb6OsKfox6l1mow0fOq3H7dRTJmVv6H3g",
+      "name": "Reunião iniciada às 2026/07/27 18:50 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-28T00:20:14Z",
+      "size_bytes": "12846"
+    },
+    {
+      "id": "1LM0PgP5DPYTFEY2kt8YH15LrOmdnhWfTJhj-UXiJSqo",
+      "name": "Reunião iniciada às 2026/07/27 09:58 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-27T13:46:48Z",
+      "size_bytes": "6486"
+    },
+    {
+      "id": "1Y7tCtay04LDIQaioBGml1I_-mWi-ggnRRjg3-x5W_ng",
+      "name": "Reunião iniciada às 2026/07/25 11:04 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-25T17:27:19Z",
+      "size_bytes": "59409"
+    },
+    {
+      "id": "1O0YqBEj_bbhm0AAgMHOkvhU1Qy94NcJk",
+      "name": "thg-dkib-bkg (2026-07-25 11:04 GMT-3) - Transcrição do chat",
+      "mime_type": "text/plain",
+      "modified_date": "2026-07-25T17:26:34Z",
+      "size_bytes": "176"
+    },
+    {
+      "id": "1Q8NkDbSoK-L_M-YVkyNvFCpxZmgrhxA-",
+      "name": "thg-dkib-bkg (2026-07-25 11:04 GMT-3)",
+      "mime_type": "video/mp4",
+      "modified_date": "2026-07-25T17:26:34Z",
+      "size_bytes": "489804196"
+    },
+    {
+      "id": "1H5pKHgQ8WOlU2AZzaJTh0ABhf0-KZRjoPlvfdUxzxbk",
+      "name": "Reunião iniciada às 2026/07/24 20:07 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-25T04:56:02Z",
+      "size_bytes": "8947"
+    },
+    {
+      "id": "1Lcd3KgSko03Rr-5z8pakg_6UAJqR_raVop7gIr5jiuQ",
+      "name": "ADS - ANÁLISE - MAURO/POSITIVEMIND - 2026/07/23 16:39 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-23T21:47:49Z",
+      "size_bytes": "89869"
+    },
+    {
+      "id": "1kYZcv7OQisZ-OkS2MyjVAt49Pcg4UJ60ehTaMiVTccY",
+      "name": "ADS - CONFIG - EMPORIO CARAIVA - 2026/07/23 15:04 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-23T21:31:45Z",
+      "size_bytes": "51842"
+    },
+    {
+      "id": "1xq69cUNeL_AqcH4iMB5zHOvWmLnfTTN6",
+      "name": "axion-dev-enterprise-backup-2026-07-18.zip",
+      "mime_type": "application/x-zip-compressed",
+      "modified_date": "2026-07-23T10:46:53Z",
+      "size_bytes": "579643638"
+    },
+    {
+      "id": "10WHTa3xmAXpttUrswlONnKEDV3yZAVlKogOe2NXy2Mc",
+      "name": "Reunião iniciada às 2026/07/22 12:30 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-23T07:06:38Z",
+      "size_bytes": "7206"
+    },
+    {
+      "id": "1FGpZKwkgJ220Ohdi8mCCZTj6dryW-WpSxuzyN6hMv-8",
+      "name": "Reunião iniciada às 2026/07/22 15:01 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-23T07:02:27Z",
+      "size_bytes": "26626"
+    },
+    {
+      "id": "15OJoKg3r-rZq1TKIAN1Hfd1ZM9gQnApt",
+      "name": "scripts__axion_group_messenger.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:54Z",
+      "size_bytes": "4963"
+    },
+    {
+      "id": "1_JkNQhcGVQb1v_1rPi2aKcDfPOJtFXAw",
+      "name": "scripts__axion_drive_backup.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:51Z",
+      "size_bytes": "2945"
+    },
+    {
+      "id": "189hxMPvy1MTjknBhf5xLdPCcy5ZkG1c_",
+      "name": "scripts__axion_drive_cleanup.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:49Z",
+      "size_bytes": "3217"
+    },
+    {
+      "id": "11IQulUxV0slGKsHDrk3rH7XtxxVR_-zL",
+      "name": "scripts__axion_drive_populate.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:46Z",
+      "size_bytes": "7948"
+    },
+    {
+      "id": "1Mfqe8ee87jFNd8uKhwzAMbGPiCNPB3ke",
+      "name": "scripts__axion_gmail_organize.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:43Z",
+      "size_bytes": "4570"
+    },
+    {
+      "id": "19xdDd_P6mHRRfncKo-8cDZyLzZomztRb",
+      "name": "scripts__axion_drive_organize.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-20T05:00:40Z",
+      "size_bytes": "4885"
+    },
+    {
+      "id": "171MV--IunO6ZFosArj_Db1itgSDJyuw-",
+      "name": "img_52f6f0fa91d9.jpg",
+      "mime_type": "image/jpeg",
+      "modified_date": "2026-07-18T07:01:13Z",
+      "size_bytes": "92945"
+    },
+    {
+      "id": "17jL0BNNrUTCOgrsz7izAws5pKEH3A-T1",
+      "name": "img_97f884292bfd.jpg",
+      "mime_type": "image/jpeg",
+      "modified_date": "2026-07-18T07:01:12Z",
+      "size_bytes": "79405"
+    },
+    {
+      "id": "1YhqtKB4Gxt35g4j8r6SP3ytLh9VKAEBz",
+      "name": "img_f7a273ef4adf.jpg",
+      "mime_type": "image/jpeg",
+      "modified_date": "2026-07-18T07:01:10Z",
+      "size_bytes": "124704"
+    },
+    {
+      "id": "10jywc_j6KrOZZf27n8snf-qrWUhceSRH",
+      "name": "img_ab530b53ccf2.jpg",
+      "mime_type": "image/jpeg",
+      "modified_date": "2026-07-18T07:01:08Z",
+      "size_bytes": "135307"
+    },
+    {
+      "id": "1410Rj6j-Sa45cae-RXC4RO6PSA2eXz2a",
+      "name": "scripts___preflight_vps.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:52:02Z",
+      "size_bytes": "1435"
+    },
+    {
+      "id": "1GEoP9s2g94WVscJWWYVgS2ODP1wZknNk",
+      "name": "scripts___index_checklist_oneoff.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:52:00Z",
+      "size_bytes": "1063"
+    },
+    {
+      "id": "1rYfYmy_krPFsGlbE78bCxKB1HbrrS73O",
+      "name": "scripts__verify-production-builds.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:57Z",
+      "size_bytes": "4356"
+    },
+    {
+      "id": "1HE8vi1OdsrjxM-Z3MwTSa2y93HlpLTRe",
+      "name": "scripts__transfer-builds.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:55Z",
+      "size_bytes": "1836"
+    },
+    {
+      "id": "1m94NTGk16cbmTrMBmuw1QTFAvvL7cGAb",
+      "name": "scripts__transfer-builds-simple.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:53Z",
+      "size_bytes": "1117"
+    },
+    {
+      "id": "1C2ZNcz9ngZrnJSXaMjGxltdwV8wDASjz",
+      "name": "scripts__test-release-pipeline.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:51Z",
+      "size_bytes": "1920"
+    },
+    {
+      "id": "1NjMR4RJ8Cg6HnnglCy4Lglwtf2hDkZGT",
+      "name": "scripts__test-agent-linkage.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:48Z",
+      "size_bytes": "2012"
+    },
+    {
+      "id": "1nqkdGcbSR8wPB_L9baSAzix32JuTvZYO",
+      "name": "scripts__sync-production-from-sandbox.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:46Z",
+      "size_bytes": "4892"
+    },
+    {
+      "id": "1d0VCU3rMv7ZtsQt7HdfB0h51SOUqd9LO",
+      "name": "scripts__start-postgres.bat",
+      "mime_type": "text/plain",
+      "modified_date": "2026-07-17T05:51:44Z",
+      "size_bytes": "124"
+    },
+    {
+      "id": "1BRJLmm-O_A5cq7emF5pPY2tiYHuBShZ1",
+      "name": "scripts__smoke-axion-published.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:41Z",
+      "size_bytes": "5724"
+    },
+    {
+      "id": "1PvU16IUuryEo38Eg3hQtRkKPX81-J-q5",
+      "name": "scripts__sim_atendimento.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:39Z",
+      "size_bytes": "7282"
+    },
+    {
+      "id": "1yohMcjWaM13KL8AbUV2hBpOycvJqL12v",
+      "name": "scripts__score-project-readiness.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:36Z",
+      "size_bytes": "6973"
+    },
+    {
+      "id": "1PmgnZbYkIMrI6HEgW8g5_fTAfS6W43Y2",
+      "name": "scripts__scaffold-production-readmes.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:34Z",
+      "size_bytes": "3935"
+    },
+    {
+      "id": "1o7LIUT2u1n2NUU5GpreoujeT_qSbR34i",
+      "name": "scripts__scaffold-production-ci.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:32Z",
+      "size_bytes": "9326"
+    },
+    {
+      "id": "1HXHTjPAVVq6ei3fNu1rS6q9T8FUDA65c",
+      "name": "scripts__README.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-07-17T05:51:27Z",
+      "size_bytes": "1847"
+    },
+    {
+      "id": "1wRqZMMOIWXdwG1sz6-FAwwQD9H7BvEkm",
+      "name": "scripts__rag_index.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:25Z",
+      "size_bytes": "6907"
+    },
+    {
+      "id": "1QZH7zzqJkhomYy9mO00zY2Oc5U5pW62r",
+      "name": "scripts__rag-sync-daemon.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:22Z",
+      "size_bytes": "6649"
+    },
+    {
+      "id": "1A935rkoCMIEg-cYDFX-c25CWBeYwmnV7",
+      "name": "scripts__publish-production-projects.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:20Z",
+      "size_bytes": "9672"
+    },
+    {
+      "id": "1krYIZaHajCTfvQuUfv7KITgS_KjMt2Nk",
+      "name": "scripts__pm_update_creatives_map.json",
+      "mime_type": "application/json",
+      "modified_date": "2026-07-17T05:51:18Z",
+      "size_bytes": "11142"
+    },
+    {
+      "id": "1Q6Mf9PdW7qf9-DUeomuBjpM9Je6BBvdZ",
+      "name": "scripts__pm_update_ads_with_utm.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:15Z",
+      "size_bytes": "5384"
+    },
+    {
+      "id": "1tsBrX3MNeKjszPBuqisANBNtBLU__AnH",
+      "name": "scripts__pm_campaign_results.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:13Z",
+      "size_bytes": "2692"
+    },
+    {
+      "id": "1u1ahwhoDIYA6hVNLHB30ZOOvYQfHrf3S",
+      "name": "scripts__pm_campaign_full_pull_output.json",
+      "mime_type": "application/json",
+      "modified_date": "2026-07-17T05:51:11Z",
+      "size_bytes": "91105"
+    },
+    {
+      "id": "1cXkMMHXiQGhXkUR8ZRwAn9jwXMayMqJW",
+      "name": "scripts__pm_campaign_full_pull_output.csv",
+      "mime_type": "text/csv",
+      "modified_date": "2026-07-17T05:51:08Z",
+      "size_bytes": "6331"
+    },
+    {
+      "id": "1zUgeoE8Em_wstCGTqGCX-sx38GA3yJQT",
+      "name": "scripts__pm_campaign_full_pull.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:51:06Z",
+      "size_bytes": "5846"
+    },
+    {
+      "id": "1jmeVhZfDsmfrESfUSoZo03suCeETrK07",
+      "name": "scripts__pm2-keepalive.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:51:03Z",
+      "size_bytes": "404"
+    },
+    {
+      "id": "1kU5xPikOVtUQ10zKKy39MC8muWGe5168",
+      "name": "scripts__memory_compact.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:59Z",
+      "size_bytes": "1104"
+    },
+    {
+      "id": "1mpiObwdWv1pAUb2ANg22DbJPbixPW73e",
+      "name": "scripts__local-ai-bridge.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:56Z",
+      "size_bytes": "5512"
+    },
+    {
+      "id": "1GIuak_yMWikMusetxurel-aTXY2iYJ3a",
+      "name": "scripts__isabela_sinal_qr.png",
+      "mime_type": "image/png",
+      "modified_date": "2026-07-17T05:50:53Z",
+      "size_bytes": "2805"
+    },
+    {
+      "id": "1YVqx2ousuIOLSb57S5cuDJ2iaijm_XLX",
+      "name": "scripts__hermes_research_agent.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:51Z",
+      "size_bytes": "6627"
+    },
+    {
+      "id": "1nFZz0uTonfH5Fq6w2hDVD5_dhIcgp32n",
+      "name": "scripts__gen_autorizacao_dos.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:46Z",
+      "size_bytes": "3542"
+    },
+    {
+      "id": "1yhC4-uyfFALBYrBObC94qnNqem5YNYoc",
+      "name": "scripts__generate_proposal_pdf.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:44Z",
+      "size_bytes": "7862"
+    },
+    {
+      "id": "1SXaxMCdBOGtV5_viWLNJaIetOBwdCECJ",
+      "name": "scripts__export-project-manifest.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:42Z",
+      "size_bytes": "14830"
+    },
+    {
+      "id": "1EKvsq9H--UBCjroeT6Mv1pYHcYx3ECuq",
+      "name": "scripts__ecosystem.config.js",
+      "mime_type": "text/javascript",
+      "modified_date": "2026-07-17T05:50:39Z",
+      "size_bytes": "1180"
+    },
+    {
+      "id": "1NYcoVu7rVI_fP_18KNBmXlJYcJ__pFAs",
+      "name": "scripts__delete-enterprise-repo-candidates.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:36Z",
+      "size_bytes": "1249"
+    },
+    {
+      "id": "1a6_JGLbDXEFgpgWV4zhUZg9HTSII8B4G",
+      "name": "scripts__cleanup.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:34Z",
+      "size_bytes": "1141"
+    },
+    {
+      "id": "1BZEisFY7IDKsojGGnJkWOema-ELDrFyc",
+      "name": "scripts__cleanup-simple.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:31Z",
+      "size_bytes": "1077"
+    },
+    {
+      "id": "1RVUxjIpxr-OpSRYgQdrNBAtPYIXKE196",
+      "name": "scripts__build-production-artifacts.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:29Z",
+      "size_bytes": "6823"
+    },
+    {
+      "id": "14N1rnEcS7il42Io8qPJ9Nbs3iVY7p2Nj",
+      "name": "scripts__backup-d-drive-light.ps1",
+      "mime_type": "application/octet-stream",
+      "modified_date": "2026-07-17T05:50:27Z",
+      "size_bytes": "2802"
+    },
+    {
+      "id": "1Uyh70FQj7pC67Dtdr2-nPkpEulxKAMLx",
+      "name": "scripts__axion_selflearn_rag.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:25Z",
+      "size_bytes": "2554"
+    },
+    {
+      "id": "1HT2R_XDbV7PP-sYWwXd3H0luvGfZdzvz",
+      "name": "scripts__axion_selflearn_leakguard.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:22Z",
+      "size_bytes": "1694"
+    },
+    {
+      "id": "1KbpPjwaQfriDHUZ8BB56o2Gt5lMs5tL8",
+      "name": "scripts__axion_selflearn_feedback.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:20Z",
+      "size_bytes": "1855"
+    },
+    {
+      "id": "1aRGxQhGPmJJ6TiS6EnvWX29XMSz-CIk6",
+      "name": "scripts__axion_pay_create_charge.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:17Z",
+      "size_bytes": "2453"
+    },
+    {
+      "id": "1crmXEFWTVfPp_kTR2RQVvq8umTLo0cLq",
+      "name": "scripts__axion_housekeeping.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:15Z",
+      "size_bytes": "9999"
+    },
+    {
+      "id": "1wd8ErApJvEXv1DIzE_Erp7A70KtyIMwZ",
+      "name": "scripts__axion_fleet_heartbeat.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:08Z",
+      "size_bytes": "1582"
+    },
+    {
+      "id": "1k-A5AkoZ8JuZ_89IfMyIvpXaw8zIFQSo",
+      "name": "scripts__axion_elevenlabs.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:50:06Z",
+      "size_bytes": "6739"
+    },
+    {
+      "id": "1qCYJTPOu32upa1gdbD4fdIrjDZByDatL",
+      "name": "scripts__axion_cron_dispatch.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:53Z",
+      "size_bytes": "3646"
+    },
+    {
+      "id": "1anUQ2ni7PGrx0SPIBDlQ3l2_BBedqy1M",
+      "name": "scripts__Autorizacao_Teste_DoS_EstadoDoPara.pdf",
+      "mime_type": "application/pdf",
+      "modified_date": "2026-07-17T05:49:51Z",
+      "size_bytes": "3263"
+    },
+    {
+      "id": "11X1QaWmNRyF5jBXMhXiM5Phd7NBsXaW2",
+      "name": "bridge_services__tasks.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:46Z",
+      "size_bytes": "1860"
+    },
+    {
+      "id": "1295gK92EGlbxFL99-C1tDzkR9Td7xmxT",
+      "name": "bridge_services__gmail.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:44Z",
+      "size_bytes": "3813"
+    },
+    {
+      "id": "1WVBP22-UvepH70NszW-WSfUdlVHo2k4j",
+      "name": "bridge_services__drive.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:42Z",
+      "size_bytes": "5454"
+    },
+    {
+      "id": "1NGPpK0Ndgi9VDKqLnlHPFCk1zz-GSjbf",
+      "name": "bridge_services__calendar.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:39Z",
+      "size_bytes": "1333"
+    },
+    {
+      "id": "1oznI6BERqeQ1CUkyM21PNvFkJ6F-WFUQ",
+      "name": "bridge_services__analytics.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:37Z",
+      "size_bytes": "1831"
+    },
+    {
+      "id": "1vUwd5YKGAtcfgT-C5sBJ1emVliCekOXy",
+      "name": "bridge_services__ads.py",
+      "mime_type": "text/x-python",
+      "modified_date": "2026-07-17T05:49:34Z",
+      "size_bytes": "1747"
+    },
+    {
+      "id": "1BzNlN_gklKs5Zo3qiHPvhBYPMyazZw_4",
+      "name": "axion_logo.png",
+      "mime_type": "image/png",
+      "modified_date": "2026-07-17T05:47:04Z",
+      "size_bytes": "374798"
+    },
+    {
+      "id": "1WQvLEj3fkZlkUw-4HbYa1KRE0w4l8lr6",
+      "name": "Changelog.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-07-17T05:46:59Z",
+      "size_bytes": "335"
+    },
+    {
+      "id": "1i4ZnOL3WmzLwqM2zodYjf8j7sy5huRI3",
+      "name": "Mídia",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:46:50Z",
+      "size_bytes": null
+    },
+    {
+      "id": "18ebjWI_Dwswx1eyZVltAKvcLYynft_d6",
+      "name": "metricas_axion.json",
+      "mime_type": "application/json",
+      "modified_date": "2026-07-17T05:46:38Z",
+      "size_bytes": "167"
+    },
+    {
+      "id": "1JYY5JUbpcuWtSfUp-j2Wb_ff6ujbmbgZ",
+      "name": "clientes_sample.csv",
+      "mime_type": "text/csv",
+      "modified_date": "2026-07-17T05:46:33Z",
+      "size_bytes": "199"
+    },
+    {
+      "id": "10x_5xvGjcNCZQ6UvlhWmxvxbhI1Q1U_-",
+      "name": "Manual_Integracao_AXION_Pay.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-07-17T05:46:20Z",
+      "size_bytes": "369"
+    },
+    {
+      "id": "1RJUYJ09EJYjFVxL4zdLr_jasMjPTuJss",
+      "name": "Visao_Geral_AXION.md",
+      "mime_type": "text/markdown",
+      "modified_date": "2026-07-17T05:46:08Z",
+      "size_bytes": "600"
+    },
+    {
+      "id": "1AiI3r8IOFgaf43sEChryawlMOS8TTg3R",
+      "name": "Backups",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:34Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1ErWCUjA6kmkhCE94a8Hl6UdFY2-60ge6",
+      "name": "Exportacoes",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:29Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1hZAVlwJkTRjMKQ3nmogDdhWVYTxIujPN",
+      "name": "Ads",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:27Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1_25uxvBJm8xYfOS4H6fdPhSLhRiQmD9c",
+      "name": "Analytics",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:26Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1LDYaTqIpsgCrjBCcmygE7umPcevD2ldD",
+      "name": "Clientes",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:16Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1wIxxQvgHKcSlb3qs3JTOg9DkhAuZxMS6",
+      "name": "Documentos",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:12:13Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1IIm4134BOhGptTLDiF6-khTJQGD7gi7Q",
+      "name": "AXION",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-17T05:09:09Z",
+      "size_bytes": null
+    },
+    {
+      "id": "1uqVcWbPWIwITkuuXb0VdJRTgFe1PJpFAiElWMBP2ECo",
+      "name": "Reunião iniciada às 2026/07/16 16:31 GMT-03:00 - Anotações do Gemini",
+      "mime_type": "application/vnd.google-apps.document",
+      "modified_date": "2026-07-16T21:40:04Z",
+      "size_bytes": "85831"
+    },
+    {
+      "id": "1YazH1p7wCd5MAZJ9YWZWWFylIIawyW2m",
+      "name": "Meet Recordings",
+      "mime_type": "application/vnd.google-apps.folder",
+      "modified_date": "2026-07-15T16:57:03Z",
+      "size_bytes": null
+    }
+  ]
+}

@@ -42,5 +42,6 @@ desktop.ini
 !.vscode/extensions.json
 .idea/
 .vercel
+.wrangler
 .env*
 memory/

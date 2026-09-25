@@ -147,6 +147,7 @@ def check_auth_statuses():
 
     # 2. Vercel Auth (fast local config check)
     v_paths = [
+        os.path.expandvars(r'%APPDATA%\com.vercel.cli\Data\auth.json'),
         os.path.expandvars(r'%APPDATA%\com.vercel.cli\auth.json'),
         os.path.expanduser("~/AppData/Roaming/com.vercel.cli/auth.json"),
         os.path.expanduser("~/.vercel/auth.json"),
@@ -174,9 +175,23 @@ def check_auth_statuses():
 
     # 3. Cloudflare Token
     cf_token = os.environ.get("CLOUDFLARE_API_TOKEN", "")
+    if not cf_token and sys.platform == "win32":
+        try:
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment") as key:
+                cf_token, _ = winreg.QueryValueEx(key, "CLOUDFLARE_API_TOKEN")
+        except Exception:
+            pass
+    if not cf_token and os.path.exists(os.path.join(os.path.dirname(__file__), "..", "workspace.config.json")):
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "..", "workspace.config.json"), "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+                cf_token = cfg.get("cloudflare_token") or cfg.get("deployment", {}).get("cloudflare_token", "")
+        except Exception:
+            pass
     cf_config = os.path.expanduser("~/.wrangler/config/default.toml")
     cf_logged = bool(cf_token) or os.path.exists(cf_config)
-    cf_detail = "Token ativo" if cf_token else ("Config local presente" if os.path.exists(cf_config) else "Token ausente (CLOUDFLARE_API_TOKEN)")
+    cf_detail = "Token ativo (AXION)" if cf_token else ("Config local presente" if os.path.exists(cf_config) else "Token ausente (CLOUDFLARE_API_TOKEN)")
     statuses["cloudflare"] = {"authenticated": cf_logged, "details": cf_detail}
 
     return statuses

@@ -1,0 +1,110 @@
+[
+  {
+    "name": "landing-page-teste-w-solucoes",
+    "url": "https://landing-page-teste-w-solucoes.vercel.app",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "AXION Enterprise — Inovação & Automação Inteligente",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "landing-page-teste",
+    "url": "https://landing-page-teste-woad.vercel.app",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "AXION Enterprise — Inovação & Automação Inteligente",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "ifood-dashboard",
+    "url": "https://ifood-dashboard-tau.vercel.app",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "Empório Caraíva — Dashboard iFood & Plano de Ação",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "meta-gpt-worker",
+    "url": "https://meta-gpt-worker.vercel.app",
+    "status": 200,
+    "framework": "Tailwind CSS / SPA",
+    "title": "Positive Mind - Gestão de Marketing",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "proxion-hub",
+    "url": "https://proxionmidia.com",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "PROXION HUB",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "axion-vps-api-contingencia",
+    "url": "https://axion-vps-api-contingencia.vercel.app",
+    "status": "Erro/Inativo",
+    "framework": "Desconhecido",
+    "title": "HTTP Error 404: Not Found",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "axion-flow",
+    "url": "https://axion-flow-gamma.vercel.app",
+    "status": 200,
+    "framework": "Next.js (React)",
+    "title": "AXION FLOW — Sistema Comercial Autônomo",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "axion-flow-homepage",
+    "url": "https://axion-flow-homepage.vercel.app",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "AXION FLOW — Automação Comercial com IA | Capture e Converta Leads 24/7",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "axion-conferencia-pecas",
+    "url": "https://axion-conferencia-pecas.vercel.app",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "My Google AI Studio App",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "growth-accelerator-main",
+    "url": "https://yannascimentoads.com",
+    "status": 200,
+    "framework": "Vite / React (Vite)",
+    "title": "Yan Nascimento | Gestor de Tráfego Pago para Negócios Locais",
+    "server": "Vercel",
+    "node_version": "24.x"
+  },
+  {
+    "name": "rosireis-atelier",
+    "url": "https://rosireis.com.br",
+    "status": 200,
+    "framework": "HTML / Estático",
+    "title": "Loja online de Atelier Rosi Reis",
+    "server": "cloudflare",
+    "node_version": "24.x"
+  },
+  {
+    "name": "vercel-ai-gateway-demo",
+    "url": "https://vercel-ai-gateway-demo-axion777.vercel.app",
+    "status": 200,
+    "framework": "Next.js (React)",
+    "title": "Login – Vercel",
+    "server": "Vercel",
+    "node_version": "24.x"
+  }
+]

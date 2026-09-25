@@ -98,6 +98,66 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 - Para uma mudança criativa ou de comportamento, primeiro investigue o contexto e obtenha aprovação para o desenho. Para trabalho de múltiplas etapas, mantenha um plano com arquivos, validação e rollback.
 - Toda alteração de configuração, interface, API ou fluxo operacional deve atualizar a documentação correspondente no mesmo conjunto de mudanças.
 
+### Regra #13: Uso Mandatório de Skills Canônicas por Escopo
+- Todo agente atuando no workspace DEVE consultar e aplicar estritamente a skill operacional canônica (`.agents/skills/<skill>/SKILL.md`) correspondente ao escopo da tarefa antes de redigir código, planejar arquitetura ou executar comandos em terminal.
+- É expressamente PROIBIDO improvisar flags de CLI ou desviar dos padrões quando houver uma skill canônica estabelecida para o respectivo domínio.
+- A matriz canônica de mapeamento escopo -> skill é gerenciada dinamicamente pelo registrador oficial:
+
+<!-- SKILLS_REGISTRY_START -->
+| Escopo da Tarefa | Skill Mandatória | Arquivo Canônico |
+| :--- | :--- | :--- |
+| **Edge & Serverless** | `cloudflare-edge-ops` | [`.agents/skills/cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
+| **IA & Engenharia de Agentes** | `elevenlabs-tts-voiceover` | [`.agents/skills/elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
+| **Backend & APIs** | `fastapi-async-api` | [`.agents/skills/fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
+| **Google Workspace** | `gam-ops` | [`.agents/skills/gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |
+| **Google Cloud Platform** | `gcp-cloud-ops` | [`.agents/skills/gcp-cloud-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gcp-cloud-ops/SKILL.md) |
+| **IA & Engenharia de Agentes** | `gemini-multimodal-agent` | [`.agents/skills/gemini-multimodal-agent/SKILL.md`](file:///C:/workspace/.agents/skills/gemini-multimodal-agent/SKILL.md) |
+| **DevOps & CI/CD** | `github-actions-cicd` | [`.agents/skills/github-actions-cicd/SKILL.md`](file:///C:/workspace/.agents/skills/github-actions-cicd/SKILL.md) |
+| **Backend & APIs** | `graphql-apollo-federation` | [`.agents/skills/graphql-apollo-federation/SKILL.md`](file:///C:/workspace/.agents/skills/graphql-apollo-federation/SKILL.md) |
+| **Backend & APIs** | `grpc-protobuf-microservices` | [`.agents/skills/grpc-protobuf-microservices/SKILL.md`](file:///C:/workspace/.agents/skills/grpc-protobuf-microservices/SKILL.md) |
+| **DevOps & CI/CD** | `kubernetes-k8s-manifests` | [`.agents/skills/kubernetes-k8s-manifests/SKILL.md`](file:///C:/workspace/.agents/skills/kubernetes-k8s-manifests/SKILL.md) |
+| **IA & Engenharia de Agentes** | `langchain-langgraph-orchestration` | [`.agents/skills/langchain-langgraph-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/langchain-langgraph-orchestration/SKILL.md) |
+| **Meta Ecosystem** | `meta-marketing-capi` | [`.agents/skills/meta-marketing-capi/SKILL.md`](file:///C:/workspace/.agents/skills/meta-marketing-capi/SKILL.md) |
+| **Layout & Responsividade** | `modern-responsive-architect` | [`.agents/skills/modern-responsive-architect/SKILL.md`](file:///C:/workspace/.agents/skills/modern-responsive-architect/SKILL.md) |
+| **Databases & Caching** | `mongodb-aggregation-pipeline` | [`.agents/skills/mongodb-aggregation-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/mongodb-aggregation-pipeline/SKILL.md) |
+| **Backend & APIs** | `nestjs-modular-backend` | [`.agents/skills/nestjs-modular-backend/SKILL.md`](file:///C:/workspace/.agents/skills/nestjs-modular-backend/SKILL.md) |
+| **Frontend & Mobile** | `nextjs-app-router-rsc` | [`.agents/skills/nextjs-app-router-rsc/SKILL.md`](file:///C:/workspace/.agents/skills/nextjs-app-router-rsc/SKILL.md) |
+| **Automação de Documentos** | `pdf-generation-puppeteer` | [`.agents/skills/pdf-generation-puppeteer/SKILL.md`](file:///C:/workspace/.agents/skills/pdf-generation-puppeteer/SKILL.md) |
+| **Testing & QA** | `playwright-e2e-testing` | [`.agents/skills/playwright-e2e-testing/SKILL.md`](file:///C:/workspace/.agents/skills/playwright-e2e-testing/SKILL.md) |
+| **Databases & Caching** | `postgresql-advanced-optimization` | [`.agents/skills/postgresql-advanced-optimization/SKILL.md`](file:///C:/workspace/.agents/skills/postgresql-advanced-optimization/SKILL.md) |
+| **Databases & Caching** | `prisma-drizzle-orm` | [`.agents/skills/prisma-drizzle-orm/SKILL.md`](file:///C:/workspace/.agents/skills/prisma-drizzle-orm/SKILL.md) |
+| **DevOps & CI/CD** | `prometheus-grafana-metrics` | [`.agents/skills/prometheus-grafana-metrics/SKILL.md`](file:///C:/workspace/.agents/skills/prometheus-grafana-metrics/SKILL.md) |
+| **IA & Engenharia de Agentes** | `prompt-engineering-jailbreak-defense` | [`.agents/skills/prompt-engineering-jailbreak-defense/SKILL.md`](file:///C:/workspace/.agents/skills/prompt-engineering-jailbreak-defense/SKILL.md) |
+| **Testing & QA** | `pytest-mocking-fixtures` | [`.agents/skills/pytest-mocking-fixtures/SKILL.md`](file:///C:/workspace/.agents/skills/pytest-mocking-fixtures/SKILL.md) |
+| **Databases & Caching** | `qdrant-vector-database` | [`.agents/skills/qdrant-vector-database/SKILL.md`](file:///C:/workspace/.agents/skills/qdrant-vector-database/SKILL.md) |
+| **IA & Engenharia de Agentes** | `rag-chunking-embeddings` | [`.agents/skills/rag-chunking-embeddings/SKILL.md`](file:///C:/workspace/.agents/skills/rag-chunking-embeddings/SKILL.md) |
+| **Frontend & Mobile** | `react-native-expo` | [`.agents/skills/react-native-expo/SKILL.md`](file:///C:/workspace/.agents/skills/react-native-expo/SKILL.md) |
+| **Frontend & Mobile** | `react-query-tanstack` | [`.agents/skills/react-query-tanstack/SKILL.md`](file:///C:/workspace/.agents/skills/react-query-tanstack/SKILL.md) |
+| **Databases & Caching** | `redis-caching-queues` | [`.agents/skills/redis-caching-queues/SKILL.md`](file:///C:/workspace/.agents/skills/redis-caching-queues/SKILL.md) |
+| **DevOps & CI/CD** | `sentry-error-tracking` | [`.agents/skills/sentry-error-tracking/SKILL.md`](file:///C:/workspace/.agents/skills/sentry-error-tracking/SKILL.md) |
+| **SEO & Performance** | `seo-technical-structured-data` | [`.agents/skills/seo-technical-structured-data/SKILL.md`](file:///C:/workspace/.agents/skills/seo-technical-structured-data/SKILL.md) |
+| **Frontend & Mobile** | `state-zustand-jotai` | [`.agents/skills/state-zustand-jotai/SKILL.md`](file:///C:/workspace/.agents/skills/state-zustand-jotai/SKILL.md) |
+| **Backend & APIs** | `stripe-payments-engine` | [`.agents/skills/stripe-payments-engine/SKILL.md`](file:///C:/workspace/.agents/skills/stripe-payments-engine/SKILL.md) |
+| **Rede & Conectividade** | `tailscale-mesh-vpn` | [`.agents/skills/tailscale-mesh-vpn/SKILL.md`](file:///C:/workspace/.agents/skills/tailscale-mesh-vpn/SKILL.md) |
+| **UI/UX & Design** | `tailwind-shadcn-ux` | [`.agents/skills/tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
+| **DevOps & CI/CD** | `terraform-iac-automation` | [`.agents/skills/terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
+| **2D/3D & Animações** | `threejs-gsap-animation` | [`.agents/skills/threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
+| **Nós VPS & Docker** | `vps-docker-orchestration` | [`.agents/skills/vps-docker-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/vps-docker-orchestration/SKILL.md) |
+| **Automação & Scraping** | `web-scraping-crawling` | [`.agents/skills/web-scraping-crawling/SKILL.md`](file:///C:/workspace/.agents/skills/web-scraping-crawling/SKILL.md) |
+| **Segurança & Pentest** | `web-security-pentest` | [`.agents/skills/web-security-pentest/SKILL.md`](file:///C:/workspace/.agents/skills/web-security-pentest/SKILL.md) |
+| **Frontend & Mobile** | `web-vitals-performance` | [`.agents/skills/web-vitals-performance/SKILL.md`](file:///C:/workspace/.agents/skills/web-vitals-performance/SKILL.md) |
+| **IA & Engenharia de Agentes** | `whisper-stt-neural-voice` | [`.agents/skills/whisper-stt-neural-voice/SKILL.md`](file:///C:/workspace/.agents/skills/whisper-stt-neural-voice/SKILL.md) |
+<!-- SKILLS_REGISTRY_END -->
+
+### Regra #14: Princípio de Pesquisa e Aprendizado Ativo (Zero Guesswork Protocol)
+- Sempre que o agente se deparar com uma demanda, tecnologia, biblioteca ou API que **não saiba como executar** (ou que não possua uma skill local correspondente), é expressamente PROIBIDO tentar "adivinhar" parâmetros ou improvisar.
+- O agente DEVE seguir obrigatoriamente o ciclo canônico documentado em [docs/SKILL_SOURCES_GUIDE.md](docs/SKILL_SOURCES_GUIDE.md):
+  1. **Pesquisar**: Consultar as fontes canônicas oficiais de skills (VoltAgent/awesome-agent-skills, Anthropics/skills, MCP Registry, Cursor Directory, documentação oficial da ferramenta).
+  2. **Estudar**: Compreender a sintaxe determinística, tipagem estrita e padrões modernos recomendados.
+  3. **Criar a Skill**: Estruturar o novo diretório `.agents/skills/<nova-skill>/SKILL.md` com YAML frontmatter e referências.
+  4. **Registrar**: Executar `python scripts/sync_skills_registry.py` para sincronizar automaticamente `AGENTS.md`, `docs/SKILLS_REGISTRY.md` e `workspace/inventory.json`.
+  5. **Aplicar**: Executar a tarefa do usuário aplicando a nova skill com validação empírica e testes de sucesso.
+
 ---
 
 ## 5. Protocolo de Coworking Multi-Agente & Timeline Diária
