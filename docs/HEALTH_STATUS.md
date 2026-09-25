@@ -1,6 +1,6 @@
 # Painel de Saúde & Auto-Fix da Infraestrutura
 
-> **Última Varredura**: 2026-09-25 01:16:45 (UTC: 2026-09-25T04:16:45.478751+00:00)  
+> **Última Varredura**: 2026-09-25 01:31:39 (UTC: 2026-09-25T04:31:39.480252+00:00)  
 > **Status Global do Sistema**: 🟢 **OPERACIONAL E SAUDÁVEL**  
 
 ---
@@ -9,9 +9,9 @@
 
 | Nó / Servidor | IP Tailscale | Função | Status | Latência |
 | :--- | :--- | :--- | :--- | :--- |
-| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 192ms |
-| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 168ms |
-| `juliana-vps` | `100.81.231.111` | Hermes Central (Nginx) | 🟢 HEALTHY | 4ms |
+| `axion-vps-104-207-90-167` | `100.95.86.83` | Traefik Gateway & API | 🟢 HEALTHY | 197ms |
+| `debian-2vcpu-amd-4gb-us-6tb9d` | `100.73.36.87` | PostgreSQL & Flow Engine | 🟢 HEALTHY | 172ms |
+| `juliana-vps` | `100.81.231.111` | Hermes Central (Nginx) | 🟢 HEALTHY | 6ms |
 
 ---
 
@@ -21,7 +21,6 @@
 | :--- | :--- | :--- | :--- |
 | **AXION Flow (Vercel)** | [https://axion-flow-gamma.vercel.app](https://axion-flow-gamma.vercel.app) | 🟢 HEALTHY | `200` |
 | **AXION Flow Homepage (Vercel)** | [https://axion-flow-homepage.vercel.app](https://axion-flow-homepage.vercel.app) | 🟢 HEALTHY | `200` |
-| **Proxion Hub (Custom Domain)** | [https://proxionmidia.com](https://proxionmidia.com) | 🟢 HEALTHY | `200` |
 | **Yan Nascimento Ads (Vite)** | [https://yannascimentoads.com](https://yannascimentoads.com) | 🟢 HEALTHY | `200` |
 | **Traefik Dashboard (Tailnet Internal)** | [http://100.95.86.83:8080](http://100.95.86.83:8080) | 🟢 HEALTHY | `200` |
 

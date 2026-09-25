@@ -1,6 +1,6 @@
 # Relatório Executivo de Implantação e Teste em Produção
 
-> **Data/Hora**: 2026-09-25 01:15:56 (UTC: 2026-09-25T04:15:56.828289+00:00)  
+> **Data/Hora**: 2026-09-25 01:31:49 (UTC: 2026-09-25T04:31:49.745919+00:00)  
 > **Ambiente**: Produção Híbrida Unificada (Vercel Edge + Cloudflare Tunnels + Tailnet Mesh + VPS)  
 > **Veredito Global**: 🟢 **IMPLANTAÇÃO APROVADA & OPERACIONAL**
 
@@ -10,12 +10,10 @@
 
 | Endpoint / Serviço | Tipo | Status | HTTP | Latência |
 | :--- | :--- | :--- | :--- | :--- |
-| [Juliana Hermes (Cloudflare Tunnel)](https://juliana.axionenterprise.cloud) | Edge / Ingress | 🟢 HEALTHY | `200` | **53.1ms** |
-| [AXION Flow (Vercel Edge)](https://axion-flow-gamma.vercel.app) | Edge / Ingress | 🟢 HEALTHY | `200` | **249.2ms** |
-| [AXION Flow Homepage (Vercel Edge)](https://axion-flow-homepage.vercel.app) | Edge / Ingress | 🟢 HEALTHY | `200` | **264.7ms** |
-| [Proxion Hub (Custom Domain)](https://proxionmidia.com) | Edge / Ingress | 🟢 HEALTHY | `200` | **152.3ms** |
-| [Yan Nascimento Ads (Vite/SPA)](https://yannascimentoads.com) | Edge / Ingress | 🟢 HEALTHY | `200` | **193.3ms** |
-| [Traefik Ingress Gateway (Tailnet)](http://100.95.86.83:8080) | Edge / Ingress | 🟢 HEALTHY | `200` | **779.7ms** |
+| [AXION Flow (Vercel Edge)](https://axion-flow-gamma.vercel.app) | Edge / Ingress | 🟢 HEALTHY | `200` | **49.2ms** |
+| [AXION Flow Homepage (Vercel Edge)](https://axion-flow-homepage.vercel.app) | Edge / Ingress | 🟢 HEALTHY | `200` | **225.4ms** |
+| [Yan Nascimento Ads (Vite/SPA)](https://yannascimentoads.com) | Edge / Ingress | 🟢 HEALTHY | `200` | **188.9ms** |
+| [Traefik Ingress Gateway (Tailnet)](http://100.95.86.83:8080) | Edge / Ingress | 🟢 HEALTHY | `200` | **777.8ms** |
 
 ---
 
@@ -36,7 +34,6 @@
 | `hermes-whatsapp-keeper` | `hermes-whatsapp-keeper:latest` | 🟢 HEALTHY | Up 5 weeks |
 | `hermes-gateway-juliana` | `hermes-gateway-juliana:v5.1.0` | 🟢 HEALTHY | Up 5 weeks (healthy) |
 | `hermes-webchat` | `hermes-webchat:v5.1.0` | 🟢 HEALTHY | Up 5 weeks (healthy) |
-| `juliana-cloudflared` | `0aa26e284f05` | 🟢 HEALTHY | Up 5 weeks |
 | `axion-cadvisor` | `3de2bd520312` | 🟢 HEALTHY | Up 6 weeks (healthy) |
 | `axion-alloy` | `0f4434c92b3e` | 🟢 HEALTHY | Up 6 weeks |
 | `axion-node-exporter` | `1b4e4438faca` | 🟢 HEALTHY | Up 6 weeks |

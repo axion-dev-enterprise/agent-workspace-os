@@ -96,7 +96,7 @@ Varredura de stack, status HTTP e frameworks de cada deployment de produção:
 | `landing-page-teste` | [Link](https://landing-page-teste-woad.vercel.app) | HTML / Tailwind | 🟢 200 OK | AXION Enterprise — Inovação & Automação |
 | `ifood-dashboard` | [Link](https://ifood-dashboard-tau.vercel.app) | HTML / Dashboard SPA | 🟢 200 OK | Empório Caraíva — Dashboard iFood & Planilhas |
 | `meta-gpt-worker` | [Link](https://meta-gpt-worker.vercel.app) | Tailwind CSS / SPA | 🟢 200 OK | Positive Mind — Gestão de Marketing |
-| `proxion-hub` | [Link](https://proxionmidia.com) | HTML / Estático | 🟢 200 OK | PROXION HUB (Domínio próprio `proxionmidia.com`) |
+| ~~`proxion-hub`~~ | *Descomissionado* | HTML / Estático | ⚪ REMOVIDO | *Projeto e domínio proxionmidia.com removidos em 2026-09-25* |
 | `axion-vps-api-contingencia` | [Link](https://axion-vps-api-contingencia.vercel.app) | API Serverless | 🟡 404 | Endpoint de contingência / fallback |
 | `axion-flow` | [Link](https://axion-flow-gamma.vercel.app) | **Next.js (React)** | 🟢 200 OK | AXION FLOW — Sistema Comercial Autônomo |
 | `axion-flow-homepage` | [Link](https://axion-flow-homepage.vercel.app) | HTML / Landing | 🟢 200 OK | AXION FLOW — Automação Comercial com IA |

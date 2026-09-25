@@ -178,10 +178,8 @@ def main():
     # 1. Edge & Web Endpoints
     print("\n[1/5] Validando Ingress Cloudflare & Frontends Vercel...")
     endpoints = [
-        {"name": "Juliana Hermes (Cloudflare Tunnel)", "url": "https://juliana.axionenterprise.cloud"},
         {"name": "AXION Flow (Vercel Edge)", "url": "https://axion-flow-gamma.vercel.app"},
         {"name": "AXION Flow Homepage (Vercel Edge)", "url": "https://axion-flow-homepage.vercel.app"},
-        {"name": "Proxion Hub (Custom Domain)", "url": "https://proxionmidia.com"},
         {"name": "Yan Nascimento Ads (Vite/SPA)", "url": "https://yannascimentoads.com"},
         {"name": "Traefik Ingress Gateway (Tailnet)", "url": "http://100.95.86.83:8080"}
     ]

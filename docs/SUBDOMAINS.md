@@ -62,7 +62,7 @@
 | `dashboard-aps.axionenterprise.cloud` | `CNAME` | `809186ad-e312-4d6c-b3d0-9564bc880756.cfargotunnel.com` | Sim (Proxied) |
 | `desiree.axionenterprise.cloud` | `CNAME` | `ab0ddaf0-042b-42fa-ad9a-fde3f7c2f5d5.cfargotunnel.com` | Sim (Proxied) |
 | `ig-webhook.axionenterprise.cloud` | `CNAME` | `8bfda0ca-c18c-484b-b2ea-976c01f67873.cfargotunnel.com` | Sim (Proxied) |
-| `juliana.axionenterprise.cloud` | `CNAME` | `6eae5379-f331-4e14-a0b5-9e332576a69f.cfargotunnel.com` | Sim (Proxied) |
+| ~~`juliana.axionenterprise.cloud`~~ | `CNAME` | *(Descomissionado & Removido em 2026-09-25)* | Removido |
 | `login.axionenterprise.cloud` | `CNAME` | `5bc9feef-80d0-42ae-985a-4bafd334a370.cfargotunnel.com` | Sim (Proxied) |
 | `mimo.axionenterprise.cloud` | `CNAME` | `771a2dfc-0f22-454d-8f89-65e99e369550.cfargotunnel.com` | Sim (Proxied) |
 | `n8n.axionenterprise.cloud` | `CNAME` | `72ccd81e-bf61-4e58-b827-8db367691e9c.cfargotunnel.com` | Sim (Proxied) |

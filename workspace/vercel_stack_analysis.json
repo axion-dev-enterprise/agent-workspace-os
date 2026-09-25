@@ -36,15 +36,6 @@
     "node_version": "24.x"
   },
   {
-    "name": "proxion-hub",
-    "url": "https://proxionmidia.com",
-    "status": 200,
-    "framework": "HTML / Estático",
-    "title": "PROXION HUB",
-    "server": "Vercel",
-    "node_version": "24.x"
-  },
-  {
     "name": "axion-vps-api-contingencia",
     "url": "https://axion-vps-api-contingencia.vercel.app",
     "status": "Erro/Inativo",

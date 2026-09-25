@@ -35,7 +35,6 @@ NODES = [
 WEB_ENDPOINTS = [
     {"name": "AXION Flow (Vercel)", "url": "https://axion-flow-gamma.vercel.app"},
     {"name": "AXION Flow Homepage (Vercel)", "url": "https://axion-flow-homepage.vercel.app"},
-    {"name": "Proxion Hub (Custom Domain)", "url": "https://proxionmidia.com"},
     {"name": "Yan Nascimento Ads (Vite)", "url": "https://yannascimentoads.com"},
     {"name": "Traefik Dashboard (Tailnet Internal)", "url": "http://100.95.86.83:8080"}
 ]
