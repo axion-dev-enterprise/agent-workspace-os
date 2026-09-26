@@ -8,7 +8,7 @@ description: >-
 
 # Google Gemini Multimodal & Agentic Engineering Skill
 
-Skill operacional para desenvolvimento de inteligência artificial autônoma, pipelines de extração multimodal e orquestração de ferramentas com a família **Google Gemini** para a **Enterprise Organization**.
+Skill operacional para desenvolvimento de inteligência artificial autônoma, pipelines de extração multimodal e orquestração de ferramentas com a família **Google Gemini** para a **AXION Enterprise**.
 
 ---
 
@@ -46,7 +46,7 @@ def extract_structured_action(text_prompt: str) -> TaskExtraction:
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=TaskExtraction,
-            system_instruction="Você é um orquestrador de operações corporativas da Enterprise Organization."
+            system_instruction="Você é um orquestrador de operações corporativas da AXION Enterprise."
         ),
     )
     return TaskExtraction.model_validate_json(response.text)

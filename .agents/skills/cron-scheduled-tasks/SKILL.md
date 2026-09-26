@@ -6,9 +6,9 @@ description: >-
   periodic background jobs, maintenance routines, self-healing watchdogs, and backup schedules across AXION nodes.
 ---
 
-# Cron & Scheduled Tasks Skill — Enterprise Organization
+# Cron & Scheduled Tasks Skill — AXION Enterprise
 
-Guia canônico e operacional para automação de tarefas periódicas, daemons de monitoramento e rotinas de manutenção em toda a infraestrutura híbrida da **Enterprise Organization** (Windows Workstation, Linux VPS, Cloudflare Edge e GitHub Actions).
+Guia canônico e operacional para automação de tarefas periódicas, daemons de monitoramento e rotinas de manutenção em toda a infraestrutura híbrida da **AXION Enterprise** (Windows Workstation, Linux VPS, Cloudflare Edge e GitHub Actions).
 
 ---
 

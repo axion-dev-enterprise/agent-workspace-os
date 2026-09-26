@@ -54,7 +54,7 @@ gam user <email> create drivefile mimetype gfolder drivefilename "Backups_2026" 
 gam user <email> print fileperms id <FILE_ID>
 
 # Conceder acesso de leitor (viewer) a outro usuário
-gam user <email> add drivefileacl id <FILE_ID> role reader user colleague@example.com
+gam user <email> add drivefileacl id <FILE_ID> role reader user colega@example.com
 
 # Conceder acesso de editor (writer)
 gam user <email> add drivefileacl id <FILE_ID> role editor user dev@example.com
@@ -78,7 +78,7 @@ gam print teamdrives
 gam create teamdrive "Projetos_Engenharia"
 
 # Adicionar membro com papel de Administrador (organizer)
-gam add drivefileacl id <TEAMDRIVE_ID> role organizer user admin@example.com
+gam add drivefileacl id <TEAMDRIVE_ID> role organizer user iago@example.com
 
 # Adicionar membro com papel de Colaborador (fileOrganizer)
 gam add drivefileacl id <TEAMDRIVE_ID> role fileOrganizer user dev@example.com
@@ -96,5 +96,5 @@ gam user <email> print filelist teamdriveid <TEAMDRIVE_ID> id title mimetype
 gam create datatransfer <email_antigo> gdrive <email_novo>
 
 # Transferir propriedade de um único arquivo
-gam user <email_dono> update drivefileacl id <FILE_ID> role owner user <newowner@example.com>
+gam user <email_dono> update drivefileacl id <FILE_ID> role owner user <novo_dono@example.com>
 ```

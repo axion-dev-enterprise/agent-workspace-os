@@ -8,7 +8,7 @@ description: >-
 
 # Tailwind CSS v4 & Shadcn UI Design System Skill
 
-Skill operacional para arquitetura de interface, design tokens e componentes acessíveis seguindo o padrão moderno de design engineering da **Enterprise Organization**.
+Skill operacional para arquitetura de interface, design tokens e componentes acessíveis seguindo o padrão moderno de design engineering da **AXION Enterprise**.
 
 ---
 

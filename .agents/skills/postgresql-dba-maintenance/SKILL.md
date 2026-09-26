@@ -6,9 +6,9 @@ description: >-
   with PgBouncer, physical and logical backups (pg_dump, WAL archiving), and point-in-time recovery across AXION nodes.
 ---
 
-# PostgreSQL DBA Maintenance Skill — Enterprise Organization
+# PostgreSQL DBA Maintenance Skill — AXION Enterprise
 
-Guia canônico e operacional para administração de bancos de dados PostgreSQL em ambientes de produção da **Enterprise Organization**. Cobre rotinas preventivas de manutenção, recuperação de espaço, otimização de consultas e resiliência de dados.
+Guia canônico e operacional para administração de bancos de dados PostgreSQL em ambientes de produção da **AXION Enterprise**. Cobre rotinas preventivas de manutenção, recuperação de espaço, otimização de consultas e resiliência de dados.
 
 ---
 

@@ -6,9 +6,9 @@ description: >-
   webhook dispatching, rate limit defense, and high-availability keeper processes across AXION nodes.
 ---
 
-# WhatsApp Baileys Bot Ops Skill — Enterprise Organization
+# WhatsApp Baileys Bot Ops Skill — AXION Enterprise
 
-Guia canônico e operacional para sustentação, resiliência e desenvolvimento de robôs e conectores de mensageria WhatsApp via biblioteca **Baileys (Multi-Device API)** em infraestrutura de contêineres na **Enterprise Organization**.
+Guia canônico e operacional para sustentação, resiliência e desenvolvimento de robôs e conectores de mensageria WhatsApp via biblioteca **Baileys (Multi-Device API)** em infraestrutura de contêineres na **AXION Enterprise**.
 
 ---
 
@@ -47,7 +47,7 @@ async function startWhatsAppBot() {
     connectTimeoutMs: 60000,
     defaultQueryTimeoutMs: 60000,
     keepAliveIntervalMs: 10000,
-    browser: ['Enterprise Organization', 'Chrome', '124.0.0.0'],
+    browser: ['AXION Enterprise', 'Chrome', '124.0.0.0'],
   });
 
   // Salvar credenciais sempre que atualizadas

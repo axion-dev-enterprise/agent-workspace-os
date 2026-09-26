@@ -3,19 +3,19 @@ name: vercel-deployment-ops
 description: >-
   Operational skill for Vercel CLI, Project Management, Domains, Serverless RSC Deployments,
   Preview Branches, Edge Middleware, and Rollback Operations. Use when configuring, deploying,
-  inspecting, managing aliases, or troubleshooting applications under team {{VERCEL_SCOPE}}.
+  inspecting, managing aliases, or troubleshooting applications under team your-team-slug.
 ---
 
-# Vercel Deployment Ops Skill — Enterprise Organization
+# Vercel Deployment Ops Skill — AXION Enterprise
 
-Guia canônico e operacional para orquestração de projetos, deploys em produção, gestão de domínios, aliases e resolução de incidentes no ecossistema **Vercel** da **Enterprise Organization** (Team Scope: `{{VERCEL_SCOPE}}`).
+Guia canônico e operacional para orquestração de projetos, deploys em produção, gestão de domínios, aliases e resolução de incidentes no ecossistema **Vercel** da **AXION Enterprise** (Team Scope: `your-team-slug`).
 
 ---
 
 ## 1. Contexto & Escopo Corporativo
 
-- **Equipe / Team Scope**: `{{VERCEL_SCOPE}}`
-- **Conta Primária**: `{{VERCEL_ACCOUNT_ID}}` (`AXION DEV`)
+- **Equipe / Team Scope**: `your-team-slug`
+- **Conta Primária**: `axionenterprise777-1846` (`AXION DEV`)
 - **CLI Instalada**: `vercel` v59.26.0 (Node.js LTS v24.19.0)
 - **Topologia de Produção**: 11 projetos ativos (Next.js 15, Vite/React, Tailwind SPAs e APIs serverless)
 
@@ -26,62 +26,62 @@ Guia canônico e operacional para orquestração de projetos, deploys em produç
 ### 2.1 Inspeção e Listagem de Projetos
 ```powershell
 # Listar todos os projetos no escopo corporativo
-vercel project ls --scope {{VERCEL_SCOPE}}
+vercel project ls --scope your-team-slug
 
 # Inspecionar configurações detalhadas de um projeto específico
-vercel project inspect <project-name> --scope {{VERCEL_SCOPE}}
+vercel project inspect <project-name> --scope your-team-slug
 
 # Listar todos os aliases e domínios vinculados
-vercel alias ls --scope {{VERCEL_SCOPE}}
+vercel alias ls --scope your-team-slug
 
 # Listar domínios registrados/delegados
-vercel domains ls --scope {{VERCEL_SCOPE}}
+vercel domains ls --scope your-team-slug
 ```
 
 ### 2.2 Deploy e Promoção para Produção
 ```powershell
 # Deploy de Preview / Staging
-vercel --scope {{VERCEL_SCOPE}}
+vercel --scope your-team-slug
 
 # Deploy direto para Produção (com build remoto ou pré-construído)
-vercel --prod --scope {{VERCEL_SCOPE}}
+vercel --prod --scope your-team-slug
 
 # Deploy pré-construído localmente (Zero Remote Build Overhead)
 npm run build
-vercel deploy --prebuilt --prod --scope {{VERCEL_SCOPE}}
+vercel deploy --prebuilt --prod --scope your-team-slug
 ```
 
 ### 2.3 Gestão de Variáveis de Ambiente
 ```powershell
 # Baixar variáveis de ambiente de produção para arquivo local .env.production
-vercel env pull .env.production --environment=production --scope {{VERCEL_SCOPE}}
+vercel env pull .env.production --environment=production --scope your-team-slug
 
 # Adicionar uma variável de ambiente em produção
-vercel env add MINHA_VARIAVEL production --scope {{VERCEL_SCOPE}}
+vercel env add MINHA_VARIAVEL production --scope your-team-slug
 
 # Listar variáveis configuradas em um projeto
-vercel env ls --scope {{VERCEL_SCOPE}}
+vercel env ls --scope your-team-slug
 ```
 
 ### 2.4 Vinculação de Domínios e Aliases Customizados
 ```powershell
 # Adicionar domínio ao projeto
-vercel domains add app.example.com --scope {{VERCEL_SCOPE}}
+vercel domains add app.example.com --scope your-team-slug
 
 # Associar alias específico a uma URL de deployment
-vercel alias set <deployment-url.vercel.app> app.example.com --scope {{VERCEL_SCOPE}}
+vercel alias set <deployment-url.vercel.app> app.example.com --scope your-team-slug
 
 # Remover alias de contingência ou projeto antigo
-vercel alias rm app-antigo.example.com --scope {{VERCEL_SCOPE}}
+vercel alias rm app-antigo.example.com --scope your-team-slug
 ```
 
 ### 2.5 Rollback Rápido de Produção
 ```powershell
 # Listar deployments recentes de um projeto
-vercel ls <project-name> --scope {{VERCEL_SCOPE}}
+vercel ls <project-name> --scope your-team-slug
 
 # Reverter tráfego instantaneamente para deployment saudável anterior
-vercel rollback <deployment-url-ou-id> --scope {{VERCEL_SCOPE}}
+vercel rollback <deployment-url-ou-id> --scope your-team-slug
 ```
 
 ---
@@ -89,11 +89,11 @@ vercel rollback <deployment-url-ou-id> --scope {{VERCEL_SCOPE}}
 ## 3. Descomissionamento Seguro de Projetos
 
 Para evitar "Subdomain Takeover" ou rotas zumbis em DNS:
-1. Primeiro, listar os aliases associados via `vercel alias ls --scope {{VERCEL_SCOPE}}`.
+1. Primeiro, listar os aliases associados via `vercel alias ls --scope your-team-slug`.
 2. Remover qualquer registro CNAME correspondente no Cloudflare / DNS antes ou logo após.
 3. Excluir o projeto de forma não-interativa:
 ```powershell
-echo y | vercel project rm <project-name> --scope {{VERCEL_SCOPE}}
+echo y | vercel project rm <project-name> --scope your-team-slug
 ```
 
 ---

@@ -144,6 +144,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Backend & APIs** | `stripe-payments-engine` | [`.agents/skills/stripe-payments-engine/SKILL.md`](file:///C:/workspace/.agents/skills/stripe-payments-engine/SKILL.md) |
 | **Rede & Conectividade** | `tailscale-mesh-vpn` | [`.agents/skills/tailscale-mesh-vpn/SKILL.md`](file:///C:/workspace/.agents/skills/tailscale-mesh-vpn/SKILL.md) |
 | **UI/UX & Design** | `tailwind-shadcn-ux` | [`.agents/skills/tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
+| **Comunicação & Mensageria** | `telegram-bot-ops` | [`.agents/skills/telegram-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/telegram-bot-ops/SKILL.md) |
 | **DevOps & CI/CD** | `terraform-iac-automation` | [`.agents/skills/terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **2D/3D & Animações** | `threejs-gsap-animation` | [`.agents/skills/threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
 | **IA & Engenharia de Agentes** | `token-reduction-context-compression` | [`.agents/skills/token-reduction-context-compression/SKILL.md`](file:///C:/workspace/.agents/skills/token-reduction-context-compression/SKILL.md) |

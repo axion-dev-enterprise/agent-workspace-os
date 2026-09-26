@@ -6,9 +6,9 @@ description: >-
   service tokens, and WAF protection across AXION enterprise infrastructure.
 ---
 
-# Cloudflare Zero Trust Tunnels Skill — Enterprise Organization
+# Cloudflare Zero Trust Tunnels Skill — AXION Enterprise
 
-Guia canônico e operacional para implantação de arquitetura **Zero Public Attack Surface** na infraestrutura da **Enterprise Organization**, utilizando **Cloudflare Tunnels (`cloudflared`)** e **Cloudflare Access** para conectar nós computacionais privados à borda global sem exposição de portas públicas.
+Guia canônico e operacional para implantação de arquitetura **Zero Public Attack Surface** na infraestrutura da **AXION Enterprise**, utilizando **Cloudflare Tunnels (`cloudflared`)** e **Cloudflare Access** para conectar nós computacionais privados à borda global sem exposição de portas públicas.
 
 ---
 

@@ -4,12 +4,12 @@
 Zero Trust & Port Exposure Auditor — AXION Enterprise
 Executes Phase 1 of the Hybrid Architecture Unification Plan:
 - Probes external public IPs vs private Tailnet interfaces
-- Maps public attack surface across remaining VPS nodes (axion-vps, debian-2vcpu)
+- Maps public attack surface across remaining VPS nodes (vps-node-01, debian-2vcpu)
 - Correlates with Cloudflare Tunnels and MagicDNS endpoints
 - Recommends zero-trust ingress migration and firewall (UFW) rules
 Generates:
-- memory/infrastructure/ZERO_TRUST_PORT_AUDIT.md
-- memory/infrastructure/zero_trust_audit.json
+- docs/ZERO_TRUST_PORT_AUDIT.md
+- workspace/zero_trust_audit.json
 """
 
 import socket
@@ -21,16 +21,16 @@ WORKSPACE_ROOT = Path(r"C:\workspace")
 
 TARGET_HOSTS = [
     {
-        "name": "primary-gateway-node",
-        "public_ip": "198.51.100.1",
+        "name": "vps-node-01-104-207-90-167",
+        "public_ip": "104.207.90.167",
         "tailnet_ip": "100.64.0.1",
         "role": "Traefik Ingress Gateway & API Core",
         "probed_ports": [80, 443, 8080, 22, 5432, 6379],
         "assigned_domains": ["api.example.com", "auth.example.com", "casa.example.com", "hooks.example.com"]
     },
     {
-        "name": "primary-db-node",
-        "public_ip": "198.51.100.2",
+        "name": "debian-2vcpu-amd-4gb-us-6tb9d",
+        "public_ip": "104.207.81.120",
         "tailnet_ip": "100.64.0.2",
         "role": "Database, Celery Tasks & Flow Engine",
         "probed_ports": [80, 443, 22, 5432, 6379, 8000],
@@ -95,7 +95,7 @@ def run_port_audit():
         "audited_at": now_utc,
         "hosts": audit_results,
         "recommendations": [
-            "Configurar UFW em axion-vps para permitir apenas tráfego vindo da interface tailscale0 e Cloudflare IP ranges.",
+            "Configurar UFW em vps-node-01 para permitir apenas tráfego vindo da interface tailscale0 e Cloudflare IP ranges.",
             "Fechar portas administrativas (8080/Traefik Dashboard) na internet pública, tornando acessível apenas via Tailscale MagicDNS ou Cloudflare Zero Trust Access.",
             "Garantir que a porta 5432 (PostgreSQL) permaneça escutando exclusivamente em 127.0.0.1 ou na interface tailscale0.",
             "Consolidar o roteamento de saída para utilizar cloudflared com protocolo quic/http2."
@@ -103,7 +103,7 @@ def run_port_audit():
     }
     
     # Salva JSON
-    json_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "zero_trust_audit.json"
+    json_path = WORKSPACE_ROOT / "workspace" / "zero_trust_audit.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(report_data, f, indent=2, ensure_ascii=False)
     print(f"\n[OK] Telemetria salva em: {json_path}")
@@ -114,7 +114,7 @@ def run_port_audit():
 
 def generate_markdown_report(data, now_local):
     lines = [
-        "# Auditoria de Superfície de Ataque & Arquitetura Zero Trust",
+        "# Auditoria de Superfície de Ataque & Arquitetura Zero Trust — AXION",
         "",
         f"> **Data/Hora**: {now_local} (UTC: {data.get('audited_at')})  ",
         "> **Classificação**: Confidencial / Engenharia de Segurança & Redes  ",
@@ -183,7 +183,7 @@ def generate_markdown_report(data, now_local):
         "O ecossistema dispõe de todos os componentes necessários (Cloudflare Tunnels, MagicDNS e Tailscale Mesh) para operar com zero superfície de ataque pública direta."
     ])
 
-    report_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "ZERO_TRUST_PORT_AUDIT.md"
+    report_path = WORKSPACE_ROOT / "docs" / "ZERO_TRUST_PORT_AUDIT.md"
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     print(f"[OK] Relatório Zero Trust salvo em: {report_path}")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Master Infrastructure Scanner & Canonical Topology Generator — Agent Workspace OS
+Master Infrastructure Scanner & Canonical Topology Generator — AXION Enterprise
 Maps absolutely everything:
 1. GitHub (User, Organizations, Repositories, Metadata)
 2. Cloudflare (Zones, DNS records, Tunnels, Workers, Pages, D1, KV)
@@ -10,8 +10,8 @@ Maps absolutely everything:
 5. Google Workspace (GAM 7 inventory, Super Admin, Drive assets)
 6. Local Workstation & Cold Storage (Disks, Scheduled Tasks, Backup Vault)
 Outputs:
-- memory/infrastructure/master_infrastructure_map.json
-- memory/infrastructure/MASTER_INFRASTRUCTURE_MAP.md
+- workspace/master_infrastructure_map.json
+- docs/MASTER_INFRASTRUCTURE_MAP.md
 """
 
 import subprocess
@@ -27,7 +27,7 @@ from pathlib import Path
 WORKSPACE_ROOT = Path(r"C:\workspace")
 TAILSCALE_BIN = r"C:\Program Files\Tailscale\tailscale.exe"
 CLOUDFLARE_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN")
-CLOUDFLARE_ACCOUNT = "{{CLOUDFLARE_ACCOUNT_ID}}"
+CLOUDFLARE_ACCOUNT = "your_cloudflare_account_id"
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
@@ -192,8 +192,8 @@ def scan_cloudflare():
 # 3. VERCEL SCANNER
 # ==========================================
 def scan_vercel():
-    print("[3/6] Escaneando Vercel (Time Vercel, Projetos e Deployments)...")
-    data = {"team": os.getenv("VERCEL_SCOPE", "your-team")}
+    print("[3/6] Escaneando Vercel (Time your-team-slug, Projetos e Deployments)...")
+    data = {"team": "your-team-slug"}
     projects = []
     
     # Carrega base enriquecida prévia se existir
@@ -208,7 +208,7 @@ def scan_vercel():
             pass
 
     try:
-        res = subprocess.run(["vercel.cmd", "project", "ls", "--scope", os.getenv("VERCEL_SCOPE", "your-team")], capture_output=True, text=True, timeout=15)
+        res = subprocess.run(["vercel.cmd", "project", "ls", "--scope", "your-team-slug"], capture_output=True, text=True, timeout=15)
         combined_output = (res.stdout or "") + "\n" + (res.stderr or "")
         lines = combined_output.strip().split("\n")
         header_passed = False
@@ -248,7 +248,7 @@ def scan_vercel():
 
     # Aliases
     try:
-        res_a = subprocess.run(["vercel.cmd", "alias", "ls", "--scope", os.getenv("VERCEL_SCOPE", "your-team")], capture_output=True, text=True, timeout=15)
+        res_a = subprocess.run(["vercel.cmd", "alias", "ls", "--scope", "your-team-slug"], capture_output=True, text=True, timeout=15)
         aliases = []
         combined_a = (res_a.stdout or "") + "\n" + (res_a.stderr or "")
         for line in combined_a.strip().split("\n"):
@@ -297,13 +297,13 @@ def scan_compute_and_tailnet():
         data["tailscale_error"] = str(e)
 
     # 4.2 Nó Juliana VPS — Registro de Descomissionamento & Cold Vault
-    print("  -> Registrando descomissionamento e integridade do cold vault do nó legacy-app-node...")
+    print("  -> Registrando descomissionamento e integridade do cold vault do nó juliana-vps...")
     decom_archive = Path(r"E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\hermes_db_final.sql.gz")
     app_archive = Path(r"E:\backups\axion_enterprise\decommission_juliana_vps_final_archive\hermes_app_code_final.tar.gz")
     data["decommissioned_nodes"] = [
         {
-            "hostname": "legacy-app-node",
-            "ip": "100.64.0.3",
+            "hostname": "juliana-vps",
+            "ip": "100.81.231.111",
             "decommissioned_at": "2026-09-25",
             "reason": "Descomissionamento operacional solicitado.",
             "actions_taken": [
@@ -325,8 +325,8 @@ def scan_compute_and_tailnet():
 
     # 4.3 VPS Probes (Port checks via curl / socket)
     vps_targets = [
-        {"name": "primary-gateway-node", "ip": "100.64.0.1", "public_ip": "198.51.100.1", "ports": [80, 443, 8080]},
-        {"name": "primary-db-node", "ip": "100.64.0.2", "public_ip": "198.51.100.2", "ports": [80, 443, 5432]}
+        {"name": "vps-node-01-104-207-90-167", "ip": "100.64.0.1", "public_ip": "104.207.90.167", "ports": [80, 443, 8080]},
+        {"name": "debian-2vcpu-amd-4gb-us-6tb9d", "ip": "100.64.0.2", "public_ip": "104.207.81.120", "ports": [80, 443, 5432]}
     ]
     data["vps_probes"] = []
     for v in vps_targets:
@@ -361,7 +361,7 @@ def scan_google_and_local():
                 data["google_workspace"] = {
                     "domain": d_info.get("primary_domain", "example.com"),
                     "customer_id": d_info.get("customer_id", "C03xtme8f"),
-                    "admin": d_info.get("admin_email", "admin@example.com"),
+                    "admin": d_info.get("admin_email", "iago@example.com"),
                     "delegation_status": "FULLY_AUTHORIZED",
                     "drive_assets_count": len(gw_raw.get("drive_assets", [])),
                     "shared_drives_count": len(gw_raw.get("shared_drives", [])),
@@ -418,7 +418,7 @@ def generate_master_documentation(master_data):
         "",
         f"> **Última Varredura Exhaustiva**: {now_str} (UTC: {now_utc})  ",
         "> **Classificação**: Confidencial / Arquitetura e Ativos Corporativos  ",
-        "> **Operador do Sistema**: `{{GIT_USER_NAME}} <{{GIT_USER_EMAIL}}>`  ",
+        "> **Operador do Sistema**: `AXION DEV <developer@example.com>`  ",
         "",
         "---",
         "",
@@ -426,21 +426,21 @@ def generate_master_documentation(master_data):
         "",
         "| Camada / Ecossistema | Recurso Primário | Quantidade Total | Status |",
         "| :--- | :--- | :--- | :--- |",
-        f"| **GitHub** (`{gh.get('organization', 'Workspace Org')}`) | Repositórios de Código | **{gh.get('total_repositories', 0)}** ({gh.get('private_count')} privados, {gh.get('public_count')} públicos) | 🟢 Ativo |",
-        f"| **Cloudflare** | Zonas & Domínios DNS | **{cf.get('total_zones', 0)}** zonas (**{cf.get('total_dns_records', 0)}** registros DNS) | 🟢 Ativo |",
+        f"| **GitHub** (`axion-dev-enterprise`) | Repositórios de Código | **{gh.get('total_repositories', 0)}** ({gh.get('private_count')} privados, {gh.get('public_count')} públicos) | 🟢 Ativo |",
+        f"| **Cloudflare** (`AXION`) | Zonas & Domínios DNS | **{cf.get('total_zones', 0)}** zonas (**{cf.get('total_dns_records', 0)}** registros DNS) | 🟢 Ativo |",
         f"| **Cloudflare Edge** | Tunnels, Workers, Pages | **{cf.get('total_tunnels', 0)}** túneis, **{cf.get('total_workers', 0)}** workers, **{cf.get('total_pages', 0)}** pages | 🟢 Ativo |",
         f"| **Cloudflare Storage** | D1 Databases & KV | **{cf.get('total_d1', 0)}** D1 DB, **{cf.get('total_kv', 0)}** KV namespaces | 🟢 Ativo |",
-        f"| **Vercel** (`{vc.get('team', 'Vercel Scope')}`) | Projetos em Produção | **{vc.get('total_projects', 0)}** projetos (**{vc.get('total_aliases', 0)}** aliases/domínios) | 🟢 Ativo |",
-        f"| **Tailnet Mesh** | Servidores & Nós | **3** nós online / **1** nó descomissionado / **2** nós standby | 🟢 Ativo |",
+        f"| **Vercel** (`your-team-slug`) | Projetos em Produção | **{vc.get('total_projects', 0)}** projetos (**{vc.get('total_aliases', 0)}** aliases/domínios) | 🟢 Ativo |",
+        f"| **Tailnet Mesh** (`taildb9106.ts.net`) | Servidores & Nós | **3** nós online / **1** nó descomissionado / **2** nós standby | 🟢 Ativo |",
         f"| **Google Workspace** | Contas & Ativos no Drive | **{loc.get('google_workspace', {}).get('drive_assets_count', 0)}** arquivos mapeados via GAM | 🟢 Autorizado (DwD) |",
         f"| **Armazenamento Offline** | Unidade de Backup `E:\\` | **{loc.get('storage', {}).get('e_backup_drive', {}).get('free_gb')} GB** livres (Dump PostgreSQL & Git) | 🟢 Operacional |",
         "",
         "---",
         "",
-        f"## 1. Mapeamento Completo do GitHub (`{gh.get('organization', 'Workspace Org')}`)",
+        "## 1. Mapeamento Completo do GitHub (`axion-dev-enterprise`)",
         "",
-        f"- **Conta**: `{gh.get('user', 'Workspace User')}` (`{gh.get('organization', 'Workspace Org')}`)",
-        f"- **E-mail**: `admin@example.com` | **Site**: [https://example.com](https://example.com)",
+        "- **Conta**: `AXION DEV` (`axion-dev-enterprise`)",
+        "- **E-mail**: `developer@example.com` | **Site**: [https://example.com](https://example.com)",
         "",
         "| Repositório | Visibilidade | Linguagem | Branch | Último Push | Descrição |",
         "| :--- | :---: | :---: | :---: | :---: | :--- |"
@@ -509,7 +509,7 @@ def generate_master_documentation(master_data):
         "",
         "---",
         "",
-        "## 3. Mapeamento Vercel (`{{VERCEL_SCOPE}}`)",
+        "## 3. Mapeamento Vercel (`your-team-slug`)",
         "",
         "| Projeto | Framework | URL de Produção | Título / Aplicação | Status HTTP |",
         "| :--- | :--- | :--- | :--- | :---: |"
@@ -583,7 +583,7 @@ def generate_master_documentation(master_data):
         "Todo o ecossistema AXION Enterprise está rigorosamente catalogado, criptograficamente assegurado e documentado em fonte canônica."
     ])
 
-    report_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "MASTER_INFRASTRUCTURE_MAP.md"
+    report_path = WORKSPACE_ROOT / "docs" / "MASTER_INFRASTRUCTURE_MAP.md"
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
@@ -603,7 +603,7 @@ def main():
         "google_and_local": scan_google_and_local()
     }
 
-    json_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "master_infrastructure_map.json"
+    json_path = WORKSPACE_ROOT / "workspace" / "master_infrastructure_map.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(master, f, indent=2, ensure_ascii=False)
     print(f"[OK] Dados canônicos salvos em: {json_path}")

@@ -4,7 +4,7 @@ description: >-
   Operational skill for managing remote Linux compute nodes, VPS servers, Docker multi-stage builds,
   Docker Compose orchestration, PM2 process supervisors, systemd service units, and network bridges.
   Use when provisioning VPS nodes, orchestrating backend services, configuring healthchecks,
-  and automating deployments for axion-vps.
+  and automating deployments for vps-node-01.
 ---
 
 # VPS Nodes & Docker Orchestration Skill

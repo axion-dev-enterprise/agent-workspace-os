@@ -8,7 +8,7 @@ Referência rápida da gramática de comandos, modificadores de lote, redirecion
 
 | Modificador | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `user <email>` | Executa a ação para um único usuário | `gam user admin@example.com ...` |
+| `user <email>` | Executa a ação para um único usuário | `gam user iago@example.com ...` |
 | `users <lista>` | Executa para uma lista separada por vírgula | `gam users user1@...,user2@... ...` |
 | `all users` | Itera por todos os usuários do domínio | `gam all users print signature` |
 | `group <email>` | Executa para os membros de um grupo | `gam group dev@... print ...` |

@@ -9,14 +9,14 @@ description: >-
 
 # Cloudflare Edge Ops Skill
 
-Skill operacional para gerenciamento, automação e deploy de microserviços, workers, páginas e bancos de dados edge no ecossistema Cloudflare da **Enterprise Organization**.
+Skill operacional para gerenciamento, automação e deploy de microserviços, workers, páginas e bancos de dados edge no ecossistema Cloudflare da **AXION Enterprise**.
 
 ---
 
 ## 1. Identificadores & Ambiente
 
 - **Conta Cloudflare**: `AXION`
-- **Account ID**: `a79a584696834139a2b70ec306f5705c`
+- **Account ID**: `your_cloudflare_account_id`
 - **Zona DNS Primária**: `example.com` (Zone ID: `73c333a9254c46fbe8522616f735d4fa`)
 - **CLI Principal**: `wrangler` (Node.js LTS v24.19.0)
 
@@ -88,7 +88,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"
-API_GATEWAY = "https://api.example.com"
+AXION_API_GATEWAY = "https://api.example.com"
 
 # Exemplo de binding D1
 [[d1_databases]]

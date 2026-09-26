@@ -1,14 +1,421 @@
 {
-  "updated_at": "2026-09-25T22:00:00Z",
-  "workspace": {
-    "name": "{{WORKSPACE_NAME}}",
-    "slug": "{{WORKSPACE_SLUG}}",
-    "distribution": "Agent Workspace OS",
-    "repository_url": "{{REPOSITORY_URL}}"
+  "updated_at": "2026-09-24T19:32:00Z",
+  "github": {
+    "organization": "axion-dev-enterprise",
+    "total_repositories": 25,
+    "repositories": [
+      {
+        "description": "Monorepo AXION â€” apps, services, packages",
+        "isPrivate": true,
+        "name": "axion-monorepo",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-06T20:05:30Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-monorepo",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "The Deterministic Operating Framework for Autonomous AI Software Engineering.",
+        "isPrivate": false,
+        "name": "agent-workspace-os",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "updatedAt": "2026-09-18T09:01:30Z",
+        "url": "https://github.com/axion-dev-enterprise/agent-workspace-os",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "[MONOREPO DEV] Sites e Aplicativos de Clientes AXION Enterprise (Estuda Junto, Edna Grahl, PositiveMind, etc.)",
+        "isPrivate": false,
+        "name": "axion-client-apps",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-17T00:04:52Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-client-apps",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "ExtraÃ§Ã£o inteligente de conteÃºdo de qualquer site via anÃ¡lise de HAR com IA",
+        "isPrivate": false,
+        "name": "har-content-extractor",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "updatedAt": "2026-09-13T00:13:48Z",
+        "url": "https://github.com/axion-dev-enterprise/har-content-extractor",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "",
+        "isPrivate": true,
+        "name": "axion-financeiro",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "updatedAt": "2026-09-12T23:54:10Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-financeiro",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR PAY] Portal Frontend SPA & Checkout de Pagamentos (pay.example.com)",
+        "isPrivate": false,
+        "name": "axion-pay",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-12T22:58:55Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pay",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "Plataforma de disparo transacional via Brevo, cloaker defensivo, open tracking 1x1, UTMs e Meta CAPI",
+        "isPrivate": false,
+        "name": "gads-mail-engine",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-12T22:41:42Z",
+        "url": "https://github.com/axion-dev-enterprise/gads-mail-engine",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "[SETOR FLOW] Plataforma AutÃ´noma de Agentes & IA Multi-Tenant (agents.example.com)",
+        "isPrivate": true,
+        "name": "axion-flow",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "updatedAt": "2026-09-09T04:44:11Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-flow",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR VPS] Infraestrutura CanÃ´nica, Docker Compose, AutomaÃ§Ãµes e Scripts de Deploy VPS",
+        "isPrivate": true,
+        "name": "vps-node-01",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-05T13:34:52Z",
+        "url": "https://github.com/axion-dev-enterprise/vps-node-01",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "",
+        "isPrivate": false,
+        "name": "vr-sso-portal-clone",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-04T21:23:57Z",
+        "url": "https://github.com/axion-dev-enterprise/vr-sso-portal-clone",
+        "visibility": "PUBLIC"
+      },
+      {
+        "description": "[SETOR VOICE] Runtime Neural TTS/STT, FastMCP Server, WebRTC & Agente de Voz AutÃƒÂ´nomo",
+        "isPrivate": true,
+        "name": "axion-voice",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-03T02:49:54Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-voice",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR DATA] App Data â€” Pipelines de Dados, Analytics, BI e RelatÃ³rios Automatizados",
+        "isPrivate": true,
+        "name": "axion-data",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-03T02:49:53Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-data",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[MONOREPO SENSIX] Ecossistema Completo Sensix (Storefront, Models, OP Black, AtacadÃ£o, Bots Telegram e AXION HOT)",
+        "isPrivate": true,
+        "name": "sensix",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "updatedAt": "2026-09-03T02:49:48Z",
+        "url": "https://github.com/axion-dev-enterprise/sensix",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR SECURITY] Painel de Auditoria de Vulnerabilidades, Relays e TÃƒÂºneis Defensivos",
+        "isPrivate": true,
+        "name": "axion-security",
+        "primaryLanguage": {
+          "name": "Python"
+        },
+        "updatedAt": "2026-09-03T02:49:59Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-security",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR OPS] Telemetria IsomÃƒÂ³rfica, Coletor RFC 7807, Grafana, Prometheus e Kuma",
+        "isPrivate": true,
+        "name": "axion-observability",
+        "primaryLanguage": {
+          "name": "HTML"
+        },
+        "updatedAt": "2026-09-03T02:49:56Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-observability",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR PDV] Sistema Offline-First para Varejo FÃƒÂ­sico, Frente de Caixa e Retaguarda",
+        "isPrivate": true,
+        "name": "axion-pdv",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T02:49:46Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pdv",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR HUB] Registry de Conectores de Agentes, Webhooks SatÃƒÂ©lites e IntegraÃƒÂ§ÃƒÂµes Externas",
+        "isPrivate": true,
+        "name": "axion-hub",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T02:49:52Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-hub",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "[SETOR COMM] Gateway de Mensageria, Baileys WhatsApp Bridge, Filas de Envio & Dispatch",
+        "isPrivate": true,
+        "name": "axion-comm",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T02:49:45Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-comm",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Auto-criado do backup mirror",
+        "isPrivate": true,
+        "name": "axion-pdv-system",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T01:36:39Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-pdv-system",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Auto-criado do backup mirror",
+        "isPrivate": true,
+        "name": "google-oauth-gateway",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T01:36:47Z",
+        "url": "https://github.com/axion-dev-enterprise/google-oauth-gateway",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Auto-criado do backup mirror",
+        "isPrivate": true,
+        "name": "axion-main-api",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T01:36:41Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-main-api",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Auto-criado do backup mirror",
+        "isPrivate": true,
+        "name": "axion-agencia-hub",
+        "primaryLanguage": {
+          "name": "JavaScript"
+        },
+        "updatedAt": "2026-09-03T01:36:43Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-agencia-hub",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Auto-criado do backup mirror",
+        "isPrivate": true,
+        "name": "axion-status",
+        "primaryLanguage": {
+          "name": "TypeScript"
+        },
+        "updatedAt": "2026-09-03T01:36:45Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-status",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "App Auth â€” autenticaÃ§Ã£o/autorizaÃ§Ã£o",
+        "isPrivate": true,
+        "name": "axion-auth",
+        "primaryLanguage": null,
+        "updatedAt": "2026-09-03T02:48:03Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-auth",
+        "visibility": "PRIVATE"
+      },
+      {
+        "description": "Source of Truth â€” regras, arquitetura, processos, RAG",
+        "isPrivate": true,
+        "name": "axion-docs",
+        "primaryLanguage": null,
+        "updatedAt": "2026-09-03T01:55:09Z",
+        "url": "https://github.com/axion-dev-enterprise/axion-docs",
+        "visibility": "PRIVATE"
+      }
+    ]
+  },
+  "vercel": {
+    "account": "your-team-slug",
+    "total_projects": 12,
+    "projects": [
+      {
+        "name": "landing-page-teste-w-solucoes",
+        "url": "https://landing-page-teste-w-solucoes.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "landing-page-teste",
+        "url": "https://landing-page-teste-woad.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "ifood-dashboard",
+        "url": "https://ifood-dashboard-tau.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "meta-gpt-worker",
+        "url": "https://meta-gpt-worker.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "proxion-hub",
+        "url": "https://proxionmidia.com",
+        "node_version": "24.x"
+      },
+      {
+        "name": "vps-node-01-api-contingencia",
+        "url": "https://vps-node-01-api-contingencia.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "axion-flow",
+        "url": "https://axion-flow-gamma.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "axion-flow-homepage",
+        "url": "https://axion-flow-homepage.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "axion-conferencia-pecas",
+        "url": "https://axion-conferencia-pecas.vercel.app",
+        "node_version": "24.x"
+      },
+      {
+        "name": "growth-accelerator-main",
+        "url": "https://yannascimentoads.com",
+        "node_version": "24.x"
+      },
+      {
+        "name": "rosireis-atelier",
+        "url": "https://rosireis.com.br",
+        "node_version": "24.x"
+      },
+      {
+        "name": "vercel-ai-gateway-demo",
+        "url": "https://vercel-ai-gateway-demo-your-team-slug.vercel.app",
+        "node_version": "24.x"
+      }
+    ]
+  },
+  "cloudflare": {
+    "account_id": "your_cloudflare_account_id",
+    "pages_projects": [
+      {
+        "name": "axion-status",
+        "domains": [
+          "axion-status.pages.dev"
+        ]
+      },
+      {
+        "name": "axion-landing",
+        "domains": [
+          "axion-landing.pages.dev"
+        ]
+      },
+      {
+        "name": "axion-flow",
+        "domains": [
+          "axion-flow.pages.dev"
+        ]
+      },
+      {
+        "name": "facebusca-routes-app",
+        "domains": [
+          "facebusca-routes-app.pages.dev",
+          "facebusca-routes.example.com"
+        ]
+      },
+      {
+        "name": "painel-axion",
+        "domains": [
+          "painel-axion.pages.dev",
+          "painel.example.com"
+        ]
+      }
+    ],
+    "workers": [
+      "ana-proxy",
+      "axion-404-gateway",
+      "axion-flow-homepage",
+      "axion-flow-proxy",
+      "axion-github-auth",
+      "axion-lead-webhook",
+      "axion-meta-webhook",
+      "axion-qr-system",
+      "axion-temp-landing",
+      "vps-node-01-proxy",
+      "mp-payroll-worker",
+      "pdv-worker",
+      "poseidon",
+      "sicrety-edge-proxy",
+      "vps-axion-api"
+    ],
+    "dns_zone": "example.com",
+    "total_dns_records": 124,
+    "subdomains_mapped_file": "docs/SUBDOMAINS.md"
+  },
+  "google_workspace": {
+    "domain": "example.com",
+    "customer_id": "C03xtme8f",
+    "admin_email": "iago@example.com",
+    "gcp_project_id": "gam-project-w1te0",
+    "service_account": "gam-project-w1te0@gam-project-w1te0.iam.gserviceaccount.com",
+    "service_account_client_id": "101149439906308817169",
+    "gam_version": "7.48.12",
+    "gam_install_path": "C:\\GAM7\\gam.exe",
+    "config_dir": "C:\\Users\\AXION\\.gam",
+    "domain_wide_delegation_status": "FULLY_AUTHORIZED",
+    "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 48,
-    "synced_at": "2026-09-26T01:14:19.317773+00:00",
+    "total_active": 49,
+    "synced_at": "2026-09-26T02:05:32.857899+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
       "cloudflare-zero-trust-tunnels",
@@ -48,6 +455,7 @@
       "stripe-payments-engine",
       "tailscale-mesh-vpn",
       "tailwind-shadcn-ux",
+      "telegram-bot-ops",
       "terraform-iac-automation",
       "threejs-gsap-animation",
       "token-reduction-context-compression",
@@ -58,6 +466,59 @@
       "web-vitals-performance",
       "whatsapp-baileys-bot-ops",
       "whisper-stt-neural-voice"
+    ]
+  },
+  "tailnet": {
+    "domain": "taildb9106.ts.net",
+    "admin": "iago@example.com",
+    "nearest_derp": "São Paulo (11.9ms)",
+    "local_node": {
+      "hostname": "desktop-1t1e46h",
+      "ip": "100.64.188.73",
+      "os": "windows"
+    },
+    "nodes": [
+      {
+        "hostname": "desktop-1t1e46h",
+        "ip": "100.64.188.73",
+        "os": "windows",
+        "status": "online"
+      },
+      {
+        "hostname": "vps-node-01-104-207-90-167",
+        "ip": "100.64.0.1",
+        "os": "linux",
+        "status": "online",
+        "public_ip": "104.207.90.167"
+      },
+      {
+        "hostname": "debian-2vcpu-amd-4gb-us-6tb9d",
+        "ip": "100.64.0.2",
+        "os": "linux",
+        "status": "online",
+        "public_ip": "104.207.81.120"
+      },
+      {
+        "hostname": "juliana-vps",
+        "ip": "100.81.231.111",
+        "os": "linux",
+        "status": "decommissioned",
+        "public_ip": "179.197.237.20",
+        "decommissioned_at": "2026-09-25",
+        "final_backup": "E:\\backups\\axion_enterprise\\decommission_juliana_vps_final_archive\\"
+      },
+      {
+        "hostname": "sensix-ai-studio-vps",
+        "ip": "100.69.94.49",
+        "os": "linux",
+        "status": "offline"
+      },
+      {
+        "hostname": "sensix-black-vps",
+        "ip": "100.86.168.13",
+        "os": "linux",
+        "status": "offline"
+      }
     ]
   }
 }

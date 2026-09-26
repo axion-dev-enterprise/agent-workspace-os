@@ -19,7 +19,7 @@ Skill operacional especializada para gestão, auditoria e automação do ecossis
 - **Binário GAM**: `C:\GAM7\gam.exe` (invocável diretamente via `gam` no terminal)
 - **Configuração & Chaves**: `C:\Users\AXION\.gam/`
   - `gam.cfg` (configuração do cliente)
-  - `oauth2.txt` (token OAuth2 do Super Admin `admin@example.com`)
+  - `oauth2.txt` (token OAuth2 do Super Admin `iago@example.com`)
   - `oauth2service.json` (credenciais da Service Account `gam-project-w1te0@gam-project-w1te0.iam.gserviceaccount.com`)
   - `client_secrets.json` (credenciais do app GCP `gam-project-w1te0`)
 - **Delegação de Domínio (DwD)**: 42 escopos autorizados para manipulação de Drive, Gmail, Docs, Calendar, Admin Directory, Meet, Chat, etc.
@@ -89,7 +89,7 @@ gam create datatransfer <email_antigo> gdrive <email_novo>
 ### 3.4 Gmail & Configurações de Mensageria
 ```powershell
 # Definir assinatura de e-mail HTML padronizada
-gam user <email> signature html "<b>Nome</b><br>Enterprise Organization"
+gam user <email> signature html "<b>Nome</b><br>AXION Enterprise"
 
 # Criar encaminhamento automático
 gam user <email> forward <destino@email.com>

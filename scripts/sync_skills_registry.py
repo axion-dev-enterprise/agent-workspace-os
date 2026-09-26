@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Canonical Skills Registry Synchronizer — Agent Workspace OS
+Canonical Skills Registry Synchronizer — AXION Enterprise
 Scans .agents/skills/ for all SKILL.md definitions, extracts metadata,
 and automatically synchronizes:
 1. docs/SKILLS_REGISTRY.md (Full documentation catalog)
@@ -25,7 +25,7 @@ INVENTORY_JSON_PATH = WORKSPACE_ROOT / "workspace" / "inventory.json"
 DOMAIN_MAP = {
     # 1. Core Integrations
     "gam-ops": ("Google Workspace", "Drive, Gmail, Docs, Sheets, OUs, Service Accounts e Domain-wide Delegation"),
-    "cloudflare-edge-ops": ("Edge & Serverless", "Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS routing"),
+    "cloudflare-edge-ops": ("Edge & Serverless", "Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com"),
     "tailwind-shadcn-ux": ("UI/UX & Design", "Design tokens, componentes Radix UI (WCAG AAA), Dark/Light mode, microinterações e skeleton loaders"),
     "threejs-gsap-animation": ("2D/3D & Animações", "Cenas 3D Three.js / React Three Fiber, shaders GLSL, modelos Draco e GSAP ScrollTrigger"),
     "modern-responsive-architect": ("Layout & Responsividade", "Container Queries (@container), Subgrid, fontes fluidas com clamp(), viewports dvh/svh"),
@@ -82,10 +82,11 @@ DOMAIN_MAP = {
 
     # 8. SRE, Cloud & Specialized Operations
     "cron-scheduled-tasks": ("Automação & SRE", "Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows"),
-    "vercel-deployment-ops": ("DevOps & Deploy", "Gestão de projetos Vercel, preview branches, custom domains e rollback"),
+    "vercel-deployment-ops": ("DevOps & Deploy", "Gestão do escopo your-team-slug, 11 projetos em produção, preview branches, domains e rollback"),
     "postgresql-dba-maintenance": ("Databases & Caching", "Manutenção preventiva de PostgreSQL 15/16, VACUUM ANALYZE, index bloat, pooling e queries lentas"),
     "cloudflare-zero-trust-tunnels": ("Segurança & Rede", "Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access"),
-    "whatsapp-baileys-bot-ops": ("Comunicação & Mensageria", "Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks")
+    "whatsapp-baileys-bot-ops": ("Comunicação & Mensageria", "Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks"),
+    "telegram-bot-ops": ("Comunicação & Mensageria", "Telegram Bot API, BotFather metadados, comandos, inline keyboards, SRE alerts e daemons")
 }
 
 def parse_frontmatter(content: str):
@@ -139,12 +140,12 @@ def update_skills_registry_md(skills):
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
     
     md_lines = [
-        "# Registro Canônico de Skills Operacionais — Agent Workspace OS",
+        "# Registro Canônico de Skills Operacionais — AXION Enterprise",
         "",
         f"> **Última Sincronização Automática**: {now}  ",
         "> **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  ",
         "> **Local do Workspace**: `C:\\workspace\\.agents\\skills/`  ",
-        "> **Local Global do Sistema**: `~/.gemini/antigravity/skills/`  ",
+        "> **Local Global do Sistema**: `C:\\Users\\AXION\\.gemini\\antigravity\\skills/`  ",
         f"> **Total de Skills Ativas**: {len(skills)}  ",
         "",
         "---",
@@ -245,7 +246,7 @@ def mirror_to_global_skills(skills):
     print(f"[OK] Espelhadas {mirrored_count} skills globalmente em: {GLOBAL_SKILLS_DIR}")
 
 def main():
-    print("=== Sincronizador Canônico de Skills OS ===")
+    print("=== Sincronizador Canônico de Skills AXION ===")
     skills = scan_skills()
     print(f"[*] Encontradas {len(skills)} skills operacionais em {SKILLS_DIR}")
     

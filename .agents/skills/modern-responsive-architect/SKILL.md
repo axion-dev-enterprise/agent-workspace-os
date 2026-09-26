@@ -9,7 +9,7 @@ description: >-
 
 # Modern Responsive Layout Architect Skill
 
-Skill operacional para construção de layouts responsivos determinísticos, eliminação de rolagem horizontal indesejada e suporte perfeito a qualquer resolução de tela para a **Enterprise Organization**.
+Skill operacional para construção de layouts responsivos determinísticos, eliminação de rolagem horizontal indesejada e suporte perfeito a qualquer resolução de tela para a **AXION Enterprise**.
 
 ---
 

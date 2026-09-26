@@ -8,7 +8,7 @@ description: >-
 
 # Google Cloud Platform (GCP) Operations Skill
 
-Skill operacional para administração de projetos, serviços serverless, gestão de segredos e políticas organizacionais no Google Cloud Platform para a **Enterprise Organization**.
+Skill operacional para administração de projetos, serviços serverless, gestão de segredos e políticas organizacionais no Google Cloud Platform para a **AXION Enterprise**.
 
 ---
 
@@ -31,7 +31,7 @@ gcloud projects list
 gcloud config set project gam-project-w1te0
 
 # Autenticar nova sessão admin
-gcloud auth login admin@example.com
+gcloud auth login iago@example.com
 ```
 
 ### 2.2 Secret Manager (Armazenamento Seguro de Tokens)
