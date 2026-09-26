@@ -1,0 +1,25 @@
+{
+  "file": "C:\\workspace\\temp\\axion-core-motion\\output\\axion-the-autonomous-core.mp4",
+  "title": "AXION: The Autonomous Core",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "frames": 450,
+  "duration": 15.0,
+  "render_seconds": 25.05,
+  "renderer": {
+    "GL_VENDOR": "ATI Technologies Inc.",
+    "GL_RENDERER": "AMD Radeon HD 5800 Series",
+    "GL_VERSION": "3.3.13417 Core Profile Context 15.301.1901.0"
+  },
+  "techniques": [
+    "ModernGL standalone context",
+    "Instanced beveled geometry",
+    "GGX metallic shading with studio reflections",
+    "2048px PCF shadow mapping",
+    "4x MSAA hardware multisampling",
+    "HDR framebuffers & ACES filmic tone mapping",
+    "Perlin quintic continuous kinematics",
+    "Pure procedural stereo audio score (NumPy)"
+  ]
+}

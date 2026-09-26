@@ -72,6 +72,7 @@ DOMAIN_MAP = {
     "elevenlabs-tts-voiceover": ("IA & Engenharia de Agentes", "Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio"),
     "token-reduction-context-compression": ("IA & Engenharia de Agentes", "Otimização agressiva de tokens, compressão AST de código, minificação JSON, condensação de logs de CLI e padrão Ponytail YAGNI"),
     "plan-execute-verify-governance": ("IA & Engenharia de Agentes", "Ciclo Plan-Execute-Verify (PEV), portão de verificação empírica, análise pre-mortem de risco e arquitetura ADR"),
+    "agents-md-master-architect": ("IA & Governança de Agentes", "Master skill: criação de novas skills, governança do AGENTS.md e arquitetura de documentação"),
 
     # 7. Testing & Automation
     "playwright-e2e-testing": ("Testing & QA", "Testes end-to-end automatizados com Playwright, regressão visual, gravação de traces e execução headless"),
@@ -94,7 +95,9 @@ DOMAIN_MAP = {
     "osint-investigation-suite": ("Segurança & Inteligência", "Investigação OSINT, Sherlock para usernames em 400+ redes, ExifTool forense e extração/limpeza de metadados"),
     "network-pentest-forensics": ("Segurança & Pentest", "Auditoria defensiva de portas com Nmap, análise de tráfego de pacotes com Wireshark/TShark e inspeção de rede"),
     "multimedia-production-suite": ("Multimídia & Criação", "Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound"),
-    "deterministic-3d-motion-pipeline": ("Multimídia & Criação", "Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe")
+    "deterministic-3d-motion-pipeline": ("Multimídia & Criação", "Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe"),
+    "content-3d-social-studio": ("Multimídia & Criação", "Automação de estúdio para posts de redes sociais, renders 3D e copy com IA"),
+    "antigravity-cli": ("Ferramentas de IA & CLI", "Antigravity CLI (agy), agentes autônomos, workflows e automações de terminal")
 }
 
 def parse_frontmatter(content: str):

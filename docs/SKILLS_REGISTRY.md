@@ -4,7 +4,7 @@
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 57  
+> **Total de Skills Ativas**: 58  
 
 ---
 
@@ -12,10 +12,11 @@
 
 | Skill | Domínio Principal | Escopo & Tecnologias | Arquivo Canônico |
 | :--- | :--- | :--- | :--- |
-| **`antigravity-cli`** | Geral / Utilitário | Operational guide and reference for the Google Antigravity CLI (agy). Covers interactive TUI sessions (agy), continuing recent conversations (agy -c), headless single-turn execution (agy -p), model inspection (agy models), MCP server administration (agy mcp list), and CLI maintenance (agy update). | [`antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
+| **`agents-md-master-architect`** | IA & Governança de Agentes | Master skill: criação de novas skills, governança do AGENTS.md e arquitetura de documentação | [`agents-md-master-architect/SKILL.md`](file:///C:/workspace/.agents/skills/agents-md-master-architect/SKILL.md) |
+| **`antigravity-cli`** | Ferramentas de IA & CLI | Antigravity CLI (agy), agentes autônomos, workflows e automações de terminal | [`antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
-| **`content-3d-social-studio`** | Geral / Utilitário | Produces reusable 3D web experiences and social-media creative workflows with Three.js, Canva, Runway, and Windsor.ai. Use for campaign assets, social formats, 3D landing-page motion, or approved publishing and ads operations. | [`content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
+| **`content-3d-social-studio`** | Multimídia & Criação | Automação de estúdio para posts de redes sociais, renders 3D e copy com IA | [`content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **`deterministic-3d-motion-pipeline`** | Multimídia & Criação | Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe | [`deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
 | **`elevenlabs-tts-voiceover`** | IA & Engenharia de Agentes | Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio | [`elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |

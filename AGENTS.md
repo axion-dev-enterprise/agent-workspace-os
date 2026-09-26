@@ -158,10 +158,11 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 <!-- SKILLS_REGISTRY_START -->
 | Escopo da Tarefa | Skill Mandatória | Arquivo Canônico |
 | :--- | :--- | :--- |
-| **Geral / Utilitário** | `antigravity-cli` | [`.agents/skills/antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
+| **IA & Governança de Agentes** | `agents-md-master-architect` | [`.agents/skills/agents-md-master-architect/SKILL.md`](file:///C:/workspace/.agents/skills/agents-md-master-architect/SKILL.md) |
+| **Ferramentas de IA & CLI** | `antigravity-cli` | [`.agents/skills/antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **Edge & Serverless** | `cloudflare-edge-ops` | [`.agents/skills/cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **Segurança & Rede** | `cloudflare-zero-trust-tunnels` | [`.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
-| **Geral / Utilitário** | `content-3d-social-studio` | [`.agents/skills/content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
+| **Multimídia & Criação** | `content-3d-social-studio` | [`.agents/skills/content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **Automação & SRE** | `cron-scheduled-tasks` | [`.agents/skills/cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **Multimídia & Criação** | `deterministic-3d-motion-pipeline` | [`.agents/skills/deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
 | **IA & Engenharia de Agentes** | `elevenlabs-tts-voiceover` | [`.agents/skills/elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
