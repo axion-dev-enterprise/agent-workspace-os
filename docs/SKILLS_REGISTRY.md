@@ -4,7 +4,7 @@
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 49  
+> **Total de Skills Ativas**: 50  
 
 ---
 
@@ -12,6 +12,7 @@
 
 | Skill | Domínio Principal | Escopo & Tecnologias | Arquivo Canônico |
 | :--- | :--- | :--- | :--- |
+| **`antigravity-cli`** | Geral / Utilitário | Operational guide and reference for the Google Antigravity CLI (agy). Covers interactive TUI sessions (agy), continuing recent conversations (agy -c), headless single-turn execution (agy -p), model inspection (agy models), MCP server administration (agy mcp list), and CLI maintenance (agy update). | [`antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |

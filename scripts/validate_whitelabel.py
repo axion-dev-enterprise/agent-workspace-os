@@ -9,6 +9,7 @@ Used in CI/CD, pre-push git hooks, and release export workflows.
 import os
 import sys
 import re
+import subprocess
 from pathlib import Path
 
 if sys.platform == "win32":
@@ -50,6 +51,8 @@ FORBIDDEN_FILES = [
     "scripts/probe_tailnet_nodes.py",
     "scripts/production_deploy_test.py",
     "scripts/telegram_assistant_bot.py",
+    "scripts/bot_engine",
+    "apps/axion-pay",
     "workspace/google_workspace_inventory.json",
     "workspace/health_telemetry.json",
     "workspace/master_infrastructure_map.json",
@@ -70,6 +73,8 @@ EXCLUDED_DIRS = {
     "__pycache__",
     ".venv",
     "venv",
+    "axion-pay",
+    "bot_engine",
 }
 
 EXCLUDED_FILES = {
@@ -83,17 +88,23 @@ BINARY_EXTENSIONS = {
     ".png", ".jpg", ".jpeg", ".ico", ".svg", ".zip", ".tar", ".gz", ".lock", ".bin", ".woff", ".woff2", ".ttf"
 }
 
+def is_tracked_by_git(repo_root: Path, rel_path: str) -> bool:
+    try:
+        res = subprocess.run(["git", "ls-files", rel_path], cwd=str(repo_root), capture_output=True, text=True, encoding="utf-8", errors="replace")
+        return bool(res.stdout.strip())
+    except Exception:
+        return (repo_root / rel_path).exists()
+
 def scan_repository(repo_root: Path) -> list:
     violations = []
     
-    # 1. Check for forbidden file existence
+    # 1. Check for forbidden file tracking in Git
     for forbidden_file in FORBIDDEN_FILES:
-        target_path = repo_root / forbidden_file
-        if target_path.exists():
+        if is_tracked_by_git(repo_root, forbidden_file):
             violations.append({
                 "type": "FORBIDDEN_FILE",
                 "file": forbidden_file,
-                "message": f"Proprietary file '{forbidden_file}' is present in workspace."
+                "message": f"Proprietary file/path '{forbidden_file}' is tracked in Git."
             })
             
     # 2. Check file contents for forbidden string patterns

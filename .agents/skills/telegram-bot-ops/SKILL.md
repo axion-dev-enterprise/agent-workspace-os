@@ -165,3 +165,54 @@ EnvironmentFile=/opt/axion/.env
 [Install]
 WantedBy=multi-user.target
 ```
+
+---
+
+## 7. Arquitetura do Co-Piloto Autônomo e Execução de Tools no PC
+
+O assistente opera com autonomia total através do motor modular `scripts/bot_engine/`:
+
+### 7.1 Módulos Centrais do Bot Engine (`scripts/bot_engine/`)
+1. **`tool_executor.py`**: Motor de execução autônoma no PC:
+   - `exec_command`: Executa comandos PowerShell / CMD em `C:\workspace`.
+   - `read_file` e `write_file`: Leitura e escrita local de arquivos.
+   - `list_directory`: Mapeamento de pastas e arquivos.
+   - `get_system_telemetry`: Coleta em tempo real de RAM (Kernel32), Discos C: e E:, e nós WireGuard Mesh.
+   - `run_health_check`: Dispara o watchdog `health_monitor_autofix.py`.
+   - `run_ssl_sentinel`: Dispara a auditoria `ssl_domain_sentinel.py`.
+   - `run_backup`: Dispara backups inteligentes (`enterprise_smart_backup.py`).
+   - `manage_workspace_task`: Injeta, lista ou executa tarefas na esteira.
+
+2. **`dynamic_keyboard.py`**: Sistema de Botões Dinâmicos e Sem Menus Fixos:
+   - Elimina teclados estáticos fixos que poluem a tela.
+   - O modelo LLM sugere de 1 a 4 botões contextuais por resposta no formato ````buttons [ ... ] ````.
+   - Os botões são parseados, associados a tokens seguros e renderizados como `InlineKeyboardMarkup`.
+   - Suporta ações de tool (`action: "tool:..."`), queries de continuidade (`query: "..."`) ou execução de tarefas (`action: "task:execute"`).
+
+3. **`task_queue.py`**: Esteira de Injeção e Execução de Tarefas:
+   - Injeta e sincroniza tarefas em `workspace/memory/active_tasks.json` e `memory/cowork/active_tasks.json`.
+   - Ciclo de vida completo: `pending` -> `running` -> `completed` / `failed`.
+   - Registro automático em `memory/cowork/blackboard.json` e `memory/daily_logs/{YYYY-MM-DD}.md`.
+
+4. **`message_store.py`**: Persistência Local e Histórico de Mensagens:
+   - Salva todas as mensagens (recebidas e enviadas) em `memory/telegram/messages.jsonl` e `memory/telegram/chats/{chat_id}.jsonl`.
+   - Sincroniza diálogos diretamente no log diário Markdown `memory/daily_logs/{YYYY-MM-DD}.md`.
+   - Fornece contexto conversacional multi-turn isolado por chat.
+
+5. **`autonomous_agent.py`**: Loop ReAct de Raciocínio e Execução:
+   - Orquestra chamadas autônomas de ferramentas locais (`tool_call`), observa os resultados e sintetiza a resposta final com botões sugeridos.
+
+---
+
+## 8. Comandos e Operação do Bot
+
+- `/start`: Boas-vindas com apresentação de capacidades autônomas e botões iniciais dinâmicos.
+- `/task add <instrução>`: Injeta tarefa na esteira do workspace com botões de execução imediata.
+- `/task list`: Lista tarefas pendentes e ativas no workspace.
+- `/task run <task_id>`: Executa uma tarefa pendente diretamente no PC.
+- `/cmd <comando>` ou `!<comando>`: Executa comandos de terminal rápidos no PC.
+- `/clear` ou `/reset`: Limpa o histórico local da conversa.
+- `/help`: Guia completo de comandos e recursos.
+- *Texto livre*: Qualquer mensagem é interpretada pela IA Xiaomi Mimo, executando ferramentas no PC conforme necessário.
+
+

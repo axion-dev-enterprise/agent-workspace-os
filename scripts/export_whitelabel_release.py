@@ -53,6 +53,8 @@ INTERNAL_FILES = [
     "scripts/probe_tailnet_nodes.py",
     "scripts/production_deploy_test.py",
     "scripts/telegram_assistant_bot.py",
+    "scripts/bot_engine",
+    "apps/axion-pay",
     "workspace/google_workspace_inventory.json",
     "workspace/health_telemetry.json",
     "workspace/master_infrastructure_map.json",
@@ -118,21 +120,26 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
     run_git(["checkout", "main"])
     
     try:
-        # 4. For files in diff_files: if not internal, checkout from axion and sanitize
-        copied_count = 0
+        # 4. Filter and batch checkout non-internal files from axion branch
+        eligible_files = []
         for rel_file in diff_files:
-            if not rel_file.strip():
+            rel_f = rel_file.strip().replace("\\", "/")
+            if not rel_f:
                 continue
-            if rel_file in INTERNAL_FILES:
+            if any(rel_f == int_f or rel_f.startswith(int_f + "/") for int_f in INTERNAL_FILES):
                 continue
-            if rel_file.startswith("memory/") or rel_file.startswith("temp/"):
+            if rel_f.startswith("memory/") or rel_f.startswith("temp/"):
                 continue
-                
-            # Checkout file from axion branch
-            run_git(["checkout", "axion", "--", rel_file])
-            file_path = WORKSPACE_ROOT / rel_file
+            eligible_files.append(rel_f)
+            
+        if eligible_files:
+            run_git(["checkout", "axion", "--"] + eligible_files)
+            
+        copied_count = 0
+        for rel_f in eligible_files:
+            file_path = WORKSPACE_ROOT / rel_f
             if file_path.exists():
-                if rel_file not in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
+                if rel_f not in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
                     sanitize_file(file_path)
                 copied_count += 1
                 
@@ -147,24 +154,27 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
                 rel_f = str(full_f.relative_to(WORKSPACE_ROOT)).replace("\\", "/")
                 if rel_f in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
                     continue
-                if full_f.suffix.lower() in [".md", ".json", ".py", ".ts", ".js", ".html", ".css", ".txt", ".yml", ".yaml"]:
+                if full_f.suffix.lower() in [".md", ".json", ".py", ".ts", ".js", ".html", ".css", ".txt", ".yml", ".yaml", ".xml", ".mjs", ".cjs"] or full_f.name.startswith(".env"):
                     sanitize_file(full_f)
                     
-        # 6. Ensure all internal files are strictly removed on main
+        # 6. Ensure all internal files and directories are strictly removed on main
         purged = 0
         for int_file in INTERNAL_FILES:
             target = WORKSPACE_ROOT / int_file
             if target.exists():
-                target.unlink()
+                if target.is_dir():
+                    shutil.rmtree(target, ignore_errors=True)
+                else:
+                    target.unlink()
                 try:
-                    run_git(["rm", "--cached", "-f", int_file])
+                    run_git(["rm", "-r", "--cached", "-f", int_file])
                 except Exception:
                     pass
                 purged += 1
         if purged > 0:
-            print(f"[*] Purged {purged} internal proprietary files from 'main'.")
+            print(f"[*] Purged {purged} internal proprietary files/dirs from 'main'.")
             
-        # 6. Re-run registry synchronizer on main
+        # 7. Re-run registry synchronizer on main
         subprocess.run([sys.executable, "scripts/sync_skills_registry.py"], cwd=str(WORKSPACE_ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace")
         
         # Sanitize any registry or docs updated by synchronizer
@@ -201,9 +211,13 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
                 print("[OK] Successfully pushed 'main' to origin/main!")
                 
     finally:
-        # Always return to axion branch
+        # Always return to axion branch and ensure working tree is clean
         print("[*] Switching back to enterprise branch 'axion'...")
-        run_git(["checkout", "axion"])
+        try:
+            run_git(["checkout", "axion"])
+            run_git(["restore", "."])
+        except Exception:
+            pass
         print("=== Whitelabel sync completed successfully! ===")
 
 if __name__ == "__main__":
