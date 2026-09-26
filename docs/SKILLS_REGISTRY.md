@@ -4,7 +4,7 @@
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 47  
+> **Total de Skills Ativas**: 48  
 
 ---
 
@@ -31,6 +31,7 @@
 | **`nestjs-modular-backend`** | Backend & APIs | Arquitetura modular corporativa em TypeScript com NestJS, Guards, Interceptors e DTOs | [`nestjs-modular-backend/SKILL.md`](file:///C:/workspace/.agents/skills/nestjs-modular-backend/SKILL.md) |
 | **`nextjs-app-router-rsc`** | Frontend & Mobile | Arquitetura Next.js 15, React Server Components (RSC), Server Actions, Suspense e streaming | [`nextjs-app-router-rsc/SKILL.md`](file:///C:/workspace/.agents/skills/nextjs-app-router-rsc/SKILL.md) |
 | **`pdf-generation-puppeteer`** | Automação de Documentos | Geração de relatórios PDF pixel-perfect a partir de HTML/CSS com Puppeteer/Playwright e print styles | [`pdf-generation-puppeteer/SKILL.md`](file:///C:/workspace/.agents/skills/pdf-generation-puppeteer/SKILL.md) |
+| **`plan-execute-verify-governance`** | IA & Engenharia de Agentes | Ciclo Plan-Execute-Verify (PEV), portão de verificação empírica, análise pre-mortem de risco e arquitetura ADR | [`plan-execute-verify-governance/SKILL.md`](file:///C:/workspace/.agents/skills/plan-execute-verify-governance/SKILL.md) |
 | **`playwright-e2e-testing`** | Testing & QA | Testes end-to-end automatizados com Playwright, regressão visual, gravação de traces e execução headless | [`playwright-e2e-testing/SKILL.md`](file:///C:/workspace/.agents/skills/playwright-e2e-testing/SKILL.md) |
 | **`postgresql-advanced-optimization`** | Databases & Caching | Otimização de PostgreSQL, tuning de índices (B-Tree, GIN, BRIN), EXPLAIN ANALYZE e pooling | [`postgresql-advanced-optimization/SKILL.md`](file:///C:/workspace/.agents/skills/postgresql-advanced-optimization/SKILL.md) |
 | **`postgresql-dba-maintenance`** | Databases & Caching | Manutenção preventiva de PostgreSQL 15/16, VACUUM ANALYZE, index bloat, pooling e queries lentas | [`postgresql-dba-maintenance/SKILL.md`](file:///C:/workspace/.agents/skills/postgresql-dba-maintenance/SKILL.md) |

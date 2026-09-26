@@ -414,8 +414,8 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 47,
-    "synced_at": "2026-09-26T00:43:22.650031+00:00",
+    "total_active": 48,
+    "synced_at": "2026-09-26T00:51:42.197113+00:00",
     "skills_list": [
       "cloudflare-edge-ops",
       "cloudflare-zero-trust-tunnels",
@@ -436,6 +436,7 @@
       "nestjs-modular-backend",
       "nextjs-app-router-rsc",
       "pdf-generation-puppeteer",
+      "plan-execute-verify-governance",
       "playwright-e2e-testing",
       "postgresql-advanced-optimization",
       "postgresql-dba-maintenance",

@@ -125,6 +125,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Backend & APIs** | `nestjs-modular-backend` | [`.agents/skills/nestjs-modular-backend/SKILL.md`](file:///C:/workspace/.agents/skills/nestjs-modular-backend/SKILL.md) |
 | **Frontend & Mobile** | `nextjs-app-router-rsc` | [`.agents/skills/nextjs-app-router-rsc/SKILL.md`](file:///C:/workspace/.agents/skills/nextjs-app-router-rsc/SKILL.md) |
 | **Automação de Documentos** | `pdf-generation-puppeteer` | [`.agents/skills/pdf-generation-puppeteer/SKILL.md`](file:///C:/workspace/.agents/skills/pdf-generation-puppeteer/SKILL.md) |
+| **IA & Engenharia de Agentes** | `plan-execute-verify-governance` | [`.agents/skills/plan-execute-verify-governance/SKILL.md`](file:///C:/workspace/.agents/skills/plan-execute-verify-governance/SKILL.md) |
 | **Testing & QA** | `playwright-e2e-testing` | [`.agents/skills/playwright-e2e-testing/SKILL.md`](file:///C:/workspace/.agents/skills/playwright-e2e-testing/SKILL.md) |
 | **Databases & Caching** | `postgresql-advanced-optimization` | [`.agents/skills/postgresql-advanced-optimization/SKILL.md`](file:///C:/workspace/.agents/skills/postgresql-advanced-optimization/SKILL.md) |
 | **Databases & Caching** | `postgresql-dba-maintenance` | [`.agents/skills/postgresql-dba-maintenance/SKILL.md`](file:///C:/workspace/.agents/skills/postgresql-dba-maintenance/SKILL.md) |
