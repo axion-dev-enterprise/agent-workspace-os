@@ -1,50 +1,46 @@
 {
   "projectName": "agent-workspace-os",
-  "version": "2.1.0",
-  "previousVersion": "2.0.0",
-  "releaseTag": "v2.1.0",
-  "buildTimestamp": "2026-09-17T04:12:46-03:00",
+  "version": "2.2.0",
+  "previousVersion": "2.1.0",
+  "releaseTag": "v2.2.0",
+  "buildTimestamp": "2026-09-25T21:55:00-03:00",
   "environment": "production",
-  "repositoryUrl": "{{REPOSITORY_URL}}",
-  "status": "TEMPLATE_BASELINE",
+  "repositoryUrl": "https://github.com/axion-dev-enterprise/agent-workspace-os",
+  "status": "PRODUCTION_CANONICAL",
   "author": {
-    "name": "{{MAINTAINER_NAME}}",
-    "email": "{{MAINTAINER_EMAIL}}"
+    "name": "AXION DEV",
+    "email": "axionenterprise777@gmail.com"
   },
   "features": [
     {
-      "module": "setup-dashboard-v2",
-      "description": "Python Threaded HTTP Server + Dark Obsidian/Zinc web dashboard with live SSE streaming installation for missing CLI tools"
+      "module": "skills-matrix-48",
+      "description": "Expanded canonical operational skills matrix to 48 competencies across Cloudflare, Tailnet, GCP, Meta, AI Agents, Microservices, and Databases with dynamic registry synchronizer."
     },
     {
-      "module": "preflight-engine",
-      "description": "High-performance concurrent preflight environment diagnostic using ThreadPoolExecutor and zero-lag local config inspections (<4.2s)"
+      "module": "token-reduction-context-compression",
+      "description": "Token reduction toolkit including AST code skeletonizing, JSON smart crusher, log noise pruner, and Ponytail YAGNI minimal code decision ladder."
     },
     {
-      "module": "whatsapp-client-bridge",
-      "description": "Baileys WhatsApp client bridge with live QR code pairing, Monitor Mode (passive logging) and React Mode (autonomous task queue execution via /task)"
+      "module": "plan-execute-verify-governance",
+      "description": "Evidence-first verification gate (SHA-256 receipts), prospective pre-mortem risk analyzer, and Architectural Decision Record (ADR) scaffolding."
     },
     {
-      "module": "google-drive-sync",
-      "description": "Automated Google Drive and Docs synchronizer for ingesting meeting transcripts, briefs, and notes into workspace memory"
+      "module": "hybrid-unified-fabric",
+      "description": "Three-tier architecture uniting Cloudflare Edge Ingress, Tailnet WireGuard Private Mesh, and compute nodes with Zero Public Attack Surface."
     },
     {
-      "module": "modular-skills",
-      "description": "Added whatsapp-monitor-react, google-drive-sync, environment-preflight-tooling, and execution-preflight-learning skills"
+      "module": "enterprise-backup-vault",
+      "description": "Cold vault backup engine with cryptographic validation (SHA-256), PostgreSQL logical dumps via Tailscale SSH, and automated retention rotation."
     },
     {
-      "module": "ui-notifications",
-      "description": "Dark glassmorphic custom toast system replacing all browser-native dialogs (zero alert/confirm/prompt)"
-    },
-    {
-      "module": "governance-v2",
-      "description": "Public operating contract, external skill provenance, repository pre-flight, community security policy, support boundaries, and release policy"
+      "module": "health-watchdog-autofix",
+      "description": "Continuous health monitoring with self-healing auto-fix and Windows Task Scheduler daemons."
     }
   ],
   "verification": {
-    "releaseScope": "Documentation and vendored-skill governance only",
-    "structuralChecks": "Passed: JSON parse, documentation presence, skill entrypoint presence, and git diff whitespace check",
-    "runtimeChecks": "Not run for v2.0.0",
-    "deployment": "Not performed for v2.0.0"
+    "releaseScope": "Full Enterprise Multi-Agent OS & 48 Canonical Skills Suite",
+    "structuralChecks": "Passed: JSON parse, 48 SKILL.md entries, Python stdlib verification suite 100% PASS",
+    "runtimeChecks": "Passed: Production test suite and real HTTP endpoint probes verified",
+    "deployment": "Verified on production node with Zero Test Pollution"
   }
 }

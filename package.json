@@ -1,6 +1,6 @@
 {
   "name": "agent-workspace-os",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Open Source Canonical Workspace OS for Autonomous AI Coding Agents & Multi-Agent Teams",
   "license": "MIT",
   "author": "{{MAINTAINER_NAME}} <{{MAINTAINER_EMAIL}}>",

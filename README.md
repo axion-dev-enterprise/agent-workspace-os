@@ -5,7 +5,7 @@
 **The Deterministic Operating Framework for Autonomous AI Software Engineering.**  
 *Turn any repository into an hallucination-resistant, multi-agent collaborative environment.*
 
-[![Release: v2.1.0](https://img.shields.io/badge/Release-v2.1.0-blue.svg?style=flat-square)](version_dump.json)
+[![Release: v2.2.0](https://img.shields.io/badge/Release-v2.2.0-blue.svg?style=flat-square)](docs/version_dump.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 [![Portable](https://img.shields.io/badge/Configuration-template--first-blue?style=flat-square)](docs/TEMPLATE_CUSTOMIZATION.md)
@@ -207,6 +207,14 @@ Agent Workspace OS is model-agnostic and runtime-agnostic:
 ---
 
 ## 🚀 Changelog
+
+### v2.2.0 (2026-09-25)
+- **Canonical Skills Matrix (48 Skills)**: Complete expansion of operational skills suite spanning Edge & Cloudflare, Tailscale Mesh, GCP, Meta, AI Agents, Microservices, Databases, Testing, SRE, and Documentation with automatic synchronizer (`scripts/sync_skills_registry.py`).
+- **Token Reduction & Context Compression Suite**: AST code skeletonizing, JSON smart crusher, log noise pruner, and Ponytail YAGNI minimal code decision ladder for LLM cost reduction (`token-reduction-context-compression`).
+- **Plan-Execute-Verify (PEV) & Decision Governance**: Strict evidence-first verification gate issuing SHA-256 receipts (`verify_gate.py`), pre-mortem risk analyzer (`pre_mortem_analyzer.py`), and Architectural Decision Records scaffolding (`docs/adr/`).
+- **Hybrid Unified Architecture**: Zero Public Attack Surface linking Cloudflare Edge Ingress, Tailnet WireGuard Private Mesh, and compute nodes.
+- **Enterprise Offline Backup & Cold Vault**: Cryptographic multi-node backup engine with PostgreSQL bit-by-bit logical dumps to secondary cold vault (`E:\backups\`).
+- **Health Watchdog & Auto-Fix**: Continuous automated health monitoring daemon registered in Windows Task Scheduler and Linux timers.
 
 ### v2.0.0 (2026-09-17)
 - **Safe operating contract**: Added explicit authorization, least-privilege connector, browser isolation, trusted-content, and update rules for agents and operators.
