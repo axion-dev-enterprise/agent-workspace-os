@@ -11,7 +11,7 @@ Guia de comandos GAM para gestão de calendários corporativos, eventos e grava�
 gam user <email> print calendars
 
 # Compartilhar calendário com outro usuário (leitor / freebusy / editor)
-gam user <email> add calendaracl primary role reader user dev@axionenterprise.cloud
+gam user <email> add calendaracl primary role reader user dev@example.com
 
 # Exibir permissões do calendário principal
 gam user <email> print calendaracls primary

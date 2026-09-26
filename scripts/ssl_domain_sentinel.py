@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SSL & Domain Sentinel — AXION Enterprise
+SSL & Domain Sentinel — Agent Workspace OS
 Proactive TLS/SSL Certificate & DNS Health Sentinel
 Inspects active corporate zones, custom domains, and Vercel edge endpoints:
 - Expiration dates and days remaining
@@ -9,8 +9,8 @@ Inspects active corporate zones, custom domains, and Vercel edge endpoints:
 - Subject Alternative Names (SANs)
 - Early warning threshold: <= 21 days
 Generates:
-- workspace/ssl_telemetry.json
-- docs/SSL_DOMAIN_STATUS.md
+- memory/infrastructure/ssl_telemetry.json
+- memory/infrastructure/SSL_DOMAIN_STATUS.md
 """
 
 import socket
@@ -23,16 +23,16 @@ WORKSPACE_ROOT = Path(r"C:\workspace")
 
 TARGET_DOMAINS = [
     # 1. Zonas e Endpoints Cloudflare Principais
-    {"domain": "axionenterprise.cloud", "category": "Corporate Apex", "expected_issuer": "Cloudflare / Google"},
-    {"domain": "api.axionenterprise.cloud", "category": "API Gateway", "expected_issuer": "Cloudflare"},
-    {"domain": "auth.axionenterprise.cloud", "category": "SSO & Auth Gateway", "expected_issuer": "Cloudflare"},
-    {"domain": "casa.axionenterprise.cloud", "category": "Casa Portal", "expected_issuer": "Cloudflare"},
-    {"domain": "agents.axionenterprise.cloud", "category": "Agentic Platform", "expected_issuer": "Cloudflare"},
-    {"domain": "tasks.axionenterprise.cloud", "category": "Task Engine", "expected_issuer": "Cloudflare"},
-    {"domain": "voice.axionenterprise.cloud", "category": "Voice Neural Engine", "expected_issuer": "Cloudflare"},
-    {"domain": "hermes.axionenterprise.cloud", "category": "Research Agent", "expected_issuer": "Cloudflare"},
-    {"domain": "waba.axionenterprise.cloud", "category": "WhatsApp Business API", "expected_issuer": "Cloudflare"},
-    {"domain": "hooks.axionenterprise.cloud", "category": "Fast Webhooks", "expected_issuer": "Cloudflare"},
+    {"domain": "example.com", "category": "Corporate Apex", "expected_issuer": "Cloudflare / Google"},
+    {"domain": "api.example.com", "category": "API Gateway", "expected_issuer": "Cloudflare"},
+    {"domain": "auth.example.com", "category": "SSO & Auth Gateway", "expected_issuer": "Cloudflare"},
+    {"domain": "casa.example.com", "category": "Casa Portal", "expected_issuer": "Cloudflare"},
+    {"domain": "agents.example.com", "category": "Agentic Platform", "expected_issuer": "Cloudflare"},
+    {"domain": "tasks.example.com", "category": "Task Engine", "expected_issuer": "Cloudflare"},
+    {"domain": "voice.example.com", "category": "Voice Neural Engine", "expected_issuer": "Cloudflare"},
+    {"domain": "hermes.example.com", "category": "Research Agent", "expected_issuer": "Cloudflare"},
+    {"domain": "waba.example.com", "category": "WhatsApp Business API", "expected_issuer": "Cloudflare"},
+    {"domain": "hooks.example.com", "category": "Fast Webhooks", "expected_issuer": "Cloudflare"},
     
     # 2. Domínios Adicionais
     {"domain": "axionflow.my", "category": "Regional Apex", "expected_issuer": "Cloudflare"},
@@ -142,12 +142,12 @@ def run_sentinel():
     }
     
     # Salva telemetria em JSON
-    json_path = WORKSPACE_ROOT / "workspace" / "ssl_telemetry.json"
+    json_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "ssl_telemetry.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(telemetry, f, indent=2, ensure_ascii=False)
     print(f"\n[OK] Telemetria salva em: {json_path}")
     
-    # Gera relatório em docs/SSL_DOMAIN_STATUS.md
+    # Gera relatório em memory/infrastructure/SSL_DOMAIN_STATUS.md
     generate_markdown_report(telemetry, now_local)
     return telemetry
 
@@ -196,7 +196,7 @@ def generate_markdown_report(data, now_local):
         "Todos os domínios corporativos e de clientes possuem criptografia TLS de ponta a ponta ativa e com prazos confortáveis de renovação."
     ])
 
-    report_path = WORKSPACE_ROOT / "docs" / "SSL_DOMAIN_STATUS.md"
+    report_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "SSL_DOMAIN_STATUS.md"
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     print(f"[OK] Relatório de SSL salvo em: {report_path}")

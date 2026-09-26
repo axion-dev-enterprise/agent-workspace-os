@@ -8,10 +8,10 @@ Guia de comandos GAM para automação e padronização do Gmail corporativo.
 
 ```powershell
 # Definir assinatura HTML para um usuário
-gam user <email> signature html "<b>Iago Barreto</b><br>AXION Enterprise<br>https://axionenterprise.cloud"
+gam user <email> signature html "<b>Lead Engineer</b><br>Enterprise Organization<br>https://example.com"
 
 # Aplicar assinatura padrão para todos os usuários do domínio
-gam all users signature html "<b>Equipe AXION Enterprise</b><br>axionenterprise.cloud"
+gam all users signature html "<b>Enterprise Team</b><br>example.com"
 
 # Exibir assinatura atual de um usuário
 gam user <email> print signature
@@ -24,8 +24,8 @@ gam user <email> print signature
 ### 2.1 Encaminhamento Automático (Forwarding)
 ```powershell
 # Adicionar endereço de encaminhamento e ativar
-gam user <email> add forwardingaddress suporte-geral@axionenterprise.cloud
-gam user <email> forward on to suporte-geral@axionenterprise.cloud keep
+gam user <email> add forwardingaddress support@example.com
+gam user <email> forward on to support@example.com keep
 
 # Desativar encaminhamento automático
 gam user <email> forward off

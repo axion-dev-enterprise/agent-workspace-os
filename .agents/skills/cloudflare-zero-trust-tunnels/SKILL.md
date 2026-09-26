@@ -6,9 +6,9 @@ description: >-
   service tokens, and WAF protection across AXION enterprise infrastructure.
 ---
 
-# Cloudflare Zero Trust Tunnels Skill — AXION Enterprise
+# Cloudflare Zero Trust Tunnels Skill — Enterprise Organization
 
-Guia canônico e operacional para implantação de arquitetura **Zero Public Attack Surface** na infraestrutura da **AXION Enterprise**, utilizando **Cloudflare Tunnels (`cloudflared`)** e **Cloudflare Access** para conectar nós computacionais privados à borda global sem exposição de portas públicas.
+Guia canônico e operacional para implantação de arquitetura **Zero Public Attack Surface** na infraestrutura da **Enterprise Organization**, utilizando **Cloudflare Tunnels (`cloudflared`)** e **Cloudflare Access** para conectar nós computacionais privados à borda global sem exposição de portas públicas.
 
 ---
 
@@ -39,18 +39,18 @@ protocol: quic
 
 ingress:
   # Roteamento 1: API Gateway Interno
-  - hostname: api.axionenterprise.cloud
+  - hostname: api.example.com
     service: http://127.0.0.1:8080
     originRequest:
       connectTimeout: 10s
       noTLSVerify: true
 
   # Roteamento 2: Painel de Autenticação / SSO
-  - hostname: auth.axionenterprise.cloud
+  - hostname: auth.example.com
     service: http://127.0.0.1:3000
 
   # Roteamento 3: Tasks & Workers
-  - hostname: tasks.axionenterprise.cloud
+  - hostname: tasks.example.com
     service: http://127.0.0.1:5000
 
   # Regra de Captura Obrigatória (404 Fallback)
@@ -96,11 +96,11 @@ sudo ufw enable
 ## 4. Políticas de Cloudflare Access (Zero Trust)
 
 ### 4.1 Proteção de Dashboards Administrativos
-Para rotas internas como Traefik Dashboard (`100.95.86.83:8080`) ou pgAdmin:
+Para rotas internas como Traefik Dashboard (`100.64.0.1:8080`) ou pgAdmin:
 1. Criar aplicação no **Zero Trust Dashboard** -> **Access** -> **Applications**.
-2. **Domain**: `admin.axionenterprise.cloud`.
+2. **Domain**: `admin.example.com`.
 3. **Políticas de Autenticação**:
-   - `Allow Emails`: `*@axionenterprise.cloud`.
+   - `Allow Emails`: `*@example.com`.
    - `Two-Factor Authentication (OTP / Google SSO)` obrigatório.
 
 ### 4.2 Service Tokens (Machine-to-Machine)

@@ -5,11 +5,11 @@
   "releaseTag": "v2.2.0",
   "buildTimestamp": "2026-09-25T21:55:00-03:00",
   "environment": "production",
-  "repositoryUrl": "https://github.com/axion-dev-enterprise/agent-workspace-os",
+  "repositoryUrl": "{{REPOSITORY_URL}}",
   "status": "PRODUCTION_CANONICAL",
   "author": {
-    "name": "AXION DEV",
-    "email": "axionenterprise777@gmail.com"
+    "name": "{{MAINTAINER_NAME}}",
+    "email": "{{MAINTAINER_EMAIL}}"
   },
   "features": [
     {

@@ -8,7 +8,7 @@ description: >-
 
 # Meta Marketing API, CAPI & WhatsApp Operations Skill
 
-Skill operacional para integração, envio de conversões server-side (Meta CAPI), automação de anúncios e mensageria WhatsApp no ecossistema da **AXION Enterprise**.
+Skill operacional para integração, envio de conversões server-side (Meta CAPI), automação de anúncios e mensageria WhatsApp no ecossistema da **Enterprise Organization**.
 
 ---
 
@@ -26,7 +26,7 @@ Endpoint: `https://graph.facebook.com/v19.0/<PIXEL_ID>/events?access_token=<ACCE
       "event_name": "Purchase",
       "event_time": 1727222400,
       "action_source": "website",
-      "event_source_url": "https://pay.axionenterprise.cloud/checkout/success",
+      "event_source_url": "https://pay.example.com/checkout/success",
       "user_data": {
         "em": ["f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a"],
         "ph": ["254aa248acb47dd654ca3ea53f48c2c26d641d23d7e2e93a1ec56258df7674c4"],

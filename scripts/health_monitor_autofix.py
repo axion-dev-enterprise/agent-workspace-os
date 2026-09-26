@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Health Monitor & Self-Healing Watchdog — AXION Enterprise
+Health Monitor & Self-Healing Watchdog — Agent Workspace OS
 Continuously inspects:
 1. Tailnet Mesh nodes connectivity and latency
 2. Production Web & API endpoints (Vercel, Cloudflare, VPS)
@@ -27,15 +27,15 @@ ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
 NODES = [
-    {"name": "axion-vps-104-207-90-167", "ip": "100.95.86.83", "role": "Traefik Gateway & API"},
-    {"name": "debian-2vcpu-amd-4gb-us-6tb9d", "ip": "100.73.36.87", "role": "PostgreSQL & Flow Engine"}
+    {"name": "primary-gateway-node", "ip": "100.64.0.1", "role": "Traefik Gateway & API"},
+    {"name": "primary-db-node", "ip": "100.64.0.2", "role": "PostgreSQL & Flow Engine"}
 ]
 
 WEB_ENDPOINTS = [
-    {"name": "AXION Flow (Vercel)", "url": "https://axion-flow-gamma.vercel.app"},
-    {"name": "AXION Flow Homepage (Vercel)", "url": "https://axion-flow-homepage.vercel.app"},
-    {"name": "Yan Nascimento Ads (Vite)", "url": "https://yannascimentoads.com"},
-    {"name": "Traefik Dashboard (Tailnet Internal)", "url": "http://100.95.86.83:8080"}
+    {"name": "Production App (Vercel)", "url": "https://app.example.com"},
+    {"name": "Production Landing (Vercel)", "url": "https://www.example.com"},
+    {"name": "Client Portal (Edge)", "url": "https://portal.example.com"},
+    {"name": "Traefik Dashboard (Tailnet Internal)", "url": "http://100.64.0.1:8080"}
 ]
 
 def check_tailscale_node(node):
@@ -55,7 +55,7 @@ def check_tailscale_node(node):
 def check_web_endpoint(endpoint):
     url = endpoint["url"]
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (AXION Health Watchdog)"})
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Workspace Health Watchdog)"})
         with urllib.request.urlopen(req, timeout=5, context=ctx) as resp:
             return {"status": "HEALTHY", "code": resp.status}
     except urllib.error.HTTPError as e:
@@ -188,7 +188,7 @@ def main():
     telemetry["auto_fix_actions"] = actions
 
     # Salva Telemetria JSON
-    json_path = WORKSPACE_ROOT / "workspace" / "health_telemetry.json"
+    json_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "health_telemetry.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(telemetry, f, indent=2, ensure_ascii=False)
 
@@ -246,7 +246,7 @@ def main():
         "```"
     ])
 
-    md_path = WORKSPACE_ROOT / "docs" / "HEALTH_STATUS.md"
+    md_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "HEALTH_STATUS.md"
     with open(md_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md_lines) + "\n")
 

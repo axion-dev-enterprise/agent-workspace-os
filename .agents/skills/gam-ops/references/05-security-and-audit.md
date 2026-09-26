@@ -41,7 +41,7 @@ Identificar vazamentos ou arquivos com link aberto para a internet:
 # Buscar arquivos compartilhados com qualquer pessoa na web
 gam user <email> print filelist query "visibility = 'anyoneWithLink' or visibility = 'anyoneCanFind'" id title
 
-# Listar todas as permissões concedidas a domínios externos (não @axionenterprise.cloud)
+# Listar todas as permissões concedidas a domínios externos (não @example.com)
 gam user <email> print fileperms id <FILE_ID>
 ```
 

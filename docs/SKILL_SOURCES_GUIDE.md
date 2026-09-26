@@ -1,6 +1,6 @@
 # Guia Canônico de Fontes de Skills & Protocolo de Aprendizado Ativo
 
-> **Destinação**: Documento de governança e instrução canônica para todos os agentes de IA, IDEs assistidas e desenvolvedores no ecossistema **AXION Enterprise**.  
+> **Destinação**: Documento de governança e instrução canônica para todos os agentes de IA, IDEs assistidas e desenvolvedores no ecossistema **{{ORGANIZATION_NAME}}**.  
 > **Status**: Mandatório e Permanente.
 
 ---

@@ -3,7 +3,7 @@
 """
 Google Workspace & GAM Inventory Generator
 Queries GAM 7 for real domain assets, accounts, shared drives, and drive assets.
-Outputs to docs/GOOGLE_WORKSPACE_INVENTORY.md and workspace/google_workspace_inventory.json.
+Outputs to memory/infrastructure/GOOGLE_WORKSPACE_INVENTORY.md and memory/infrastructure/google_workspace_inventory.json.
 """
 
 import subprocess
@@ -40,9 +40,9 @@ def main():
     domain_info_raw = run_gam(["info", "domain"])
     
     domain_meta = {
-        "domain": "axionenterprise.cloud",
+        "domain": "example.com",
         "customer_id": "C03xtme8f",
-        "admin": "iago@axionenterprise.cloud",
+        "admin": "admin@example.com",
         "raw_info": domain_info_raw
     }
 
@@ -57,7 +57,7 @@ def main():
     print("[4/5] Extraindo arquivos e diretórios do Drive...")
     # Extract files for admin user
     drive_files = run_gam_csv([
-        "user", "iago@axionenterprise.cloud", "print", "filelist",
+        "user", "admin@example.com", "print", "filelist",
         "query", "'me' in owners", "id", "title", "mimetype", "modifiedDate", "filesize"
     ])
 
@@ -66,12 +66,12 @@ def main():
     inventory = {
         "generated_at": now_iso,
         "domain_info": {
-            "primary_domain": "axionenterprise.cloud",
+            "primary_domain": "example.com",
             "customer_id": "C03xtme8f",
             "country": "BR",
             "language": "pt-BR",
             "admin_contact": "Iago Barreto",
-            "admin_email": "iago@axionenterprise.cloud",
+            "admin_email": "admin@example.com",
             "secondary_admin_email": "kurtalexanderwolf@gmail.com"
         },
         "users": [
@@ -129,10 +129,10 @@ def main():
     md_lines = [
         "# Inventário de Contas, Ativos e Recursos Google Workspace",
         "",
-        f"> **Domínio**: `axionenterprise.cloud`  ",
+        f"> **Domínio**: `example.com`  ",
         f"> **Customer ID**: `C03xtme8f`  ",
         f"> **Data de Atualização**: {now_iso[:10]}  ",
-        f"> **Administrador**: `iago@axionenterprise.cloud`  ",
+        f"> **Administrador**: `admin@example.com`  ",
         f"> **Total de Usuários**: {len(inventory['users'])} | **Shared Drives**: {len(inventory['shared_drives'])} | **Arquivos no Drive**: {len(inventory['drive_assets'])}",
         "",
         "---",
@@ -172,7 +172,7 @@ def main():
         "",
         "## 3. Categorização de Arquivos e Ativos no Drive",
         "",
-        "Resumo dos **141 ativos** catalogados na conta principal (`iago@axionenterprise.cloud`):",
+        "Resumo dos **141 ativos** catalogados na conta principal (`admin@example.com`):",
         "",
         "| Categoria / Tipo de Ativo | Qtd Estimada | Exemplos Notáveis |",
         "| :--- | :--- | :--- |",

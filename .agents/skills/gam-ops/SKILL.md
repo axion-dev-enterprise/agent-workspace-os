@@ -3,14 +3,14 @@ name: gam-ops
 description: >-
   Operational runbook and command suite for Google Apps Manager (GAM 7) to administer,
   automate, and audit Google Workspace (Google Drive, Docs, Sheets, Gmail, Google Calendar,
-  Admin Users, Groups, Licenses, and Security) for axionenterprise.cloud.
+  Admin Users, Groups, Licenses, and Security) for example.com.
   Use whenever managing Google Workspace accounts, listing/transferring Drive files,
   managing email settings/signatures, auditing permissions, or running Google API batch automations.
 ---
 
 # GAM Operations Skill (Google Apps Manager)
 
-Skill operacional especializada para gestão, auditoria e automação do ecossistema **Google Workspace** via **GAM 7.48.12** no domínio `axionenterprise.cloud`.
+Skill operacional especializada para gestão, auditoria e automação do ecossistema **Google Workspace** via **GAM 7.48.12** no domínio `example.com`.
 
 ---
 
@@ -19,7 +19,7 @@ Skill operacional especializada para gestão, auditoria e automação do ecossis
 - **Binário GAM**: `C:\GAM7\gam.exe` (invocável diretamente via `gam` no terminal)
 - **Configuração & Chaves**: `C:\Users\AXION\.gam/`
   - `gam.cfg` (configuração do cliente)
-  - `oauth2.txt` (token OAuth2 do Super Admin `iago@axionenterprise.cloud`)
+  - `oauth2.txt` (token OAuth2 do Super Admin `admin@example.com`)
   - `oauth2service.json` (credenciais da Service Account `gam-project-w1te0@gam-project-w1te0.iam.gserviceaccount.com`)
   - `client_secrets.json` (credenciais do app GCP `gam-project-w1te0`)
 - **Delegação de Domínio (DwD)**: 42 escopos autorizados para manipulação de Drive, Gmail, Docs, Calendar, Admin Directory, Meet, Chat, etc.
@@ -89,7 +89,7 @@ gam create datatransfer <email_antigo> gdrive <email_novo>
 ### 3.4 Gmail & Configurações de Mensageria
 ```powershell
 # Definir assinatura de e-mail HTML padronizada
-gam user <email> signature html "<b>Nome</b><br>AXION Enterprise"
+gam user <email> signature html "<b>Nome</b><br>Enterprise Organization"
 
 # Criar encaminhamento automático
 gam user <email> forward <destino@email.com>

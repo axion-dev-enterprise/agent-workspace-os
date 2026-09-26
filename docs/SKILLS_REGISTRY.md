@@ -1,9 +1,9 @@
-# Registro Canônico de Skills Operacionais — AXION Enterprise
+# Registro Canônico de Skills Operacionais — Agent Workspace OS
 
 > **Última Sincronização Automática**: 2026-09-26  
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
-> **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
+> **Local Global do Sistema**: `~/.gemini/antigravity/skills/`  
 > **Total de Skills Ativas**: 48  
 
 ---
@@ -12,7 +12,7 @@
 
 | Skill | Domínio Principal | Escopo & Tecnologias | Arquivo Canônico |
 | :--- | :--- | :--- | :--- |
-| **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS axionenterprise.cloud | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
+| **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS routing | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **`elevenlabs-tts-voiceover`** | IA & Engenharia de Agentes | Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio | [`elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
@@ -53,7 +53,7 @@
 | **`terraform-iac-automation`** | DevOps & CI/CD | Infraestrutura como Código (IaC) com Terraform, módulos reutilizáveis e gestão de estado seguro | [`terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **`threejs-gsap-animation`** | 2D/3D & Animações | Cenas 3D Three.js / React Three Fiber, shaders GLSL, modelos Draco e GSAP ScrollTrigger | [`threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
 | **`token-reduction-context-compression`** | IA & Engenharia de Agentes | Otimização agressiva de tokens, compressão AST de código, minificação JSON, condensação de logs de CLI e padrão Ponytail YAGNI | [`token-reduction-context-compression/SKILL.md`](file:///C:/workspace/.agents/skills/token-reduction-context-compression/SKILL.md) |
-| **`vercel-deployment-ops`** | DevOps & Deploy | Gestão do escopo axion777, 11 projetos em produção, preview branches, domains e rollback | [`vercel-deployment-ops/SKILL.md`](file:///C:/workspace/.agents/skills/vercel-deployment-ops/SKILL.md) |
+| **`vercel-deployment-ops`** | DevOps & Deploy | Gestão de projetos Vercel, preview branches, custom domains e rollback | [`vercel-deployment-ops/SKILL.md`](file:///C:/workspace/.agents/skills/vercel-deployment-ops/SKILL.md) |
 | **`vps-docker-orchestration`** | Nós VPS & Docker | Administração remota Linux, Docker multi-stage builds, Docker Compose em produção, PM2 e systemd | [`vps-docker-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/vps-docker-orchestration/SKILL.md) |
 | **`web-scraping-crawling`** | Automação & Scraping | Extração de dados resiliente, bypass de anti-bot, Playwright headless, Beautiful Soup e rotação de proxies | [`web-scraping-crawling/SKILL.md`](file:///C:/workspace/.agents/skills/web-scraping-crawling/SKILL.md) |
 | **`web-security-pentest`** | Segurança & Pentest | Auditoria OWASP Top 10, prevenção de Subdomain Takeover (124 subdomínios), secret scanning e WAF | [`web-security-pentest/SKILL.md`](file:///C:/workspace/.agents/skills/web-security-pentest/SKILL.md) |

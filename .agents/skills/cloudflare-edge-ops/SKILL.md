@@ -4,12 +4,12 @@ description: >-
   Operational skill for Cloudflare Edge Infrastructure via Wrangler CLI and Cloudflare API.
   Use when developing, deploying, configuring, or debugging Cloudflare Workers, Pages,
   D1 Relational SQL Databases, KV Namespaces, R2 Object Storage, Queues, and DNS routing
-  for axionenterprise.cloud.
+  for example.com.
 ---
 
 # Cloudflare Edge Ops Skill
 
-Skill operacional para gerenciamento, automação e deploy de microserviços, workers, páginas e bancos de dados edge no ecossistema Cloudflare da **AXION Enterprise**.
+Skill operacional para gerenciamento, automação e deploy de microserviços, workers, páginas e bancos de dados edge no ecossistema Cloudflare da **Enterprise Organization**.
 
 ---
 
@@ -17,7 +17,7 @@ Skill operacional para gerenciamento, automação e deploy de microserviços, wo
 
 - **Conta Cloudflare**: `AXION`
 - **Account ID**: `a79a584696834139a2b70ec306f5705c`
-- **Zona DNS Primária**: `axionenterprise.cloud` (Zone ID: `73c333a9254c46fbe8522616f735d4fa`)
+- **Zona DNS Primária**: `example.com` (Zone ID: `73c333a9254c46fbe8522616f735d4fa`)
 - **CLI Principal**: `wrangler` (Node.js LTS v24.19.0)
 
 ---
@@ -88,7 +88,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"
-AXION_API_GATEWAY = "https://api.axionenterprise.cloud"
+API_GATEWAY = "https://api.example.com"
 
 # Exemplo de binding D1
 [[d1_databases]]

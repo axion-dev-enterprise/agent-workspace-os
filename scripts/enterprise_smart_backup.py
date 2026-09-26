@@ -55,7 +55,7 @@ def backup_google_drive(dest_dir):
     drive_dir.mkdir(parents=True, exist_ok=True)
     
     # Carrega inventário de arquivos mapeados
-    inv_file = WORKSPACE_ROOT / "workspace" / "google_workspace_inventory.json"
+    inv_file = WORKSPACE_ROOT / "memory" / "infrastructure" / "google_workspace_inventory.json"
     if not inv_file.exists():
         print("  [!] Inventário de arquivos não encontrado. Pulando download em massa.")
         return 0
@@ -81,7 +81,7 @@ def backup_google_drive(dest_dir):
             if not target_path.exists():
                 try:
                     subprocess.run(
-                        [str(GAM_BIN), "user", "iago@axionenterprise.cloud", "get", "drivefile", "id", fid, "targetfolder", str(drive_dir)],
+                        [str(GAM_BIN), "user", os.getenv("WORKSPACE_ADMIN_EMAIL", "admin@example.com"), "get", "drivefile", "id", fid, "targetfolder", str(drive_dir)],
                         capture_output=True, timeout=15
                     )
                     downloaded += 1

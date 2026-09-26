@@ -21,6 +21,10 @@ workspace.config.json
 workspace/inbox/
 workspace/memory/active_tasks.json
 workspace/telemetry/
+workspace/*.json
+!workspace/inventory.json
+!workspace/workspace-manifest.template.json
+!workspace/capability-policy.template.json
 
 # Temporary files & Logs
 temp/

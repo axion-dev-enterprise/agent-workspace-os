@@ -3,19 +3,19 @@ name: gcp-cloud-ops
 description: >-
   Operational skill for Google Cloud Platform (GCP) infrastructure management via gcloud CLI,
   Cloud Console, and APIs. Use when managing Cloud Run services, Secret Manager, Cloud Storage buckets,
-  Artifact Registry, IAM permissions, Service Accounts, and Organization Policies for axionenterprise.cloud.
+  Artifact Registry, IAM permissions, Service Accounts, and Organization Policies for example.com.
 ---
 
 # Google Cloud Platform (GCP) Operations Skill
 
-Skill operacional para administração de projetos, serviços serverless, gestão de segredos e políticas organizacionais no Google Cloud Platform para a **AXION Enterprise**.
+Skill operacional para administração de projetos, serviços serverless, gestão de segredos e políticas organizacionais no Google Cloud Platform para a **Enterprise Organization**.
 
 ---
 
 ## 1. Projetos & Identificadores Centrais
 
 - **Projeto GAM Primário**: `gam-project-w1te0`
-- **Organização**: `axionenterprise.cloud`
+- **Organização**: `example.com`
 - **Região Canônica Padrão**: `southamerica-east1` (São Paulo, Brasil) ou `us-central1`
 
 ---
@@ -31,7 +31,7 @@ gcloud projects list
 gcloud config set project gam-project-w1te0
 
 # Autenticar nova sessão admin
-gcloud auth login iago@axionenterprise.cloud
+gcloud auth login admin@example.com
 ```
 
 ### 2.2 Secret Manager (Armazenamento Seguro de Tokens)

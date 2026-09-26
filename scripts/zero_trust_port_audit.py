@@ -8,8 +8,8 @@ Executes Phase 1 of the Hybrid Architecture Unification Plan:
 - Correlates with Cloudflare Tunnels and MagicDNS endpoints
 - Recommends zero-trust ingress migration and firewall (UFW) rules
 Generates:
-- docs/ZERO_TRUST_PORT_AUDIT.md
-- workspace/zero_trust_audit.json
+- memory/infrastructure/ZERO_TRUST_PORT_AUDIT.md
+- memory/infrastructure/zero_trust_audit.json
 """
 
 import socket
@@ -21,20 +21,20 @@ WORKSPACE_ROOT = Path(r"C:\workspace")
 
 TARGET_HOSTS = [
     {
-        "name": "axion-vps-104-207-90-167",
-        "public_ip": "104.207.90.167",
-        "tailnet_ip": "100.95.86.83",
+        "name": "primary-gateway-node",
+        "public_ip": "198.51.100.1",
+        "tailnet_ip": "100.64.0.1",
         "role": "Traefik Ingress Gateway & API Core",
         "probed_ports": [80, 443, 8080, 22, 5432, 6379],
-        "assigned_domains": ["api.axionenterprise.cloud", "auth.axionenterprise.cloud", "casa.axionenterprise.cloud", "hooks.axionenterprise.cloud"]
+        "assigned_domains": ["api.example.com", "auth.example.com", "casa.example.com", "hooks.example.com"]
     },
     {
-        "name": "debian-2vcpu-amd-4gb-us-6tb9d",
-        "public_ip": "104.207.81.120",
-        "tailnet_ip": "100.73.36.87",
+        "name": "primary-db-node",
+        "public_ip": "198.51.100.2",
+        "tailnet_ip": "100.64.0.2",
         "role": "Database, Celery Tasks & Flow Engine",
         "probed_ports": [80, 443, 22, 5432, 6379, 8000],
-        "assigned_domains": ["db.axionenterprise.cloud", "agents.axionenterprise.cloud", "tasks.axionenterprise.cloud"]
+        "assigned_domains": ["db.example.com", "agents.example.com", "tasks.example.com"]
     }
 ]
 
@@ -103,7 +103,7 @@ def run_port_audit():
     }
     
     # Salva JSON
-    json_path = WORKSPACE_ROOT / "workspace" / "zero_trust_audit.json"
+    json_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "zero_trust_audit.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(report_data, f, indent=2, ensure_ascii=False)
     print(f"\n[OK] Telemetria salva em: {json_path}")
@@ -114,7 +114,7 @@ def run_port_audit():
 
 def generate_markdown_report(data, now_local):
     lines = [
-        "# Auditoria de Superfície de Ataque & Arquitetura Zero Trust — AXION",
+        "# Auditoria de Superfície de Ataque & Arquitetura Zero Trust",
         "",
         f"> **Data/Hora**: {now_local} (UTC: {data.get('audited_at')})  ",
         "> **Classificação**: Confidencial / Engenharia de Segurança & Redes  ",
@@ -174,7 +174,7 @@ def generate_markdown_report(data, now_local):
         "```",
         "",
         "### 2.2 Roteamento de Dashboards Internos via Cloudflare Access",
-        "- **Traefik Dashboard (`100.95.86.83:8080`)**: Configurar túnel `cloudflared` direcionando `admin.axionenterprise.cloud` para `http://localhost:8080` com política de login por OTP para `@axionenterprise.cloud`.",
+        "- **Traefik Dashboard (`100.64.0.1:8080`)**: Configurar túnel `cloudflared` direcionando `admin.example.com` para `http://localhost:8080` com política de login por OTP para `@example.com`.",
         "- **Resultado**: Eliminação total de ataques automatizados de força bruta, port scanners e exploração de CVEs em portas de gerenciamento.",
         "",
         "---",
@@ -183,7 +183,7 @@ def generate_markdown_report(data, now_local):
         "O ecossistema dispõe de todos os componentes necessários (Cloudflare Tunnels, MagicDNS e Tailscale Mesh) para operar com zero superfície de ataque pública direta."
     ])
 
-    report_path = WORKSPACE_ROOT / "docs" / "ZERO_TRUST_PORT_AUDIT.md"
+    report_path = WORKSPACE_ROOT / "memory" / "infrastructure" / "ZERO_TRUST_PORT_AUDIT.md"
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     print(f"[OK] Relatório Zero Trust salvo em: {report_path}")

@@ -21,7 +21,7 @@ gam info user <email>
 ### 1.2 Criação e Atualização de Contas
 ```powershell
 # Criar usuário com senha temporária exigindo troca no primeiro login
-gam create user novousuario@axionenterprise.cloud firstname "Nome" lastname "Sobrenome" password "SenhaForte123!" changepassword on
+gam create user newuser@example.com firstname "Nome" lastname "Sobrenome" password "SenhaForte123!" changepassword on
 
 # Atualizar nome de usuário
 gam update user <email> firstname "NovoNome" lastname "NovoSobrenome"
@@ -48,13 +48,13 @@ gam delete user <email>
 
 ```powershell
 # Criar alias (ex: suporte@ apontando para equipe ou pessoa)
-gam create alias suporte@axionenterprise.cloud user iago@axionenterprise.cloud
+gam create alias support@example.com user admin@example.com
 
 # Listar aliases de um usuário
 gam info user <email>
 
 # Remover alias
-gam delete alias suporte@axionenterprise.cloud
+gam delete alias support@example.com
 ```
 
 ---
@@ -66,16 +66,16 @@ gam delete alias suporte@axionenterprise.cloud
 gam print groups
 
 # Criar novo grupo
-gam create group financeiro@axionenterprise.cloud name "Setor Financeiro" description "Grupo de comunicação financeira"
+gam create group finance@example.com name "Setor Financeiro" description "Grupo de comunicação financeira"
 
 # Adicionar membro ao grupo
-gam update group financeiro@axionenterprise.cloud add member user iago@axionenterprise.cloud
+gam update group finance@example.com add member user admin@example.com
 
 # Adicionar gerente ou proprietário ao grupo
-gam update group financeiro@axionenterprise.cloud add manager user iago@axionenterprise.cloud
+gam update group finance@example.com add manager user admin@example.com
 
 # Listar membros de um grupo
-gam print group-members group financeiro@axionenterprise.cloud
+gam print group-members group finance@example.com
 ```
 
 ---
@@ -90,5 +90,5 @@ gam print orgs
 gam create org "Engenharia" parent "/"
 
 # Mover usuário para uma OU específica
-gam update org "Engenharia" add users dev@axionenterprise.cloud
+gam update org "Engenharia" add users dev@example.com
 ```

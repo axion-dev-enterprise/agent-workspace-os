@@ -8,7 +8,7 @@ description: >-
 
 # Google Gemini Multimodal & Agentic Engineering Skill
 
-Skill operacional para desenvolvimento de inteligência artificial autônoma, pipelines de extração multimodal e orquestração de ferramentas com a família **Google Gemini** para a **AXION Enterprise**.
+Skill operacional para desenvolvimento de inteligência artificial autônoma, pipelines de extração multimodal e orquestração de ferramentas com a família **Google Gemini** para a **Enterprise Organization**.
 
 ---
 
@@ -36,7 +36,7 @@ client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 class TaskExtraction(BaseModel):
     title: str = Field(description="Título objetivo da tarefa")
     priority: str = Field(description="HIGH, MEDIUM ou LOW")
-    assignee_email: str = Field(description="E-mail do responsável no domínio axionenterprise.cloud")
+    assignee_email: str = Field(description="E-mail do responsável no domínio example.com")
     due_date: str = Field(description="Data limite no formato YYYY-MM-DD")
 
 def extract_structured_action(text_prompt: str) -> TaskExtraction:
@@ -46,7 +46,7 @@ def extract_structured_action(text_prompt: str) -> TaskExtraction:
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=TaskExtraction,
-            system_instruction="Você é um orquestrador de operações corporativas da AXION Enterprise."
+            system_instruction="Você é um orquestrador de operações corporativas da Enterprise Organization."
         ),
     )
     return TaskExtraction.model_validate_json(response.text)
