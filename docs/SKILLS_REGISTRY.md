@@ -1,10 +1,10 @@
 # Registro Canônico de Skills Operacionais — AXION Enterprise
 
-> **Última Sincronização Automática**: 2026-09-25  
+> **Última Sincronização Automática**: 2026-09-26  
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 46  
+> **Total de Skills Ativas**: 47  
 
 ---
 
@@ -51,6 +51,7 @@
 | **`tailwind-shadcn-ux`** | UI/UX & Design | Design tokens, componentes Radix UI (WCAG AAA), Dark/Light mode, microinterações e skeleton loaders | [`tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
 | **`terraform-iac-automation`** | DevOps & CI/CD | Infraestrutura como Código (IaC) com Terraform, módulos reutilizáveis e gestão de estado seguro | [`terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **`threejs-gsap-animation`** | 2D/3D & Animações | Cenas 3D Three.js / React Three Fiber, shaders GLSL, modelos Draco e GSAP ScrollTrigger | [`threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
+| **`token-reduction-context-compression`** | IA & Engenharia de Agentes | Otimização agressiva de tokens, compressão AST de código, minificação JSON, condensação de logs de CLI e padrão Ponytail YAGNI | [`token-reduction-context-compression/SKILL.md`](file:///C:/workspace/.agents/skills/token-reduction-context-compression/SKILL.md) |
 | **`vercel-deployment-ops`** | DevOps & Deploy | Gestão do escopo axion777, 11 projetos em produção, preview branches, domains e rollback | [`vercel-deployment-ops/SKILL.md`](file:///C:/workspace/.agents/skills/vercel-deployment-ops/SKILL.md) |
 | **`vps-docker-orchestration`** | Nós VPS & Docker | Administração remota Linux, Docker multi-stage builds, Docker Compose em produção, PM2 e systemd | [`vps-docker-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/vps-docker-orchestration/SKILL.md) |
 | **`web-scraping-crawling`** | Automação & Scraping | Extração de dados resiliente, bypass de anti-bot, Playwright headless, Beautiful Soup e rotação de proxies | [`web-scraping-crawling/SKILL.md`](file:///C:/workspace/.agents/skills/web-scraping-crawling/SKILL.md) |

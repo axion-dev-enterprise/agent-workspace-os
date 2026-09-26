@@ -70,6 +70,7 @@ DOMAIN_MAP = {
     "prompt-engineering-jailbreak-defense": ("IA & Engenharia de Agentes", "Engenharia de prompts robusta, defesa contra injeção de prompt (prompt injection) e estruturação de contexto"),
     "whisper-stt-neural-voice": ("IA & Engenharia de Agentes", "Transcrição de áudio com OpenAI Whisper, diarização de locutores e tratamento de ruído acústico"),
     "elevenlabs-tts-voiceover": ("IA & Engenharia de Agentes", "Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio"),
+    "token-reduction-context-compression": ("IA & Engenharia de Agentes", "Otimização agressiva de tokens, compressão AST de código, minificação JSON, condensação de logs de CLI e padrão Ponytail YAGNI"),
 
     # 7. Testing & Automation
     "playwright-e2e-testing": ("Testing & QA", "Testes end-to-end automatizados com Playwright, regressão visual, gravação de traces e execução headless"),

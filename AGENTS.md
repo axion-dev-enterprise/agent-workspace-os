@@ -145,6 +145,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **UI/UX & Design** | `tailwind-shadcn-ux` | [`.agents/skills/tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
 | **DevOps & CI/CD** | `terraform-iac-automation` | [`.agents/skills/terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **2D/3D & Animações** | `threejs-gsap-animation` | [`.agents/skills/threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
+| **IA & Engenharia de Agentes** | `token-reduction-context-compression` | [`.agents/skills/token-reduction-context-compression/SKILL.md`](file:///C:/workspace/.agents/skills/token-reduction-context-compression/SKILL.md) |
 | **DevOps & Deploy** | `vercel-deployment-ops` | [`.agents/skills/vercel-deployment-ops/SKILL.md`](file:///C:/workspace/.agents/skills/vercel-deployment-ops/SKILL.md) |
 | **Nós VPS & Docker** | `vps-docker-orchestration` | [`.agents/skills/vps-docker-orchestration/SKILL.md`](file:///C:/workspace/.agents/skills/vps-docker-orchestration/SKILL.md) |
 | **Automação & Scraping** | `web-scraping-crawling` | [`.agents/skills/web-scraping-crawling/SKILL.md`](file:///C:/workspace/.agents/skills/web-scraping-crawling/SKILL.md) |
