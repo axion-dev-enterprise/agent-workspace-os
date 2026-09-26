@@ -93,7 +93,8 @@ DOMAIN_MAP = {
     "proton-privacy-ecosystem": ("Privacidade & VPN", "Proton VPN ilimitado, WireGuard, Kill Switch, Proton Drive e cofres criptografados com Cryptomator e Rclone"),
     "osint-investigation-suite": ("Segurança & Inteligência", "Investigação OSINT, Sherlock para usernames em 400+ redes, ExifTool forense e extração/limpeza de metadados"),
     "network-pentest-forensics": ("Segurança & Pentest", "Auditoria defensiva de portas com Nmap, análise de tráfego de pacotes com Wireshark/TShark e inspeção de rede"),
-    "multimedia-production-suite": ("Multimídia & Criação", "Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound")
+    "multimedia-production-suite": ("Multimídia & Criação", "Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound"),
+    "deterministic-3d-motion-pipeline": ("Multimídia & Criação", "Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe")
 }
 
 def parse_frontmatter(content: str):

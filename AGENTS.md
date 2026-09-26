@@ -163,6 +163,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Segurança & Rede** | `cloudflare-zero-trust-tunnels` | [`.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **Geral / Utilitário** | `content-3d-social-studio` | [`.agents/skills/content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **Automação & SRE** | `cron-scheduled-tasks` | [`.agents/skills/cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
+| **Multimídia & Criação** | `deterministic-3d-motion-pipeline` | [`.agents/skills/deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
 | **IA & Engenharia de Agentes** | `elevenlabs-tts-voiceover` | [`.agents/skills/elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
 | **Backend & APIs** | `fastapi-async-api` | [`.agents/skills/fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
 | **Google Workspace** | `gam-ops` | [`.agents/skills/gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |

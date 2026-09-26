@@ -414,14 +414,15 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 56,
-    "synced_at": "2026-09-26T08:59:33.854542+00:00",
+    "total_active": 57,
+    "synced_at": "2026-09-26T09:09:58.815103+00:00",
     "skills_list": [
       "antigravity-cli",
       "cloudflare-edge-ops",
       "cloudflare-zero-trust-tunnels",
       "content-3d-social-studio",
       "cron-scheduled-tasks",
+      "deterministic-3d-motion-pipeline",
       "elevenlabs-tts-voiceover",
       "fastapi-async-api",
       "gam-ops",

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "motion-engine"
+version = "1.0.0"
+description = "Deterministic native 3D motion graphics and procedural audio engine for AXION Enterprise"
+authors = [
+    { name = "AXION DEV", email = "developer@example.com" }
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26.0",
+    "pillow>=10.0.0",
+    "moderngl>=5.10.0",
+    "glcontext>=3.0.0"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0"
+]

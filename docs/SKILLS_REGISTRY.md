@@ -4,7 +4,7 @@
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 56  
+> **Total de Skills Ativas**: 57  
 
 ---
 
@@ -17,6 +17,7 @@
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **`content-3d-social-studio`** | Geral / Utilitário | Produces reusable 3D web experiences and social-media creative workflows with Three.js, Canva, Runway, and Windsor.ai. Use for campaign assets, social formats, 3D landing-page motion, or approved publishing and ads operations. | [`content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
+| **`deterministic-3d-motion-pipeline`** | Multimídia & Criação | Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe | [`deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
 | **`elevenlabs-tts-voiceover`** | IA & Engenharia de Agentes | Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio | [`elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
 | **`fastapi-async-api`** | Backend & APIs | APIs assíncronas em Python com Pydantic v2, dependency injection, background tasks e OpenAPI | [`fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
 | **`gam-ops`** | Google Workspace | Drive, Gmail, Docs, Sheets, OUs, Service Accounts e Domain-wide Delegation | [`gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |
