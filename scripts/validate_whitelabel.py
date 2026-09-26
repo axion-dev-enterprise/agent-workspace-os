@@ -51,6 +51,7 @@ FORBIDDEN_FILES = [
     "scripts/probe_tailnet_nodes.py",
     "scripts/production_deploy_test.py",
     "scripts/telegram_assistant_bot.py",
+    "scripts/brain_server.py",
     "scripts/bot_engine",
     "apps/axion-pay",
     "workspace/google_workspace_inventory.json",
