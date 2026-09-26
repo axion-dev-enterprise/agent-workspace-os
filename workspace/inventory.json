@@ -414,12 +414,13 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 50,
-    "synced_at": "2026-09-26T07:51:35.842816+00:00",
+    "total_active": 56,
+    "synced_at": "2026-09-26T08:59:33.854542+00:00",
     "skills_list": [
       "antigravity-cli",
       "cloudflare-edge-ops",
       "cloudflare-zero-trust-tunnels",
+      "content-3d-social-studio",
       "cron-scheduled-tasks",
       "elevenlabs-tts-voiceover",
       "fastapi-async-api",
@@ -434,8 +435,11 @@
       "meta-marketing-capi",
       "modern-responsive-architect",
       "mongodb-aggregation-pipeline",
+      "multimedia-production-suite",
       "nestjs-modular-backend",
+      "network-pentest-forensics",
       "nextjs-app-router-rsc",
+      "osint-investigation-suite",
       "pdf-generation-puppeteer",
       "plan-execute-verify-governance",
       "playwright-e2e-testing",
@@ -444,6 +448,7 @@
       "prisma-drizzle-orm",
       "prometheus-grafana-metrics",
       "prompt-engineering-jailbreak-defense",
+      "proton-privacy-ecosystem",
       "pytest-mocking-fixtures",
       "qdrant-vector-database",
       "rag-chunking-embeddings",
@@ -466,7 +471,8 @@
       "web-security-pentest",
       "web-vitals-performance",
       "whatsapp-baileys-bot-ops",
-      "whisper-stt-neural-voice"
+      "whisper-stt-neural-voice",
+      "windows-hardware-performance-tuning"
     ]
   },
   "tailnet": {

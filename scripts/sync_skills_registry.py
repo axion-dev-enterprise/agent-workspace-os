@@ -86,7 +86,14 @@ DOMAIN_MAP = {
     "postgresql-dba-maintenance": ("Databases & Caching", "Manutenção preventiva de PostgreSQL 15/16, VACUUM ANALYZE, index bloat, pooling e queries lentas"),
     "cloudflare-zero-trust-tunnels": ("Segurança & Rede", "Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access"),
     "whatsapp-baileys-bot-ops": ("Comunicação & Mensageria", "Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks"),
-    "telegram-bot-ops": ("Comunicação & Mensageria", "Telegram Bot API, BotFather metadados, comandos, inline keyboards, SRE alerts e daemons")
+    "telegram-bot-ops": ("Comunicação & Mensageria", "Telegram Bot API, BotFather metadados, comandos, inline keyboards, SRE alerts e daemons"),
+
+    # 9. Hardware, Privacy, Security & Multimedia (Novas Skills Operacionais)
+    "windows-hardware-performance-tuning": ("Sistemas & Performance", "Tuning de kernel, NDIS Realtek, AMD GPU ULPS/FlipQueueSize, CPU High Performance, DisablePagingExecutive e I/O"),
+    "proton-privacy-ecosystem": ("Privacidade & VPN", "Proton VPN ilimitado, WireGuard, Kill Switch, Proton Drive e cofres criptografados com Cryptomator e Rclone"),
+    "osint-investigation-suite": ("Segurança & Inteligência", "Investigação OSINT, Sherlock para usernames em 400+ redes, ExifTool forense e extração/limpeza de metadados"),
+    "network-pentest-forensics": ("Segurança & Pentest", "Auditoria defensiva de portas com Nmap, análise de tráfego de pacotes com Wireshark/TShark e inspeção de rede"),
+    "multimedia-production-suite": ("Multimídia & Criação", "Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound")
 }
 
 def parse_frontmatter(content: str):

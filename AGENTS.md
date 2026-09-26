@@ -161,6 +161,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Geral / Utilitário** | `antigravity-cli` | [`.agents/skills/antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **Edge & Serverless** | `cloudflare-edge-ops` | [`.agents/skills/cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **Segurança & Rede** | `cloudflare-zero-trust-tunnels` | [`.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
+| **Geral / Utilitário** | `content-3d-social-studio` | [`.agents/skills/content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **Automação & SRE** | `cron-scheduled-tasks` | [`.agents/skills/cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **IA & Engenharia de Agentes** | `elevenlabs-tts-voiceover` | [`.agents/skills/elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
 | **Backend & APIs** | `fastapi-async-api` | [`.agents/skills/fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
@@ -175,8 +176,11 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Meta Ecosystem** | `meta-marketing-capi` | [`.agents/skills/meta-marketing-capi/SKILL.md`](file:///C:/workspace/.agents/skills/meta-marketing-capi/SKILL.md) |
 | **Layout & Responsividade** | `modern-responsive-architect` | [`.agents/skills/modern-responsive-architect/SKILL.md`](file:///C:/workspace/.agents/skills/modern-responsive-architect/SKILL.md) |
 | **Databases & Caching** | `mongodb-aggregation-pipeline` | [`.agents/skills/mongodb-aggregation-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/mongodb-aggregation-pipeline/SKILL.md) |
+| **Multimídia & Criação** | `multimedia-production-suite` | [`.agents/skills/multimedia-production-suite/SKILL.md`](file:///C:/workspace/.agents/skills/multimedia-production-suite/SKILL.md) |
 | **Backend & APIs** | `nestjs-modular-backend` | [`.agents/skills/nestjs-modular-backend/SKILL.md`](file:///C:/workspace/.agents/skills/nestjs-modular-backend/SKILL.md) |
+| **Segurança & Pentest** | `network-pentest-forensics` | [`.agents/skills/network-pentest-forensics/SKILL.md`](file:///C:/workspace/.agents/skills/network-pentest-forensics/SKILL.md) |
 | **Frontend & Mobile** | `nextjs-app-router-rsc` | [`.agents/skills/nextjs-app-router-rsc/SKILL.md`](file:///C:/workspace/.agents/skills/nextjs-app-router-rsc/SKILL.md) |
+| **Segurança & Inteligência** | `osint-investigation-suite` | [`.agents/skills/osint-investigation-suite/SKILL.md`](file:///C:/workspace/.agents/skills/osint-investigation-suite/SKILL.md) |
 | **Automação de Documentos** | `pdf-generation-puppeteer` | [`.agents/skills/pdf-generation-puppeteer/SKILL.md`](file:///C:/workspace/.agents/skills/pdf-generation-puppeteer/SKILL.md) |
 | **IA & Engenharia de Agentes** | `plan-execute-verify-governance` | [`.agents/skills/plan-execute-verify-governance/SKILL.md`](file:///C:/workspace/.agents/skills/plan-execute-verify-governance/SKILL.md) |
 | **Testing & QA** | `playwright-e2e-testing` | [`.agents/skills/playwright-e2e-testing/SKILL.md`](file:///C:/workspace/.agents/skills/playwright-e2e-testing/SKILL.md) |
@@ -185,6 +189,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Databases & Caching** | `prisma-drizzle-orm` | [`.agents/skills/prisma-drizzle-orm/SKILL.md`](file:///C:/workspace/.agents/skills/prisma-drizzle-orm/SKILL.md) |
 | **DevOps & CI/CD** | `prometheus-grafana-metrics` | [`.agents/skills/prometheus-grafana-metrics/SKILL.md`](file:///C:/workspace/.agents/skills/prometheus-grafana-metrics/SKILL.md) |
 | **IA & Engenharia de Agentes** | `prompt-engineering-jailbreak-defense` | [`.agents/skills/prompt-engineering-jailbreak-defense/SKILL.md`](file:///C:/workspace/.agents/skills/prompt-engineering-jailbreak-defense/SKILL.md) |
+| **Privacidade & VPN** | `proton-privacy-ecosystem` | [`.agents/skills/proton-privacy-ecosystem/SKILL.md`](file:///C:/workspace/.agents/skills/proton-privacy-ecosystem/SKILL.md) |
 | **Testing & QA** | `pytest-mocking-fixtures` | [`.agents/skills/pytest-mocking-fixtures/SKILL.md`](file:///C:/workspace/.agents/skills/pytest-mocking-fixtures/SKILL.md) |
 | **Databases & Caching** | `qdrant-vector-database` | [`.agents/skills/qdrant-vector-database/SKILL.md`](file:///C:/workspace/.agents/skills/qdrant-vector-database/SKILL.md) |
 | **IA & Engenharia de Agentes** | `rag-chunking-embeddings` | [`.agents/skills/rag-chunking-embeddings/SKILL.md`](file:///C:/workspace/.agents/skills/rag-chunking-embeddings/SKILL.md) |
@@ -208,6 +213,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Frontend & Mobile** | `web-vitals-performance` | [`.agents/skills/web-vitals-performance/SKILL.md`](file:///C:/workspace/.agents/skills/web-vitals-performance/SKILL.md) |
 | **Comunicação & Mensageria** | `whatsapp-baileys-bot-ops` | [`.agents/skills/whatsapp-baileys-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/whatsapp-baileys-bot-ops/SKILL.md) |
 | **IA & Engenharia de Agentes** | `whisper-stt-neural-voice` | [`.agents/skills/whisper-stt-neural-voice/SKILL.md`](file:///C:/workspace/.agents/skills/whisper-stt-neural-voice/SKILL.md) |
+| **Sistemas & Performance** | `windows-hardware-performance-tuning` | [`.agents/skills/windows-hardware-performance-tuning/SKILL.md`](file:///C:/workspace/.agents/skills/windows-hardware-performance-tuning/SKILL.md) |
 <!-- SKILLS_REGISTRY_END -->
 
 ### Regra #14: Princípio de Pesquisa e Aprendizado Ativo (Zero Guesswork Protocol)

@@ -4,7 +4,7 @@
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 50  
+> **Total de Skills Ativas**: 56  
 
 ---
 
@@ -15,6 +15,7 @@
 | **`antigravity-cli`** | Geral / Utilitário | Operational guide and reference for the Google Antigravity CLI (agy). Covers interactive TUI sessions (agy), continuing recent conversations (agy -c), headless single-turn execution (agy -p), model inspection (agy models), MCP server administration (agy mcp list), and CLI maintenance (agy update). | [`antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
+| **`content-3d-social-studio`** | Geral / Utilitário | Produces reusable 3D web experiences and social-media creative workflows with Three.js, Canva, Runway, and Windsor.ai. Use for campaign assets, social formats, 3D landing-page motion, or approved publishing and ads operations. | [`content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
 | **`elevenlabs-tts-voiceover`** | IA & Engenharia de Agentes | Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio | [`elevenlabs-tts-voiceover/SKILL.md`](file:///C:/workspace/.agents/skills/elevenlabs-tts-voiceover/SKILL.md) |
 | **`fastapi-async-api`** | Backend & APIs | APIs assíncronas em Python com Pydantic v2, dependency injection, background tasks e OpenAPI | [`fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
@@ -29,8 +30,11 @@
 | **`meta-marketing-capi`** | Meta Ecosystem | Meta Conversions API (CAPI server-side), UTM tracking, Meta Ads Graph API e WhatsApp Cloud API | [`meta-marketing-capi/SKILL.md`](file:///C:/workspace/.agents/skills/meta-marketing-capi/SKILL.md) |
 | **`modern-responsive-architect`** | Layout & Responsividade | Container Queries (@container), Subgrid, fontes fluidas com clamp(), viewports dvh/svh | [`modern-responsive-architect/SKILL.md`](file:///C:/workspace/.agents/skills/modern-responsive-architect/SKILL.md) |
 | **`mongodb-aggregation-pipeline`** | Databases & Caching | Pipelines de agregação complexos, indexação composta e change streams no MongoDB | [`mongodb-aggregation-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/mongodb-aggregation-pipeline/SKILL.md) |
+| **`multimedia-production-suite`** | Multimídia & Criação | Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound | [`multimedia-production-suite/SKILL.md`](file:///C:/workspace/.agents/skills/multimedia-production-suite/SKILL.md) |
 | **`nestjs-modular-backend`** | Backend & APIs | Arquitetura modular corporativa em TypeScript com NestJS, Guards, Interceptors e DTOs | [`nestjs-modular-backend/SKILL.md`](file:///C:/workspace/.agents/skills/nestjs-modular-backend/SKILL.md) |
+| **`network-pentest-forensics`** | Segurança & Pentest | Auditoria defensiva de portas com Nmap, análise de tráfego de pacotes com Wireshark/TShark e inspeção de rede | [`network-pentest-forensics/SKILL.md`](file:///C:/workspace/.agents/skills/network-pentest-forensics/SKILL.md) |
 | **`nextjs-app-router-rsc`** | Frontend & Mobile | Arquitetura Next.js 15, React Server Components (RSC), Server Actions, Suspense e streaming | [`nextjs-app-router-rsc/SKILL.md`](file:///C:/workspace/.agents/skills/nextjs-app-router-rsc/SKILL.md) |
+| **`osint-investigation-suite`** | Segurança & Inteligência | Investigação OSINT, Sherlock para usernames em 400+ redes, ExifTool forense e extração/limpeza de metadados | [`osint-investigation-suite/SKILL.md`](file:///C:/workspace/.agents/skills/osint-investigation-suite/SKILL.md) |
 | **`pdf-generation-puppeteer`** | Automação de Documentos | Geração de relatórios PDF pixel-perfect a partir de HTML/CSS com Puppeteer/Playwright e print styles | [`pdf-generation-puppeteer/SKILL.md`](file:///C:/workspace/.agents/skills/pdf-generation-puppeteer/SKILL.md) |
 | **`plan-execute-verify-governance`** | IA & Engenharia de Agentes | Ciclo Plan-Execute-Verify (PEV), portão de verificação empírica, análise pre-mortem de risco e arquitetura ADR | [`plan-execute-verify-governance/SKILL.md`](file:///C:/workspace/.agents/skills/plan-execute-verify-governance/SKILL.md) |
 | **`playwright-e2e-testing`** | Testing & QA | Testes end-to-end automatizados com Playwright, regressão visual, gravação de traces e execução headless | [`playwright-e2e-testing/SKILL.md`](file:///C:/workspace/.agents/skills/playwright-e2e-testing/SKILL.md) |
@@ -39,6 +43,7 @@
 | **`prisma-drizzle-orm`** | Databases & Caching | Migrations automatizadas, consultas seguras com tipagem estrita e edge compatibility em Drizzle e Prisma | [`prisma-drizzle-orm/SKILL.md`](file:///C:/workspace/.agents/skills/prisma-drizzle-orm/SKILL.md) |
 | **`prometheus-grafana-metrics`** | DevOps & CI/CD | Exposição de métricas RED/USE, configuração de painéis no Grafana e alertas em tempo real | [`prometheus-grafana-metrics/SKILL.md`](file:///C:/workspace/.agents/skills/prometheus-grafana-metrics/SKILL.md) |
 | **`prompt-engineering-jailbreak-defense`** | IA & Engenharia de Agentes | Engenharia de prompts robusta, defesa contra injeção de prompt (prompt injection) e estruturação de contexto | [`prompt-engineering-jailbreak-defense/SKILL.md`](file:///C:/workspace/.agents/skills/prompt-engineering-jailbreak-defense/SKILL.md) |
+| **`proton-privacy-ecosystem`** | Privacidade & VPN | Proton VPN ilimitado, WireGuard, Kill Switch, Proton Drive e cofres criptografados com Cryptomator e Rclone | [`proton-privacy-ecosystem/SKILL.md`](file:///C:/workspace/.agents/skills/proton-privacy-ecosystem/SKILL.md) |
 | **`pytest-mocking-fixtures`** | Testing & QA | Testes unitários e de integração em Python com Pytest, fixtures parametrizadas, mocking e cobertura | [`pytest-mocking-fixtures/SKILL.md`](file:///C:/workspace/.agents/skills/pytest-mocking-fixtures/SKILL.md) |
 | **`qdrant-vector-database`** | Databases & Caching | Busca vetorial, coleções semânticas, filtragem de payloads e integração com RAG no Qdrant | [`qdrant-vector-database/SKILL.md`](file:///C:/workspace/.agents/skills/qdrant-vector-database/SKILL.md) |
 | **`rag-chunking-embeddings`** | IA & Engenharia de Agentes | Pipelines de RAG avançado, divisão semântica de texto (chunking), busca híbrida BM25 + Vetorial e re-ranking | [`rag-chunking-embeddings/SKILL.md`](file:///C:/workspace/.agents/skills/rag-chunking-embeddings/SKILL.md) |
@@ -62,6 +67,7 @@
 | **`web-vitals-performance`** | Frontend & Mobile | Otimização de Core Web Vitals (LCP, INP, CLS), auditoria Lighthouse 100/100 e code-splitting | [`web-vitals-performance/SKILL.md`](file:///C:/workspace/.agents/skills/web-vitals-performance/SKILL.md) |
 | **`whatsapp-baileys-bot-ops`** | Comunicação & Mensageria | Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks | [`whatsapp-baileys-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/whatsapp-baileys-bot-ops/SKILL.md) |
 | **`whisper-stt-neural-voice`** | IA & Engenharia de Agentes | Transcrição de áudio com OpenAI Whisper, diarização de locutores e tratamento de ruído acústico | [`whisper-stt-neural-voice/SKILL.md`](file:///C:/workspace/.agents/skills/whisper-stt-neural-voice/SKILL.md) |
+| **`windows-hardware-performance-tuning`** | Sistemas & Performance | Tuning de kernel, NDIS Realtek, AMD GPU ULPS/FlipQueueSize, CPU High Performance, DisablePagingExecutive e I/O | [`windows-hardware-performance-tuning/SKILL.md`](file:///C:/workspace/.agents/skills/windows-hardware-performance-tuning/SKILL.md) |
 
 ---
 
