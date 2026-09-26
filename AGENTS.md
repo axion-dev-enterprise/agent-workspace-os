@@ -71,8 +71,9 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 ## 4. Regras Gerais de Engenharia & Governança
 
 ### Regra #1: Zero Root Clutter (Organização Estrita da Raiz)
-- A raiz do repositório deve conter apenas os arquivos fundamentais permitidos: `AGENTS.md`, `DIRECTIVES.md`, `README.md`, `SETUP_AGENT_DIRECTIVE.md`, `workspace.config.json`, `.gitignore` e lockfiles de pacote.
-- Proibido criar scripts soltos, rascunhos ou arquivos de teste na raiz. Usar pastas dedicadas em `apps/`, `services/` ou `temp/`.
+- A raiz do repositório deve conter estritamente os arquivos canônicos permitidos: `AGENTS.md`, `DIRECTIVES.md`, `README.md`, `workspace.config.json`, `.gitignore`, `package.json`, `.env`, `.env.example` e `ecosystem.config.js`.
+- Proibido criar scripts soltos (`.bat`, `.sh`, `.ps1`), arquivos de ambiente secundários (`.env.*`), rascunhos, artefatos temporários ou arquivos de teste na raiz.
+- Todo script deve residir em `scripts/`, documentações comunitárias em `.github/` (ex: `CONTRIBUTING.md`, `SECURITY.md`), configurações de serviços em `services/` ou `scripts/pm2/`, e arquivos voláteis em `temp/`.
 
 ### Regra #2: Verificação Empírica, Objetividade e Proibição de Falsos Afirmativos
 - **Proibição Estrita de Falsos Afirmativos**: É terminantemente PROIBIDO declarar que uma tarefa, teste ou deploy foi concluído com sucesso sem verificação empírica e factual do resultado.
@@ -295,7 +296,7 @@ Todo trabalho realizado por qualquer agente deve ser registrado sequencialmente 
 ### 5.3 Contribuição e releases
 - Desenvolva em branch própria e abra Pull Request; não escreva diretamente em `main`.
 - Todo PR deve declarar o escopo, arquivos alterados, evidências de validação e limitações conhecidas. Não declare uma validação que não foi executada.
-- Consulte [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) e [docs/README.md](docs/README.md) para o fluxo da comunidade.
+- Consulte [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md), [.github/SECURITY.md](.github/SECURITY.md) e [docs/README.md](docs/README.md) para o fluxo da comunidade.
 
 ### 5.4 Governança de Subagentes e Limite de Delegação
 - **Herança de Regras**: Todo subagente evocado herda compulsoriamente todas as regras e restrições deste documento.

@@ -1,7 +1,7 @@
 # AXION Dev/Prod Manager
 # Usage: .\scripts\env.ps1 [start|stop|restart|logs|status] [dev|prod]
 param([string]$Action = "status", [string]$Env = "prod")
-$EcoFile = if ($Env -eq "dev") { "ecosystem.dev.js" } else { "ecosystem.config.js" }
+$EcoFile = if ($Env -eq "dev") { "scripts/pm2/ecosystem.dev.js" } else { "ecosystem.config.js" }
 $BrainName = if ($Env -eq "dev") { "axion-brain-dev" } else { "axion-brain-server" }
 $Port = if ($Env -eq "dev") { "8766" } else { "8765" }
 Write-Host "AXION [$($Env.ToUpper())] $Action" -ForegroundColor Cyan
