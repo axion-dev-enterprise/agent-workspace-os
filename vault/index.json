@@ -1,0 +1,68 @@
+{
+  "version": "1.0.0",
+  "name": "AXION Enterprise Secrets Vault",
+  "description": "Repositório centralizado, categorizado e seguro de credenciais, chaves de API e tokens de autenticação para o ecossistema de agentes AXION.",
+  "updated_at": "2026-09-29T18:20:00Z",
+  "governance": {
+    "policy": "Zero Credential Logging & Strict Isolation",
+    "git_status": "All .env files under vault/ are strictly ignored by .gitignore",
+    "loader": "scripts/vault_loader.py"
+  },
+  "categories": [
+    {
+      "id": "social",
+      "name": "Redes Sociais & Mensageria",
+      "path": "vault/social",
+      "platforms": [
+        "twitter-x",
+        "instagram",
+        "telegram",
+        "whatsapp"
+      ]
+    },
+    {
+      "id": "ai",
+      "name": "Inteligência Artificial & LLMs",
+      "path": "vault/ai",
+      "platforms": [
+        "llm-providers",
+        "elevenlabs"
+      ]
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud & Infraestrutura Edge",
+      "path": "vault/cloud",
+      "platforms": [
+        "cloudflare",
+        "vercel",
+        "shopify"
+      ]
+    },
+    {
+      "id": "communication",
+      "name": "Comunicação & E-mail",
+      "path": "vault/communication",
+      "platforms": [
+        "email"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Segurança, VPN & Mesh",
+      "path": "vault/security",
+      "platforms": [
+        "proton",
+        "tailscale"
+      ]
+    },
+    {
+      "id": "payments",
+      "name": "Pagamentos & Credenciais de Teste",
+      "path": "vault/payments",
+      "platforms": [
+        "axion-staging"
+      ]
+    }
+  ]
+}

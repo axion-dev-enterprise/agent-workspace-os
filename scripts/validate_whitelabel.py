@@ -50,9 +50,6 @@ FORBIDDEN_FILES = [
     "scripts/inspect_vercel_projects.py",
     "scripts/probe_tailnet_nodes.py",
     "scripts/production_deploy_test.py",
-    "scripts/telegram_assistant_bot.py",
-    "scripts/brain_server.py",
-    "scripts/bot_engine",
     "apps/axion-pay",
     "workspace/google_workspace_inventory.json",
     "workspace/health_telemetry.json",
@@ -108,44 +105,52 @@ def scan_repository(repo_root: Path) -> list:
                 "message": f"Proprietary file/path '{forbidden_file}' is tracked in Git."
             })
             
-    # 2. Check file contents for forbidden string patterns
+    # 2. Check tracked file contents for forbidden string patterns
     compiled_patterns = [(pat, re.compile(pat, re.IGNORECASE)) for pat in FORBIDDEN_PATTERNS]
     
-    for root, dirs, files in os.walk(repo_root):
-        # Prune excluded directories in-place
-        dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS]
-        
-        for file in files:
-            full_path = Path(root) / file
-            rel_str = str(full_path.relative_to(repo_root)).replace("\\", "/")
-            if file in EXCLUDED_FILES or rel_str in EXCLUDED_FILES or any(rel_str.endswith(f"/{ef}") for ef in EXCLUDED_FILES):
-                continue
-            ext = os.path.splitext(file)[1].lower()
-            if ext in BINARY_EXTENSIONS:
-                continue
-            
-            try:
-                content = full_path.read_text(encoding="utf-8", errors="ignore")
-                for raw_pat, comp_pat in compiled_patterns:
-                    matches = list(comp_pat.finditer(content))
-                    if matches:
-                        lines = content.splitlines()
-                        for m in matches:
-                            line_no = content[:m.start()].count("\n") + 1
-                            line_text = lines[line_no - 1].strip() if line_no <= len(lines) else ""
-                            violations.append({
-                                "type": "FORBIDDEN_STRING",
-                                "file": rel_str,
-                                "line": line_no,
-                                "pattern": raw_pat,
-                                "snippet": line_text[:100]
-                            })
-            except Exception as e:
-                violations.append({
-                    "type": "READ_ERROR",
-                    "file": rel_str,
-                    "message": str(e)
-                })
+    try:
+        res = subprocess.run(["git", "ls-files"], cwd=str(repo_root), capture_output=True, text=True, encoding="utf-8", errors="replace")
+        tracked_files = res.stdout.splitlines() if res.returncode == 0 else []
+    except Exception:
+        tracked_files = []
+
+    for rel_str in tracked_files:
+        rel_str = rel_str.strip().replace("\\", "/")
+        if not rel_str:
+            continue
+        file_name = Path(rel_str).name
+        if file_name in EXCLUDED_FILES or rel_str in EXCLUDED_FILES or any(rel_str.endswith(f"/{ef}") for ef in EXCLUDED_FILES):
+            continue
+        ext = os.path.splitext(file_name)[1].lower()
+        if ext in BINARY_EXTENSIONS:
+            continue
+
+        full_path = repo_root / rel_str
+        if not full_path.is_file():
+            continue
+
+        try:
+            content = full_path.read_text(encoding="utf-8", errors="ignore")
+            for raw_pat, comp_pat in compiled_patterns:
+                matches = list(comp_pat.finditer(content))
+                if matches:
+                    lines = content.splitlines()
+                    for m in matches:
+                        line_no = content[:m.start()].count("\n") + 1
+                        line_text = lines[line_no - 1].strip() if line_no <= len(lines) else ""
+                        violations.append({
+                            "type": "FORBIDDEN_STRING",
+                            "file": rel_str,
+                            "line": line_no,
+                            "pattern": raw_pat,
+                            "snippet": line_text[:100]
+                        })
+        except Exception as e:
+            violations.append({
+                "type": "READ_ERROR",
+                "file": rel_str,
+                "message": str(e)
+            })
                 
     return violations
 

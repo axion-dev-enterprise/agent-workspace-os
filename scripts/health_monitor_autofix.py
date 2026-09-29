@@ -16,11 +16,21 @@ import json
 import ssl
 import datetime
 import os
+import sys
 import shutil
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(r"C:\workspace")
 TAILSCALE_BIN = r"C:\Program Files\Tailscale\tailscale.exe"
+
+def _silent_run(cmd, **kwargs):
+    if sys.platform == "win32":
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = 0
+        kwargs["startupinfo"] = si
+        kwargs["creationflags"] = 0x08000000 | 0x00000200
+    return subprocess.run(cmd, **kwargs)
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
@@ -41,7 +51,7 @@ WEB_ENDPOINTS = [
 def check_tailscale_node(node):
     cmd = [TAILSCALE_BIN, "ping", "--c=1", node["ip"]]
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+        res = _silent_run(cmd, capture_output=True, text=True, timeout=5)
         if res.returncode == 0 and "pong from" in res.stdout:
             # Extract latency
             parts = res.stdout.strip().split()
@@ -127,15 +137,15 @@ def auto_fix_routines(telemetry):
     registry_file = WORKSPACE_ROOT / "docs" / "SKILLS_REGISTRY.md"
     if not registry_file.exists():
         print("[Auto-Fix] SKILLS_REGISTRY.md ausente. Executando auto-sincronização...")
-        subprocess.run(["python", str(WORKSPACE_ROOT / "scripts" / "sync_skills_registry.py")], capture_output=True)
+        _silent_run(["python", str(WORKSPACE_ROOT / "scripts" / "sync_skills_registry.py")], capture_output=True)
         actions_taken.append("Regenerado docs/SKILLS_REGISTRY.md automaticamente")
 
     # Auto-Fix 2: Verificação do serviço local Tailscale
     try:
-        svc_check = subprocess.run(["powershell", "-Command", "(Get-Service Tailscale).Status"], capture_output=True, text=True)
+        svc_check = _silent_run(["powershell", "-Command", "(Get-Service Tailscale).Status"], capture_output=True, text=True)
         if "Running" not in svc_check.stdout:
             print("[Auto-Fix] Serviço Tailscale inativo! Reiniciando serviço...")
-            subprocess.run(["powershell", "-Command", "Start-Service Tailscale"], capture_output=True)
+            _silent_run(["powershell", "-Command", "Start-Service Tailscale"], capture_output=True)
             actions_taken.append("Reiniciado serviço local do Tailscale via PowerShell")
     except Exception:
         pass

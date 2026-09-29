@@ -23,10 +23,12 @@ SKILLS_REGISTRY_MD_PATH = WORKSPACE_ROOT / "docs" / "SKILLS_REGISTRY.md"
 INVENTORY_JSON_PATH = WORKSPACE_ROOT / "workspace" / "inventory.json"
 
 DOMAIN_MAP = {
+    "agentic-engineering-suite": ("IA & Engenharia de Agentes", "Toolkit avançado: inteligência geoespacial/leads, otimização Docker multi-stage, micro-interações CSS e workspaces de agentes"),
     # 1. Core Integrations
     "gam-ops": ("Google Workspace", "Drive, Gmail, Docs, Sheets, OUs, Service Accounts e Domain-wide Delegation"),
     "cloudflare-edge-ops": ("Edge & Serverless", "Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com"),
     "tailwind-shadcn-ux": ("UI/UX & Design", "Design tokens, componentes Radix UI (WCAG AAA), Dark/Light mode, microinterações e skeleton loaders"),
+    "anti-slop-ui-craft": ("UI/UX & Design", "Protocolo anti-slop, proibição de clichês visuais de IA, tipografia editorial, WCAG 2.2 AA e dials de controle estético"),
     "threejs-gsap-animation": ("2D/3D & Animações", "Cenas 3D Three.js / React Three Fiber, shaders GLSL, modelos Draco e GSAP ScrollTrigger"),
     "modern-responsive-architect": ("Layout & Responsividade", "Container Queries (@container), Subgrid, fontes fluidas com clamp(), viewports dvh/svh"),
     "web-security-pentest": ("Segurança & Pentest", "Auditoria OWASP Top 10, prevenção de Subdomain Takeover (124 subdomínios), secret scanning e WAF"),
@@ -52,8 +54,7 @@ DOMAIN_MAP = {
 
     # 4. Frontend & Mobile
     "nextjs-app-router-rsc": ("Frontend & Mobile", "Arquitetura Next.js 15, React Server Components (RSC), Server Actions, Suspense e streaming"),
-    "react-query-tanstack": ("Frontend & Mobile", "Gerenciamento de estado assíncrono, cache inteligente, revalidação e mutações com TanStack Query v5"),
-    "state-zustand-jotai": ("Frontend & Mobile", "Estado global leve, atômico e determinístico com Zustand e Jotai (sem boilerplate)"),
+    "react-state-architecture": ("Frontend & Mobile", "Gerenciamento de estado de servidor (TanStack Query v5) e cliente (Zustand/Jotai), cache e optimistic UI"),
     "react-native-expo": ("Frontend & Mobile", "Desenvolvimento mobile multiplataforma (iOS e Android) com Expo Router e React Native"),
     "web-vitals-performance": ("Frontend & Mobile", "Otimização de Core Web Vitals (LCP, INP, CLS), auditoria Lighthouse 100/100 e code-splitting"),
 
@@ -68,13 +69,13 @@ DOMAIN_MAP = {
     "langchain-langgraph-orchestration": ("IA & Engenharia de Agentes", "Orquestração de agentes cíclicos com estado, LangGraph, roteamento de ferramentas e memória persistente"),
     "rag-chunking-embeddings": ("IA & Engenharia de Agentes", "Pipelines de RAG avançado, divisão semântica de texto (chunking), busca híbrida BM25 + Vetorial e re-ranking"),
     "prompt-engineering-jailbreak-defense": ("IA & Engenharia de Agentes", "Engenharia de prompts robusta, defesa contra injeção de prompt (prompt injection) e estruturação de contexto"),
-    "whisper-stt-neural-voice": ("IA & Engenharia de Agentes", "Transcrição de áudio com OpenAI Whisper, diarização de locutores e tratamento de ruído acústico"),
-    "elevenlabs-tts-voiceover": ("IA & Engenharia de Agentes", "Síntese de voz neural ultrarrealista com ElevenLabs API, controle emocional e streaming de áudio"),
+    "neural-speech-audio": ("IA & Engenharia de Agentes", "Síntese de voz neural (TTS), transcrição (STT), clonagem de voz e diarização com ElevenLabs e Whisper"),
     "token-reduction-context-compression": ("IA & Engenharia de Agentes", "Otimização agressiva de tokens, compressão AST de código, minificação JSON, condensação de logs de CLI e padrão Ponytail YAGNI"),
     "plan-execute-verify-governance": ("IA & Engenharia de Agentes", "Ciclo Plan-Execute-Verify (PEV), portão de verificação empírica, análise pre-mortem de risco e arquitetura ADR"),
     "agents-md-master-architect": ("IA & Governança de Agentes", "Master skill: criação de novas skills, governança do AGENTS.md e arquitetura de documentação"),
 
     # 7. Testing & Automation
+    "paranoid-bug-hunter": ("Testing & QA", "Auditoria adversária, caça sistemática a bugs, race conditions, schema divergence e edge-case analysis"),
     "playwright-e2e-testing": ("Testing & QA", "Testes end-to-end automatizados com Playwright, regressão visual, gravação de traces e execução headless"),
     "pytest-mocking-fixtures": ("Testing & QA", "Testes unitários e de integração em Python com Pytest, fixtures parametrizadas, mocking e cobertura"),
     "web-scraping-crawling": ("Automação & Scraping", "Extração de dados resiliente, bypass de anti-bot, Playwright headless, Beautiful Soup e rotação de proxies"),
@@ -97,7 +98,13 @@ DOMAIN_MAP = {
     "multimedia-production-suite": ("Multimídia & Criação", "Corte sem render com LosslessCut, edição com Shotcut, pintura digital com Krita, GIMP e FxSound"),
     "deterministic-3d-motion-pipeline": ("Multimídia & Criação", "Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe"),
     "content-3d-social-studio": ("Multimídia & Criação", "Automação de estúdio para posts de redes sociais, renders 3D e copy com IA"),
-    "antigravity-cli": ("Ferramentas de IA & CLI", "Antigravity CLI (agy), agentes autônomos, workflows e automações de terminal")
+    "antigravity-cli": ("Ferramentas de IA & CLI", "Antigravity CLI (agy), agentes autônomos, workflows e automações de terminal"),
+
+    # 10. Agent Communications & Intelligence
+    "agent-email-social-intelligence": ("Comunicação & Inteligência", "E-mail IMAP/SMTP para agentes (Proton Bridge, Gmail, Google Workspace), presença digital e monitor de conteúdo: GitHub Trending, HN, RSS feeds"),
+
+    # 11. Vídeo Programático & React (Remotion Master Skill)
+    "remotion-video-studio": ("Vídeo & Remotion", "Produção programática de vídeo em React, Remotion Studio, renderização SSR e animações dinâmicas"),
 }
 
 def parse_frontmatter(content: str):

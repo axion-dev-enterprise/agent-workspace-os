@@ -1,36 +1,58 @@
 ---
 name: content-3d-social-studio
 description: >-
-  Produces reusable 3D web experiences and social-media creative workflows with
-  Three.js, Canva, Runway, and Windsor.ai. Use for campaign assets, social
-  formats, 3D landing-page motion, or approved publishing and ads operations.
+  Produces reusable 3D web experiences and social-media creative workflows with Three.js, Canva, Runway, and Windsor.ai. Use for campaign assets, social formats, 3D landing-page motion, or approved publishing and ads operations.
 ---
 
-# Content 3d Social Studio
+# Content 3D & Social Studio Skill
 
-Use this skill to turn a campaign brief into an approved creative package, a
-responsive 3D web scene, or a connected publishing/ads workflow. It does not
-grant permission to publish, spend budget, upload a private asset, or alter a
-live campaign.
+Guia operacional para produção de assets criativos multimídia, experiências web 3D imersivas com Three.js e esteiras de publicação em redes sociais e plataformas de anúncios.
 
-## Route the request
+---
 
-- **3D web or supplied GLB/GLTF asset:** read [Three.js snippets](references/threejs-snippets.md). Prefer a bounded, responsive scene with an accessible HTML fallback.
-- **Creative pack, social formats, Canva, or Runway:** read [creative templates](references/creative-templates.md). Start with the campaign brief and make deliverables reviewable before generation or export.
-- **Social publishing or Meta/Google Ads:** use Windsor.ai only after its account is connected. Discover connectors and account IDs first; request confirmation immediately before any write action.
+## 1. Roteamento de Solicitações Criativas
 
-## Operating rules
+- **Cenas Web 3D & Modelos GLTF/GLB**: Consulte [Three.js snippets](references/threejs-snippets.md). Priorize cenas delimitadas, responsivas e com fallback acessível em HTML/CSS para navegadores sem aceleração gráfica.
+- **Formatos Sociais & Templates**: Consulte [creative templates](references/creative-templates.md). Inicie sempre pelo briefing de campanha e gere entregáveis inspecionáveis antes de qualquer exportação ou consumo de créditos.
+- **Automação de Anúncios e Analytics**: Utilize conectores homologados (Meta/Google Ads via Windsor.ai) apenas após autorização explícita e confirmação de IDs de conta pelo usuário.
 
-1. State the deliverable, platforms, audience, aspect ratios, brand constraints, and CTA before creating a campaign asset. Ask only for missing material inputs.
-2. For Three.js, use CSS for display size; update the camera projection only when the drawing buffer changes. Cap render cost for mobile and dispose of geometries, materials, textures, controls, and loaded assets on unmount.
-3. Use GLTF/GLB for production 3D assets. Do not claim to have modeled a production asset unless one was actually created or supplied; keep asset licensing and attribution with the project.
-4. For Canva or Runway, first verify the connected workspace/capabilities. Do not promise video generation or editing when the connected plan does not expose it. Treat credit-consuming generation as an external-cost action.
-5. For Windsor.ai, first call `get_connectors`; never infer connector slugs, account IDs, action IDs, or permissions. Read analytics safely; require the user's confirmation naming the exact account and change before `execute_action`.
-6. Keep raw media and intermediate renders outside Git. Save final deliverables in the user-approved location and report actual output paths or platform URLs only after verification.
+---
 
-## Quality gate
+## 2. Regras Operacionais e Guardrails
 
-- Visual: safe margins, readable captions, contrast, platform-appropriate framing, and a clean first frame/thumbnail.
-- Web 3D: keyboard-safe page content, `prefers-reduced-motion` fallback, no horizontal overflow, mobile performance checked.
-- Marketing: correct brand/account, destination URL and UTM policy, and no unapproved claims.
-- Publishing/ads: report the selected account, asset, audience, budget, schedule, and the explicit approval that authorized the write.
+1. **Briefing Mandatório**: Declare o formato de entrega, plataformas de destino, proporções de tela (`1:1` Feed, `9:16` Stories/Reels, `16:9` Vídeo Horizontal), limites de marca e Call to Action (CTA) antes de gerar o asset.
+2. **Ciclo de Vida Three.js & Desalocação**: No React/Three.js, utilize CSS para definir as dimensões de exibição. No desmonte do componente (`unmount`), invoque obrigatoriamente `.dispose()` em geometrias, materiais, texturas e controles para eliminar vazamentos de memória na GPU.
+3. **Formatos 3D Canônicos**: Utilize formatos binários `.glb` com compressão Draco/Meshopt. Mantenha os créditos de licença e atribuição acompanhando o projeto.
+4. **Respeito a Créditos em IA Generativa**: Antes de acionar geração de imagens ou vídeos (Canva/Runway), confirme o saldo e obtenha aprovação do operador humano, tratando o gasto como ação financeira de mutação externa (Regra #5A).
+5. **Prevenção de Emojis em UI (Regra #6)**: NUNCA utilize emojis em botões, topbars ou legendas de interfaces interativas; use exclusivamente ícones vetoriais SVG profissionais.
+
+---
+
+## 3. Matriz de Proporções e Formatos de Exportação
+
+| Plataforma | Finalidade | Aspect Ratio | Resolução Recomendada |
+| :--- | :--- | :--- | :--- |
+| **Instagram / TikTok** | Reels / Stories | `9:16` | 1080 x 1920 px |
+| **Instagram / LinkedIn** | Post no Feed | `1:1` ou `4:5` | 1080 x 1080 px / 1080 x 1350 px |
+| **YouTube / Web Desktop** | Vídeo / Hero Banner | `16:9` | 1920 x 1080 px |
+| **Twitter / X** | Card de Compartilhamento | `1.91:1` | 1200 x 630 px |
+
+---
+
+## 4. Portão de Qualidade (Quality Gate)
+
+- **Acessibilidade 3D**: Suporte a `@media (prefers-reduced-motion: reduce)` para pausar rotações contínuas de câmera.
+- **Performance Mobile**: Limitar a taxa de quadros e complexidade de polígonos em telas de baixa densidade gráfica.
+- **Zero Layout Shift**: Espaço em tela estritamente reservado antes do carregamento do canvas WebGL.
+
+---
+
+## 5. Ferramental Integrado
+
+Audite arquivos de código de cenas Three.js e specs com o verificador embutido:
+```powershell
+python .agents/skills/content-3d-social-studio/scripts/asset_specs_linter.py <pasta-ou-arquivo>
+```
+O linter verifica:
+- Falta de `.dispose()` em objetos WebGL e Three.js.
+- Ausência de tratamento para `prefers-reduced-motion`.

@@ -23,6 +23,13 @@ Skill mestra (*Master Meta-Skill*) canônica para governança de agentes, arquit
 - **Delegação Modular**: regras extensas de domínio, checklists de segurança e guias arquiteturais devem residir em arquivos dedicados em `docs/rules/`, `docs/architecture/` ou em `SKILL.md` especializados, mantendo o `AGENTS.md` abaixo de 20KB.
 - **Hierarquia em Monorepos**: quando subprojetos ou pacotes necessitarem de instruções sob medida, utilize arquivos `AGENTS.md` aninhados nas subpastas (`packages/*/AGENTS.md`). O agente sempre prioriza o `AGENTS.md` mais próximo do arquivo em edição. Instruções explícitas do usuário no chat sobrepõem tudo.
 
+### 1.3 O Princípio da Generalidade e Reusabilidade (*Anti-Silo Mandate*)
+> **"SKILLS DEVEM SER GENÉRICAS, PARAMETRIZÁVEIS E REAPROVEITÁVEIS EM MÚLTIPLAS APLICAÇÕES."**
+
+- **Proibição de Skills Monopropósito ou Hiper-Acopladas**: Uma skill nunca deve ser construída como um script engessado para resolver apenas a tela ou o ticket do dia. Código com regras de negócio exclusivas de um único produto pertence ao código da aplicação (`apps/<app>/src/`), jamais à biblioteca global de skills (`.agents/skills/`).
+- **Separação de Mecanismo vs. Política**: O núcleo da skill (scripts e metodologias) deve ser agnóstico à stack. Use parâmetros, perfis (`--profile generic|security|concurrency`) e contratos extensíveis (ex: `--rules <custom.json>`) para que a mesma skill possa auditar ou operar qualquer frontend, backend, microsserviço ou banco de dados da organização.
+- **Consolidação vs. Micro-Fragmentação**: É terminantemente proibido fragmentar uma mesma tecnologia em dezenas de micro-skills de finalidade única (ex: separar um framework em 12 skills redundantes). Priorize skills coesas, profundas e modulares com subcomandos e documentação estruturada.
+
 ---
 
 ## 2. Padrão Canônico de Construção de Novas Skills
@@ -76,7 +83,13 @@ Quando uma nova skill for solicitada ou identificada:
    - Preencha o `SKILL.md` com as regras de ouro, padrões e anti-padrões.
    - Adicione scripts executáveis em `scripts/` para automações complexas.
    - Documente especificações extensas em `references/`.
-3. **Sincronização Canônica**:
+3. **Validação Pré-Merge Mandatória**:
+   Execute o validador para auditar frontmatter, ausência de stubs e sintaxe de scripts:
+   ```bash
+   python scripts/validate_skill.py --skill "nome-da-skill"
+   ```
+
+4. **Sincronização Canônica**:
    Dispare o sincronizador global para propagar a nova skill para toda a infraestrutura:
    ```bash
    python scripts/sync_skills_registry.py

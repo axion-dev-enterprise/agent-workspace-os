@@ -1,0 +1,28 @@
+{
+  "category": "cloud",
+  "platform": "cloudflare",
+  "name": "Cloudflare Edge & Zero Trust",
+  "description": "Credenciais para gerenciamento de DNS, Workers, D1, R2, Pages e túneis Cloudflared.",
+  "portal_url": "https://dash.cloudflare.com/",
+  "updated_at": "2026-09-26T10:50:00Z",
+  "variables": {
+    "CLOUDFLARE_API_TOKEN": {
+      "type": "string",
+      "required": true,
+      "description": "API Token com permissões de Zone DNS, Workers e Tunnels",
+      "scope": "edge_management"
+    },
+    "CLOUDFLARE_ACCOUNT_ID": {
+      "type": "string",
+      "required": false,
+      "description": "Account Tag identificadora do tenant Cloudflare",
+      "scope": "account"
+    },
+    "CLOUDFLARE_ZONE_ID": {
+      "type": "string",
+      "required": false,
+      "description": "ID da zona primária (example.com)",
+      "scope": "dns"
+    }
+  }
+}

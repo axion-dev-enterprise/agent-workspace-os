@@ -130,3 +130,11 @@ O pipeline é composto por quatro camadas desacopladas que garantem reprodutibil
 - **Arquivos Intermediários**: Logs e frames efêmeros pertencem estritamente a pastas descartáveis em `output/` ou `temp/`.
 - **Licenciamento & Soberania**: Zero dependência de serviços externos, CDNs ou APIs pagas de IA generativa de vídeo. A infraestrutura é auto-suficiente no hardware local.
 - **Portabilidade**: Shaders em GLSL 330 core / ES 3.0 garantem compatibilidade imediata entre GPUs dedicadas (AMD/NVIDIA/Intel) e drivers WGL/EGL.
+
+---
+
+## 5. Toolkit de Ferramentas Avançadas (`packages/motion-engine`)
+- **Geometria & Malhas (`motion_engine.geometry`)**: Primitivas procedurais de alta definição (`create_primitive`) via `Trimesh` e suporte a carregamento de ativos externos (`load_mesh_asset`).
+- **Ruído Procedural (`motion_engine.noise`)**: OpenSimplex com síntese multi-escala fBm para deslocamento orgânico e animação contínua de superfícies no espaço 4D ($x, y, z, t$).
+- **Processamento de Sinal Digital (`motion_engine.dsp`)**: Filtros IIR Butterworth com varredura de corte via `scipy.signal` e convolução de impulso estéreo para acústica realista de sala.
+

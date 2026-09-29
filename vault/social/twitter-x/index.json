@@ -1,0 +1,40 @@
+{
+  "category": "social",
+  "platform": "twitter-x",
+  "name": "Twitter / X Developer API",
+  "description": "Credenciais para autenticação na API v2 do X e integração com motor de Syndication.",
+  "portal_url": "https://developer.x.com/en/portal/dashboard",
+  "updated_at": "2026-09-26T10:49:00Z",
+  "variables": {
+    "X_BEARER_TOKEN": {
+      "type": "string",
+      "required": false,
+      "description": "App-Only Bearer Token para autenticação v2 no Twitter/X",
+      "scope": "read_public"
+    },
+    "X_API_KEY": {
+      "type": "string",
+      "required": false,
+      "description": "OAuth 1.0a Consumer Key do App",
+      "scope": "app_auth"
+    },
+    "X_API_KEY_SECRET": {
+      "type": "string",
+      "required": false,
+      "description": "OAuth 1.0a Consumer Secret do App",
+      "scope": "app_auth"
+    },
+    "X_ACCESS_TOKEN": {
+      "type": "string",
+      "required": false,
+      "description": "User Access Token para publicar tweets em nome do agente",
+      "scope": "write_tweets"
+    },
+    "X_ACCESS_TOKEN_SECRET": {
+      "type": "string",
+      "required": false,
+      "description": "User Access Token Secret para assinar requisições de escrita",
+      "scope": "write_tweets"
+    }
+  }
+}

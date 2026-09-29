@@ -14,6 +14,8 @@ __pycache__/
 *.pem
 *.pfx
 secrets/
+vault/**/.env
+vault/**/.env.*
 vault/private/
 credentials/
 auth_info_baileys/
@@ -36,6 +38,8 @@ tmp/
 *.session
 *.session-journal
 *_cookies.json
+*.mp4
+services/motion-render-service/output/
 
 # IDEs & System
 .DS_Store
@@ -50,3 +54,4 @@ desktop.ini
 .env*
 memory/
 apps/axion-pay/
+services/axion-flow/

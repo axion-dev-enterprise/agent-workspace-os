@@ -37,6 +37,26 @@ module.exports = {
       error_file: 'memory/telegram/pm2_logs/error.log',
       out_file: 'memory/telegram/pm2_logs/out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss'
+    },
+    {
+      name: 'axion-whatsapp-bridge',
+      script: 'server.js',
+      cwd: 'C:/workspace/scripts/whatsapp_bridge',
+      interpreter: 'node',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '400M',
+      restart_delay: 3000,
+      env: {
+        WHATSAPP_PORT: process.env.WHATSAPP_PORT || '4114',
+        WHATSAPP_PAIRING_NUMBER: process.env.WHATSAPP_PAIRING_NUMBER || '551151041784',
+        WHATSAPP_ADMIN_NUMBER: process.env.WHATSAPP_ADMIN_NUMBER || '5511988045139',
+        WHATSAPP_ADMIN_LID: process.env.WHATSAPP_ADMIN_LID || '36735559962762',
+        BRAIN_URL: process.env.BRAIN_URL || 'http://127.0.0.1:8765'
+      },
+      error_file: 'memory/whatsapp/pm2_logs/error.log',
+      out_file: 'memory/whatsapp/pm2_logs/out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss'
     }
   ]
 };

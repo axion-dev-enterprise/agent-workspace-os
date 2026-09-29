@@ -1,0 +1,34 @@
+{
+  "category": "security",
+  "platform": "proton",
+  "name": "Proton Privacy & VPN Ecosystem",
+  "description": "Credenciais para túneis VPN criptografados e sincronização de arquivos privados com Proton Drive / Cryptomator.",
+  "portal_url": "https://account.proton.me/",
+  "updated_at": "2026-09-26T10:51:00Z",
+  "variables": {
+    "PROTON_USERNAME": {
+      "type": "string",
+      "required": false,
+      "description": "Usuário principal da conta Proton",
+      "scope": "account"
+    },
+    "PROTON_PASSWORD": {
+      "type": "string",
+      "required": false,
+      "description": "Senha principal da conta Proton",
+      "scope": "account"
+    },
+    "PROTON_OPENVPN_USERNAME": {
+      "type": "string",
+      "required": false,
+      "description": "Nome de usuário específico para credenciais IKEv2 / WireGuard / OpenVPN",
+      "scope": "vpn"
+    },
+    "PROTON_OPENVPN_PASSWORD": {
+      "type": "string",
+      "required": false,
+      "description": "Senha específica para credenciais OpenVPN / WireGuard",
+      "scope": "vpn"
+    }
+  }
+}

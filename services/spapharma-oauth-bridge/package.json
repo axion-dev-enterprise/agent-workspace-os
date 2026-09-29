@@ -1,0 +1,11 @@
+{
+  "name": "spapharma-oauth-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.3.0"
+  }
+}

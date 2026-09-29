@@ -52,9 +52,6 @@ INTERNAL_FILES = [
     "scripts/inspect_vercel_projects.py",
     "scripts/probe_tailnet_nodes.py",
     "scripts/production_deploy_test.py",
-    "scripts/telegram_assistant_bot.py",
-    "scripts/brain_server.py",
-    "scripts/bot_engine",
     "ecosystem.dev.js",
     "apps/axion-pay",
     "workspace/google_workspace_inventory.json",
@@ -133,31 +130,55 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
             if rel_f.startswith("memory/") or rel_f.startswith("temp/"):
                 continue
             eligible_files.append(rel_f)
-            
-        if eligible_files:
-            run_git(["checkout", "axion", "--"] + eligible_files)
-            
-        copied_count = 0
+
+        to_checkout = []
+        to_delete = []
         for rel_f in eligible_files:
+            res = subprocess.run(["git", "cat-file", "-e", f"axion:{rel_f}"], cwd=str(WORKSPACE_ROOT), capture_output=True)
+            if res.returncode == 0:
+                to_checkout.append(rel_f)
+            else:
+                to_delete.append(rel_f)
+
+        if to_checkout:
+            for i in range(0, len(to_checkout), 50):
+                batch = to_checkout[i:i+50]
+                run_git(["checkout", "axion", "--"] + batch)
+
+        for rel_f in to_delete:
+            p = WORKSPACE_ROOT / rel_f
+            if p.exists():
+                if p.is_dir():
+                    shutil.rmtree(p, ignore_errors=True)
+                else:
+                    try:
+                        p.unlink()
+                    except Exception:
+                        pass
+            try:
+                run_git(["rm", "-f", "--cached", rel_f])
+            except Exception:
+                pass
+
+        copied_count = 0
+        for rel_f in to_checkout:
             file_path = WORKSPACE_ROOT / rel_f
             if file_path.exists():
                 if rel_f not in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
                     sanitize_file(file_path)
                 copied_count += 1
-                
-        print(f"[*] Synchronized and sanitized {copied_count} files onto 'main'.")
+
+        print(f"[*] Synchronized and sanitized {copied_count} files onto 'main' (deleted {len(to_delete)} obsolete files).")
         
         # 5. Global sanitization sweep across all text files on 'main'
-        EXCLUDED_SWEEP_DIRS = {".git", "node_modules", "memory", "temp", "tmp", ".gemini", ".vercel", ".wrangler"}
-        for root, dirs, files in os.walk(WORKSPACE_ROOT):
-            dirs[:] = [d for d in dirs if d not in EXCLUDED_SWEEP_DIRS]
-            for f in files:
-                full_f = Path(root) / f
-                rel_f = str(full_f.relative_to(WORKSPACE_ROOT)).replace("\\", "/")
-                if rel_f in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
-                    continue
-                if full_f.suffix.lower() in [".md", ".json", ".py", ".ts", ".js", ".html", ".css", ".txt", ".yml", ".yaml", ".xml", ".mjs", ".cjs"] or full_f.name.startswith(".env"):
-                    sanitize_file(full_f)
+        tracked_main = run_git(["ls-files"]).splitlines()
+        for rel_f in tracked_main:
+            rel_f = rel_f.strip().replace("\\", "/")
+            if not rel_f or rel_f in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
+                continue
+            full_f = WORKSPACE_ROOT / rel_f
+            if full_f.suffix.lower() in [".md", ".json", ".py", ".ts", ".js", ".html", ".css", ".txt", ".yml", ".yaml", ".xml", ".mjs", ".cjs"] or full_f.name.startswith(".env"):
+                sanitize_file(full_f)
                     
         # 6. Ensure all internal files and directories are strictly removed on main
         purged = 0
@@ -223,6 +244,7 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
         print("=== Whitelabel sync completed successfully! ===")
 
 if __name__ == "__main__":
-    msg = sys.argv[1] if len(sys.argv) > 1 else None
+    non_flags = [a for a in sys.argv[1:] if not a.startswith("--")]
+    msg = non_flags[0] if non_flags else None
     push = "--push" in sys.argv
     export_whitelabel(commit_message=msg, push_remote=push)

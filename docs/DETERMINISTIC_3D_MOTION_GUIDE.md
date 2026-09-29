@@ -110,3 +110,18 @@ Para garantir máxima performance de I/O e evitar consumo desnecessário de escr
 3. **Verify**:
    - Inspecionar a saída gerada com comandos nativos do PowerShell (`Get-Item`, `ffprobe.exe` ou `ffmpeg.exe -i`).
    - Validar que o relatório `render-report.json` documenta resolução, taxa de quadros, duração e tempo total de processamento.
+
+---
+
+## 7. Ferramentas e Recursos de Expansão (v1.1)
+
+O ecossistema conta com bibliotecas científicas de ponta integradas no monorepo (`packages/motion-engine`):
+
+| Biblioteca | Módulo no Pacote | Funcionalidade Principal |
+| :--- | :--- | :--- |
+| **`Trimesh`** | `motion_engine.geometry` | Criação de primitivas procedurais (`icosphere`, `torus`, `cylinder`, `capsule`), cálculo de normais e importação de modelos externos (`.glb`, `.gltf`, `.obj`). |
+| **`OpenSimplex`** | `motion_engine.noise` | Geração de ruído procedural 2D/3D/4D e *fractional Brownian motion* (fBm) para deformação orgânica de vértices e superfícies fluidas. |
+| **`SciPy`** | `motion_engine.dsp` | Filtros IIR Butterworth (varreduras dinâmicas de frequência) e convolução de reverb estéreo para simulação acústica espacial. |
+| **`SoundFile`** | `motion_engine.audio` | I/O de áudio em ponto flutuante de 32-bits e múltiplos formatos de exportação. |
+| **`ImageIO`** | Pipeline de Suporte | Manipulação de sequências de quadros, conversão e exportação rápida de GIFs animados. |
+

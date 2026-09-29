@@ -1,0 +1,12 @@
+{
+  "category": "cloud",
+  "platform": "shopify",
+  "description": "Acesso temporário autorizado à Shopify SPA Pharma Brasil",
+  "variables": {
+    "SHOPIFY_SPAPHARMA_EMAIL": {"type":"string","required":true,"description":"Identificador de login da loja","scope":"auth"},
+    "SHOPIFY_SPAPHARMA_PASSWORD": {"type":"string","required":true,"description":"Senha temporária fornecida pelo operador","scope":"auth"}
+    ,"SHOPIFY_N8N_CLIENT_ID": {"type":"string","required":false,"description":"Identificador do app n8n SpaPharma (SERVIDOR), somente se houver transferência autorizada pelo responsável","scope":"oauth_client"}
+    ,"SHOPIFY_N8N_CLIENT_SECRET": {"type":"string","required":false,"description":"Segredo do cliente do app n8n SpaPharma (SERVIDOR), somente se houver transferência autorizada pelo responsável","scope":"oauth_client"}
+    ,"SHOPIFY_N8N_ACCESS_TOKEN": {"type":"string","required":false,"description":"Token efêmero obtido pelo fluxo client_credentials; manter renovação programática","scope":"admin_api"}
+  }
+}

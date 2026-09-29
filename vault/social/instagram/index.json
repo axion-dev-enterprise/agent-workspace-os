@@ -1,0 +1,28 @@
+{
+  "category": "social",
+  "platform": "instagram",
+  "name": "Instagram / Meta Integration",
+  "description": "Credenciais para autenticação e monitoramento de perfis via Instaloader ou Meta Graph API.",
+  "portal_url": "https://www.instagram.com/",
+  "updated_at": "2026-09-26T10:49:00Z",
+  "variables": {
+    "IG_USERNAME": {
+      "type": "string",
+      "required": false,
+      "description": "Nome de usuário da conta Instagram do agente",
+      "scope": "session_auth"
+    },
+    "IG_PASSWORD": {
+      "type": "string",
+      "required": false,
+      "description": "Senha da conta Instagram do agente",
+      "scope": "session_auth"
+    },
+    "IG_SESSION_COOKIE": {
+      "type": "string",
+      "required": false,
+      "description": "Cookie de sessão 'sessionid' para autenticação sem digitar senha",
+      "scope": "session_auth"
+    }
+  }
+}

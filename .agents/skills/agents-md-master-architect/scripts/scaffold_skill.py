@@ -131,7 +131,7 @@ def main():
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:
-        print(f"[{result['status'].upper()}] {{result['message']}} (ts: {{result['timestamp']}})")
+        print(f"[{{result['status'].upper()}}] {{result['message']}} (ts: {{result['timestamp']}})")
 
     sys.exit(0 if result.get("status") == "healthy" else 1)
 

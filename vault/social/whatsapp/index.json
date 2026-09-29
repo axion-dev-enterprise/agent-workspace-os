@@ -1,0 +1,33 @@
+{
+  "category": "social",
+  "platform": "whatsapp",
+  "name": "WhatsApp Multi-Device Bridge & CAPI",
+  "description": "Credenciais para autenticação de socket Baileys e webhooks do WhatsApp.",
+  "updated_at": "2026-09-26T10:50:00Z",
+  "variables": {
+    "WHATSAPP_PHONE_NUMBER": {
+      "type": "string",
+      "required": false,
+      "description": "Número de telefone da conta conectada no WhatsApp",
+      "scope": "bridge_auth"
+    },
+    "WHATSAPP_PAIRING_CODE": {
+      "type": "string",
+      "required": false,
+      "description": "Código de pareamento de 8 dígitos para login sem QR Code",
+      "scope": "pairing"
+    },
+    "WHATSAPP_API_TOKEN": {
+      "type": "string",
+      "required": false,
+      "description": "Token de acesso Cloud API da Meta (se modo Cloud for ativado)",
+      "scope": "meta_cloud"
+    },
+    "WHATSAPP_WEBHOOK_VERIFY_TOKEN": {
+      "type": "string",
+      "required": false,
+      "description": "Token secreto de verificação do webhook",
+      "scope": "webhook"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "category": "payments",
+  "platform": "axion-staging",
+  "name": "AXION Staging - Credenciais de Teste",
+  "description": "Credenciais sinteticas geradas para validacao do staging integrado AXION Flow + AXION Pay. Nenhuma credencial de producao reside aqui e nenhum pagamento real pode ser processado com estas chaves.",
+  "portal_url": null,
+  "updated_at": "2026-09-29T18:20:00Z",
+  "variables": {
+    "AXION_PAY_STAGING_TEST_API_KEY": {
+      "type": "string",
+      "required": true,
+      "description": "API key de teste injetada no AXION Pay staging via workflow staging-ops. Formato segredo:merchantId:escopos com merchantId staging-e2e e escopos charges:read,charges:write,sandbox:read.",
+      "scope": "staging_e2e_authenticated_reads_and_charges"
+    },
+    "AXION_FLOW_STAGING_WEBHOOK_SECRET": {
+      "type": "string",
+      "required": true,
+      "description": "Segredo HMAC-SHA256 injetado no AXION Flow staging para assinar envelopes sinteticos em POST /api/v1/webhooks/axion-pay durante o teste de integracao PAY -> FLOW.",
+      "scope": "staging_e2e_webhook_contract"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "category": "ai",
+  "platform": "llm-providers",
+  "name": "LLM Inference & AI API Keys",
+  "description": "Chaves de API para modelos de linguagem e inferência em nuvem (OpenRouter, HuggingFace, OpenAI, Gemini).",
+  "updated_at": "2026-09-26T10:50:00Z",
+  "variables": {
+    "OPENROUTER_API_KEY": {
+      "type": "string",
+      "required": true,
+      "description": "Chave de acesso à API OpenRouter para roteamento de modelos",
+      "scope": "inference"
+    },
+    "OPENROUTER_MODEL": {
+      "type": "string",
+      "required": false,
+      "description": "Modelo principal padrão no OpenRouter",
+      "scope": "config"
+    },
+    "OPENROUTER_FALLBACK_MODEL": {
+      "type": "string",
+      "required": false,
+      "description": "Modelo de contingência caso o principal falhe",
+      "scope": "config"
+    },
+    "HUGGINGFACE_TOKEN": {
+      "type": "string",
+      "required": false,
+      "description": "Token HuggingFace para download de pesos e modelos locais",
+      "scope": "models"
+    },
+    "OPENAI_API_KEY": {
+      "type": "string",
+      "required": false,
+      "description": "Chave da API oficial OpenAI",
+      "scope": "inference"
+    },
+    "GEMINI_API_KEY": {
+      "type": "string",
+      "required": false,
+      "description": "Chave da API Google Gemini Studio / Vertex",
+      "scope": "inference"
+    },
+    "ANTHROPIC_API_KEY": {
+      "type": "string",
+      "required": false,
+      "description": "Chave da API Anthropic Claude",
+      "scope": "inference"
+    }
+  }
+}

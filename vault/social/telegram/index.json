@@ -1,0 +1,34 @@
+{
+  "category": "social",
+  "platform": "telegram",
+  "name": "Telegram Bot API",
+  "description": "Credenciais para o bot operacional AXION e despacho de alertas SRE.",
+  "portal_url": "https://t.me/BotFather",
+  "updated_at": "2026-09-26T10:49:00Z",
+  "variables": {
+    "TELEGRAM_BOT_TOKEN": {
+      "type": "string",
+      "required": true,
+      "description": "Token de autenticação do Telegram Bot emitido pelo @BotFather",
+      "scope": "bot_api"
+    },
+    "TELEGRAM_BOT_USERNAME": {
+      "type": "string",
+      "required": false,
+      "description": "Handle do bot (@axion_assistant_bot)",
+      "scope": "metadata"
+    },
+    "TELEGRAM_BOT_FIRST_NAME": {
+      "type": "string",
+      "required": false,
+      "description": "Nome de exibição do bot",
+      "scope": "metadata"
+    },
+    "TELEGRAM_ADMIN_CHAT_ID": {
+      "type": "string",
+      "required": false,
+      "description": "Chat ID do administrador para envio de alertas proativos",
+      "scope": "alerts"
+    }
+  }
+}

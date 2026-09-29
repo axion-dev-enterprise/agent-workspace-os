@@ -1,0 +1,45 @@
+{
+  "category": "communication",
+  "platform": "email",
+  "name": "Agent Email System",
+  "description": "Credenciais para envio e polling de e-mails via IMAP/SMTP (Gmail ou Proton Bridge).",
+  "updated_at": "2026-09-26T10:51:00Z",
+  "variables": {
+    "AGENT_EMAIL_USER": {
+      "type": "string",
+      "required": true,
+      "description": "Endereço de e-mail da caixa do agente",
+      "scope": "email_auth"
+    },
+    "AGENT_EMAIL_PASSWORD": {
+      "type": "string",
+      "required": true,
+      "description": "App Password (Gmail) ou Bridge Password (Proton)",
+      "scope": "email_auth"
+    },
+    "AGENT_EMAIL_IMAP": {
+      "type": "string",
+      "required": false,
+      "description": "Host do servidor IMAP para leitura",
+      "scope": "network"
+    },
+    "AGENT_EMAIL_IMAP_PORT": {
+      "type": "integer",
+      "required": false,
+      "description": "Porta do servidor IMAP (993 SSL padrão ou 1143 Bridge)",
+      "scope": "network"
+    },
+    "AGENT_EMAIL_SMTP": {
+      "type": "string",
+      "required": false,
+      "description": "Host do servidor SMTP para envio",
+      "scope": "network"
+    },
+    "AGENT_EMAIL_SMTP_PORT": {
+      "type": "integer",
+      "required": false,
+      "description": "Porta do servidor SMTP (587 STARTTLS padrão ou 1025 Bridge)",
+      "scope": "network"
+    }
+  }
+}
