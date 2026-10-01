@@ -41,6 +41,8 @@ try:
     from scripts.vault_loader import load_vault
     load_vault()
 except Exception as _ve:
+    pass
+
 _dotenv = WORKSPACE_ROOT / '.env'
 if _dotenv.exists():
     try:
