@@ -98,19 +98,22 @@ def save_message(chat_id: int | str, direction: str, text: str, user_info: dict 
     sender = user_info.get("first_name", "Operador") if user_info else "Operador"
     username = f"@{user_info.get('username')}" if user_info and user_info.get("username") else f"ID:{chat_id}"
     
+    platform = "WhatsApp" if ("@s.whatsapp.net" in str(chat_id) or "@lid" in str(chat_id)) else "Telegram"
     if direction == "incoming":
         md_entry = (
-            f"\n#### [{now_time}] 📥 Telegram [User: {sender} ({username})]\n"
+            f"\n#### [{now_time}] 📥 {platform} [User: {sender} ({username})]\n"
             f"- **Mensagem**: {text.strip()}\n"
         )
     else:
         model = metadata.get("model", "Xiaomi Mimo") if metadata else "Xiaomi Mimo"
         tools = metadata.get("tools_executed", []) if metadata else []
         tools_str = f" | Tools: `{'`, `'.join(tools)}`" if tools else ""
-        first_line = text.strip().split("\n")[0][:150]
+        full_text = text.strip()
+        quoted_lines = ["> " + ln if ln.strip() else ">" for ln in full_text.split("\n")]
+        quoted_block = "\n".join(quoted_lines)
         md_entry = (
-            f"##### [{now_time}] 📤 Telegram [Bot: {model}{tools_str}]\n"
-            f"> {first_line}...\n"
+            f"##### [{now_time}] 📤 {platform} [Bot: {model}{tools_str}]\n"
+            f"{quoted_block}\n"
         )
 
     try:

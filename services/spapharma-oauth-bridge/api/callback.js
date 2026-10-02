@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { saveTokenRecord } = require('./token-store');
+const { saveTokenRecord } = require('../lib/token-store');
 
 function readCookie(header, name) {
   return (header || '').split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`))?.slice(name.length + 1);

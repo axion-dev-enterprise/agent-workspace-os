@@ -53,7 +53,7 @@ try:
         autonomous_agent, tool_executor, task_queue,
         message_store, dynamic_keyboard, tentacles, watcher,
         telemetry, error_handlers, intent_router, hit_cache,
-        first_content_stream
+        first_content_stream, identity_registry
     )
 except ImportError as e:
     print(f"Warning: Failed to import bot_engine modules: {e}")
@@ -70,6 +70,7 @@ except ImportError as e:
     intent_router = None
     hit_cache = None
     first_content_stream = None
+    identity_registry = None
 
 BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
 TG_API_BASE = f'https://api.telegram.org/bot{BOT_TOKEN}'
@@ -78,7 +79,7 @@ STARTUP_TIME = time.time()
 _EXECUTOR = ThreadPoolExecutor(max_workers=8)
 
 # Telegram API helpers
-def _tg_api(method, data=None, timeout=30):
+def _tg_api(method, data=None, timeout=30, max_retries=2):
     url = f'{TG_API_BASE}/{method}'
     body = json.dumps(data).encode('utf-8') if data else None
 
@@ -88,11 +89,11 @@ def _tg_api(method, data=None, timeout=30):
             return json.loads(r.read().decode('utf-8'))
 
     try:
-        if error_handlers:
+        if error_handlers and max_retries > 0:
             return error_handlers.retry_with_backoff(
                 _call,
-                max_retries=2,
-                initial_delay=1.0,
+                max_retries=max_retries,
+                initial_delay=0.8,
                 service_name="telegram_api",
                 circuit=error_handlers.TELEGRAM_CIRCUIT
             )
@@ -127,17 +128,35 @@ def _tg_send_full(chat_id, text, reply_markup=None):
             _tg_api('sendMessage', {'chat_id': chat_id, 'text': plain[:4000]})
 
 def _tg_edit(chat_id, message_id, text):
+    """Non-blocking in-place progress edit with short timeout"""
     if not message_id:
         return
-    _tg_api('editMessageText', {'chat_id': chat_id, 'message_id': message_id, 'text': text, 'parse_mode': 'HTML', 'disable_web_page_preview': True})
+    def _run():
+        try:
+            _tg_api('editMessageText', {'chat_id': chat_id, 'message_id': message_id, 'text': text, 'parse_mode': 'HTML', 'disable_web_page_preview': True}, timeout=4, max_retries=0)
+        except Exception:
+            pass
+    threading.Thread(target=_run, daemon=True).start()
 
 def _tg_delete(chat_id, message_id):
+    """Non-blocking message deletion with short timeout"""
     if not message_id:
         return
-    _tg_api('deleteMessage', {'chat_id': chat_id, 'message_id': message_id})
+    def _run():
+        try:
+            _tg_api('deleteMessage', {'chat_id': chat_id, 'message_id': message_id}, timeout=4, max_retries=0)
+        except Exception:
+            pass
+    threading.Thread(target=_run, daemon=True).start()
 
 def _tg_typing(chat_id):
-    _tg_api('sendChatAction', {'chat_id': chat_id, 'action': 'typing'})
+    """Non-blocking typing indicator"""
+    def _run():
+        try:
+            _tg_api('sendChatAction', {'chat_id': chat_id, 'action': 'typing'}, timeout=3, max_retries=0)
+        except Exception:
+            pass
+    threading.Thread(target=_run, daemon=True).start()
 
 # broadcast_alert
 SUBSCRIBERS_PATH = WORKSPACE_ROOT / 'workspace' / 'telegram_subscribers.json'
@@ -349,6 +368,23 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                            source='telegram', is_admin=False, is_lead=False):
     is_whatsapp = (source == 'whatsapp' or (isinstance(chat_id, str) and ('@s.whatsapp.net' in str(chat_id) or '@lid' in str(chat_id))))
     clean_msg = message.strip()
+
+    # 0. Centralized Identity & Permissions Lookup (O(1))
+    user_profile = None
+    if identity_registry:
+        user_profile = identity_registry.resolve_identity(
+            chat_id=chat_id,
+            username=username,
+            first_name=first_name,
+            source=source,
+            is_admin_hint=is_admin,
+            is_lead_hint=is_lead
+        )
+        is_admin = user_profile.get("is_admin", is_admin)
+        is_lead = user_profile.get("is_lead", is_lead)
+        if user_profile.get("is_registered") and user_profile.get("name"):
+            first_name = user_profile.get("name")
+
     words = clean_msg.split()
     cmd_token = words[0].lower() if words else ""
     if '@' in cmd_token:
@@ -416,6 +452,7 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
 
     # Direct command: /cmd or !
     if cmd_token == '/cmd' or clean_msg.startswith('!'):
+        cmd_to_run = ""
         if is_lead:
             msg_out = "⚠️ Comandos de terminal são restritos ao Administrador."
         else:
@@ -526,20 +563,40 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
             _store_progress_msg_id(request_id, prog_msg_id)
             step_lines = [f'⚙️ <b>Agente iniciado</b>{resume_label} — analisando seu pedido...']
 
+        is_final_dispatched = [False]
+        wa_msg_key = [None]
+        wa_last_sent_text = [""]
+        wa_last_edit_time = [0.0]
         step_num = [0]
 
         def on_step(sn, step_type, description):
             step_num[0] = sn
             _add_request_step(request_id, sn, step_type, description)
+            icons = {'think': '🧠', 'tool': '⚡', 'result': '📊', 'goal_check': '🎯', 'done': '✅', 'error': '❌'}
+            icon = icons.get(step_type, '•')
+            import re as _re
+            clean_desc = _re.sub(r'<[^>]+>', '', description)
+
             if not is_whatsapp and prog_msg_id:
-                icons = {'think': '🧠', 'tool': '⚡', 'result': '📊', 'goal_check': '🎯', 'done': '✅', 'error': '❌'}
-                icon = icons.get(step_type, '•')
-                import re as _re
-                clean_desc = _re.sub(r'<[^>]+>', '', description)
                 step_lines.append(f'{icon} <b>Passo {sn}:</b> {html.escape(clean_desc)}')
                 visible_lines = step_lines[:1] + step_lines[-7:] if len(step_lines) > 8 else step_lines
                 _tg_edit(chat_id, prog_msg_id, '\n'.join(visible_lines))
                 _tg_typing(chat_id)
+            elif is_whatsapp and not is_final_dispatched[0]:
+                now = time.monotonic()
+                if not wa_msg_key[0]:
+                    init_text = f"⚙️ *Executando diagnóstico no ambiente...*\n{icon} *Passo {sn}:* {clean_desc}"
+                    res = _dispatch_reply(chat_id, init_text, source=source, is_admin=is_admin)
+                    if isinstance(res, dict) and res.get("success"):
+                        wa_msg_key[0] = res.get("key") or res.get("messageId")
+                        wa_last_sent_text[0] = init_text
+                        wa_last_edit_time[0] = now
+                elif now - wa_last_edit_time[0] >= 1.5:
+                    progress_text = f"⚙️ *Executando diagnóstico no ambiente...*\n\n{icon} *Passo {sn}:* {clean_desc}"
+                    if progress_text != wa_last_sent_text[0]:
+                        wa_last_sent_text[0] = progress_text
+                        wa_last_edit_time[0] = now
+                        _dispatch_reply(chat_id, progress_text, source=source, is_admin=is_admin, edit_key=wa_msg_key[0])
 
         def on_checkpoint(step_idx, messages, tools_executed, completed_steps):
             """Persists mid-execution state to disk for crash recovery."""
@@ -556,9 +613,12 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
         if message_store:
             message_store.save_message(chat_id, 'incoming', message, user_info={'username': username, 'first_name': first_name})
 
-        # Prepare prompt for LLM (Lead vs Admin persona)
+        # Prepare prompt for LLM (Contextual Persona via Identity Registry)
         effective_message = message
-        if is_lead:
+        contextual_prompt = user_profile.get("contextual_prompt") if user_profile else None
+        if contextual_prompt:
+            effective_message = f"{contextual_prompt}\n\nMensagem do Usuário: {message}"
+        elif is_lead:
             effective_message = (
                 "[CANAL WHATSAPP - MODO ATENDIMENTO E QUALIFICAÇÃO DE LEAD]:\n"
                 "O usuário é um potencial cliente ou contato comercial em atendimento via WhatsApp corporativo da AXION Enterprise. "
@@ -569,11 +629,6 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 "Foque em qualificar a demanda do lead e convidá-lo a agendar uma conversa ou reunião comercial.\n\n"
                 f"Mensagem do Lead: {message}"
             )
-
-        is_final_dispatched = [False]
-        wa_msg_key = [None]
-        wa_last_sent_text = [""]
-        wa_last_edit_time = [0.0]
 
         def _handle_first_content(sentence):
             if is_final_dispatched[0]:
@@ -623,10 +678,12 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 visible_lines = step_lines[:1] + step_lines[-7:] if len(step_lines) > 8 else step_lines
                 _tg_edit(chat_id, prog_msg_id, '\n'.join(visible_lines))
 
-        # Run the agent with hardened constraints
+        # Run the agent with hardened constraints and dynamic model routing
         try:
             allow_tools = not is_lead
             max_steps = 1 if is_lead else 6
+            chosen_tier = user_profile.get("default_tier", "pro") if user_profile else ("flash" if is_lead else "pro")
+            target_model = getattr(autonomous_agent, 'OPENROUTER_FALLBACK_MODEL', 'xiaomi/mimo-v2.6-flash') if chosen_tier == "flash" else getattr(autonomous_agent, 'OPENROUTER_MODEL', 'xiaomi/mimo-v2.6-pro')
 
             result = autonomous_agent.run_autonomous_turn(
                 effective_message, chat_id,
@@ -638,7 +695,8 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 max_steps=max_steps,
                 is_lead=is_lead,
                 on_first_content=_handle_first_content,
-                on_stream_update=_handle_stream_update
+                on_stream_update=_handle_stream_update,
+                model=target_model
             )
             # Mark final dispatched to prevent late first content race condition
             is_final_dispatched[0] = True

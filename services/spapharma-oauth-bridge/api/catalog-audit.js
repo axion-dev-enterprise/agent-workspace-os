@@ -1,4 +1,4 @@
-const { loadTokenRecord } = require('./token-store');
+const { loadTokenRecord } = require('../lib/token-store');
 
 function configuredShop() {
   const shop = process.env.SHOPIFY_SHOP;

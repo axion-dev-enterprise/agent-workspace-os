@@ -83,8 +83,9 @@ def sanitize_file(file_path: Path):
         modified = True
         
     for target, repl in REPLACEMENTS:
-        if target in content:
-            content = content.replace(target, repl)
+        new_content = re.sub(re.escape(target), repl, content, flags=re.IGNORECASE)
+        if new_content != content:
+            content = new_content
             modified = True
             
     if modified:
@@ -171,14 +172,17 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
         print(f"[*] Synchronized and sanitized {copied_count} files onto 'main' (deleted {len(to_delete)} obsolete files).")
         
         # 5. Global sanitization sweep across all text files on 'main'
-        tracked_main = run_git(["ls-files"]).splitlines()
-        for rel_f in tracked_main:
-            rel_f = rel_f.strip().replace("\\", "/")
-            if not rel_f or rel_f in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
-                continue
-            full_f = WORKSPACE_ROOT / rel_f
-            if full_f.suffix.lower() in [".md", ".json", ".py", ".ts", ".js", ".html", ".css", ".txt", ".yml", ".yaml", ".xml", ".mjs", ".cjs"] or full_f.name.startswith(".env"):
-                sanitize_file(full_f)
+        EXCLUDED_SWEEP_DIRS = {".git", "node_modules", "memory", "temp", "tmp", ".gemini", ".vercel", ".wrangler"}
+        for root, dirs, files in os.walk(WORKSPACE_ROOT):
+            dirs[:] = [d for d in dirs if d not in EXCLUDED_SWEEP_DIRS]
+            for f in files:
+                full_f = Path(root) / f
+                rel_f = str(full_f.relative_to(WORKSPACE_ROOT)).replace("\\", "/")
+                if rel_f in ["scripts/validate_whitelabel.py", "scripts/export_whitelabel_release.py"]:
+                    continue
+                BINARY_EXTS = {".png", ".jpg", ".jpeg", ".ico", ".svg", ".zip", ".tar", ".gz", ".lock", ".bin", ".woff", ".woff2", ".ttf", ".webp", ".mp3", ".wav", ".mp4", ".pdf", ".pyc"}
+                if full_f.suffix.lower() not in BINARY_EXTS:
+                    sanitize_file(full_f)
                     
         # 6. Ensure all internal files and directories are strictly removed on main
         purged = 0
@@ -212,6 +216,10 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
             print("[FAIL] Whitelabel validation failed on branch 'main'!")
             print(val_res.stdout)
             print("[*] Aborting and switching back to 'axion'...")
+            lock = WORKSPACE_ROOT / ".git" / "index.lock"
+            if lock.exists():
+                try: lock.unlink()
+                except Exception: pass
             run_git(["reset", "--hard", "HEAD"])
             run_git(["checkout", "axion"])
             sys.exit(1)
@@ -236,6 +244,10 @@ def export_whitelabel(commit_message: str = None, push_remote: bool = False):
     finally:
         # Always return to axion branch and ensure working tree is clean
         print("[*] Switching back to enterprise branch 'axion'...")
+        lock = WORKSPACE_ROOT / ".git" / "index.lock"
+        if lock.exists():
+            try: lock.unlink()
+            except Exception: pass
         try:
             run_git(["checkout", "axion"])
             run_git(["restore", "."])

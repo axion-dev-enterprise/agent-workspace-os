@@ -81,7 +81,22 @@ A própria falha revela como o Vercel resolve o autor: o status aponta `Git auth
 - `workspace.config.json` → `git.user_email = developer@example.com`; `git.user_name` permanece `AXION DEV`.
 - Override local removido nos repositórios `C:/workspace`, `C:/workspace/services/axion-flow` e `C:/workspace/apps/axion-pay` (os três estavam forçando `developer@example.com` por cima do escopo global, que já estava correto; os repositórios em `temp/` nunca tiveram override).
 - Verificação: `git var GIT_AUTHOR_IDENT` devolve `AXION DEV <developer@example.com>` nos três repositórios.
-- **Pendente**: commit de teste + push para comprovar empiricamente que o status `Vercel` deixa de falhar (não executado sem autorização explícita).
+- **Executado com autorização em 2026-09-29**: commit de teste `6c9d0ad` + push (resultado em §2.5).
+
+### 2.5 Resultado empírico do commit de teste (`6c9d0ad`)
+
+- Commit `6c9d0ad` na branch `feat/staging-worker-flag` de `services/axion-flow`, autor `AXION DEV <developer@example.com>`, alteração inocua: `docker-compose.staging.yml` +3 linhas (`AXION_PROVISIONING_WORKER_ENABLED: ${AXION_PROVISIONING_WORKER_ENABLED:-false}` + comentário), YAML validado. Push aceito pelo `origin`.
+- `ci-cd.yml` só dispara em push para `main` e em PR para `main` → **nenhum deploy foi acionado**.
+- Status do commit: `state=failure`, `description="Deployment was blocked"`, `target_url=https://vercel.com/axion12/axion-flow/7o1edmVCqoFSuxXkcVcg5qBcJYdK`. Check-run `Vercel Preview Comments` = success.
+
+| | Antes (`developer@example.com`) | Depois (`developer@example.com`) |
+| :--- | :--- | :--- |
+| Autor do commit | `AXION DEV <developer@example.com>` → `developeratexample` | `AXION DEV <developer@example.com>` |
+| `description` | `Git author developeratexample must have access to the Project` | `Deployment was blocked` |
+| `state` | `failure` | `failure` (inalterado) |
+
+- A mensagem deixou de citar o autor → indício factual de que a **checagem de identidade foi superada** (opção C confirmada). O bloqueio remanescente vem de outro lugar: a **integração Git do repositório pertence ao time Vercel `axion12`**, que devolve **HTTP 403 `Not authorized`** para a conta local em todos os endpoints consultados (`/v2/teams/axion12`, `/v9/projects?teamId=axion12`, `/v6/deployments/7o1edm...?teamId=axion12`; `404` sem `teamId`). A conta `axionenterprise777-1846` só enxerga o time **`your-team-slug`** (hobby), onde existe um segundo projeto `axion-flow` **desconectado** do Git (`link=null`, `prj_ADPDrQfAsY2FE852jK4ScemNwZMX`, aliases `axion-flow-gamma.vercel.app` / `axion-flow-your-team-slug.vercel.app`).
+- Conclusão: identidade git resolvida; resta a **posse da integração** (opções em §8.1).
 
 ---
 
@@ -212,7 +227,7 @@ PR #29 toca `app.ts`, `config.ts`, `openapi.ts`, `flow-billing.service.ts`, `doc
 | 5 | Fixture de merchant | **Sim** | SQL via modo `db-audit`/novo modo |
 | 6 | Emissor dos eventos `subscription.*` | **Parcial** | dispatcher de merchant-webhooks do próprio Pay quando pagamentos ligados, ou job de CI |
 | 7 | Backlog P1/P2 | **Não** | trabalho de produto |
-| 8a | `Vercel \| failure` | **Aplicado, falta provar** | §2.4 — identidade trocada para `developer@example.com`; falta commit de teste + push |
+| 8a | `Vercel \| failure` | **Parcial** | §2.4/§2.5 — identidade trocada e commit `6c9d0ad` enviado; checagem de autor superada, mas a integração Git está presa ao time `axion12` (HTTP 403) e mantém `state=failure` |
 | 8b | Branch protection / required checks | **Não** | exige upgrade para GitHub Pro/Team ou repositório público |
 | 9 | Commitar os 106 arquivos alterados (vault, docs, log) | **Decisão sua** | pendente de autorização explícita |
 
@@ -230,10 +245,10 @@ PR #29 toca `app.ts`, `config.ts`, `openapi.ts`, `flow-billing.service.ts`, `doc
 
 ## 8. Decisões pendentes do operador
 
-1. **Vercel**: operador escolheu a **opção C** e informou `developer@example.com` como identidade git. Configuração aplicada em `workspace.config.json` + 3 repositórios (§2.4). Resta o commit de teste + push para comprovar que o status `Vercel` deixa de falhar.
+1. **Vercel (opção C executada e comprovada parcialmente)**: identidade trocada para `developer@example.com` (§2.4) e validada pelo commit de teste `6c9d0ad` (§2.5) — a checagem de autor desapareceu, mas `state=failure` continua por causa da integração Git presa ao time `axion12` (403 para a conta local). Escolher: **(i)** obter acesso/convite à conta `axion12`; **(ii)** remover a integração antiga (GitHub → Settings → Integrations, ou o dashboard `axion12`) e reconectar o repositório ao time `your-team-slug` — **mutação que exige autorização explícita**; **(iii)** ignorar o status (não há branch protection exigindo checks, §7).
 2. **Pagamentos**: fornecer `WOOVI_APP_ID` de sandbox se quiser `PAYMENTS_ENABLED=true` no staging.
 3. **Worker**: autorizar o modo `worker-enable` no `staging-ops` (exige commit + push).
-4. **Commit**: autorizar commit dos arquivos alterados (vault, docs, log diário) — **operador respondeu "nada por enquanto"**.
+4. **Commit do repositório raiz**: segue **sem autorização** — **operador respondeu "nada por enquanto"**. Só o commit de teste `6c9d0ad` em `services/axion-flow` foi autorizado. Observação: um processo externo (exportador whitelabel) versionou o workspace no branch `axion` durante esta sessão (`7bc6b99`, `7b1152a`), sem intervenção deste agente.
 5. **Túneis**: decidir entre reativar túneis, remover registros DNS órfãos ou seguir para fechamento de portas.
 
 ---

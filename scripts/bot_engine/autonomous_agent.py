@@ -769,7 +769,7 @@ def synthesize_in_natural_language(
     ]
 
     try:
-        res = call_openrouter_api(messages, model=synth_model, timeout=45, max_tokens=1000)
+        res = call_openrouter_api(messages, model=synth_model, timeout=45, max_tokens=4000)
         content = (res.get("choices") or [{}])[0].get("message", {}).get("content", "") or ""
         content = content.strip()
         if content and len(content) > 15:
@@ -780,7 +780,7 @@ def synthesize_in_natural_language(
     # Fallback to OPENROUTER_MODEL if fallback model failed
     if synth_model != OPENROUTER_MODEL:
         try:
-            res = call_openrouter_api(messages, model=OPENROUTER_MODEL, timeout=45, max_tokens=1000)
+            res = call_openrouter_api(messages, model=OPENROUTER_MODEL, timeout=45, max_tokens=4000)
             content = (res.get("choices") or [{}])[0].get("message", {}).get("content", "") or ""
             if content.strip() and len(content.strip()) > 15:
                 return content.strip()
@@ -851,6 +851,7 @@ def run_autonomous_turn(
     on_first_content=None,
     on_stream_update=None,
     intent: str = None,
+    model: str = None,
 ) -> tuple[str, dict | None, list, dict]:
     """
     Executes an autonomous agent turn with goal-driven ReAct loop on the local PC.
@@ -993,9 +994,11 @@ def run_autonomous_turn(
 
         threading.Thread(target=_stream_worker, daemon=True, name=f"FirstContent-{chat_id}").start()
 
-        # Wait up to 3.0s for the intent tag (Flash streams it in ~400ms)
-        intent_event.wait(timeout=3.0)
+        # Wait up to 6.0s for the intent tag from SSE stream
+        intent_event.wait(timeout=6.0)
         resolved_intent = intent_holder[0] or ("CHAT_ONLY" if is_lead else "ACTION")
+        if is_lead:
+            resolved_intent = "CHAT_ONLY"
 
     if resolved_intent:
         print(f"[Agent] Turn Intent aplicado: {resolved_intent}")
@@ -1019,7 +1022,8 @@ def run_autonomous_turn(
             max_steps = min(max_steps, 6)
 
     tool_results_accumulator: list[str] = []   # for goal check summaries
-    model_used     = OPENROUTER_MODEL
+    target_primary_model = model or (OPENROUTER_FALLBACK_MODEL if is_lead else OPENROUTER_MODEL)
+    model_used     = target_primary_model
     final_raw_content = ""
     goal_achieved  = False
     goal_check_text = ""
@@ -1045,10 +1049,10 @@ def run_autonomous_turn(
 
         # --- call primary LLM ---
         try:
-            res_data = call_openrouter_api(messages, model=OPENROUTER_MODEL, timeout=100)
+            res_data = call_openrouter_api(messages, model=target_primary_model, timeout=100)
             exec_record["model_calls"] += 1
         except Exception as e:
-            print(f"[!] Erro no modelo primário ({OPENROUTER_MODEL}): {e}. Tentando fallback...")
+            print(f"[!] Erro no modelo primário ({target_primary_model}): {e}. Tentando fallback...")
             try:
                 model_used = OPENROUTER_FALLBACK_MODEL
                 res_data   = call_openrouter_api(messages, model=OPENROUTER_FALLBACK_MODEL, timeout=60)

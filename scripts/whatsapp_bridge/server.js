@@ -669,8 +669,10 @@ async function initBaileys() {
         }
 
         // If pushName matches the bot account's profile name and comes from a LID, it is the operator typing on Web/Desktop
-        if (pushName === 'Axion Comm' && remoteJid.endsWith('@lid')) {
-          console.log(`[WHATSAPP SELF-IGNORE] Ignorando mensagem do operador no WhatsApp Web (LID: ${cleanNumber})`);
+        const botName = (sock?.user?.name || '').trim();
+        const isOperatorName = pushName && (pushName === 'Axion Comm' || (botName && pushName.toLowerCase() === botName.toLowerCase()));
+        if (isOperatorName && remoteJid.endsWith('@lid') && cleanNumber !== ADMIN_LID) {
+          console.log(`[WHATSAPP SELF-IGNORE] Ignorando mensagem do operador no WhatsApp Web (LID: ${cleanNumber}, PushName: ${pushName})`);
           continue;
         }
 
@@ -1034,8 +1036,9 @@ function handleHttpRequest(req, res) {
 
 // ── Startup ────────────────────────────────────────────────
 const server = http.createServer(handleHttpRequest);
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[WHATSAPP BRIDGE] Servidor HTTP ativo em http://0.0.0.0:${PORT}`);
+const BIND_HOST = process.env.WHATSAPP_BRIDGE_HOST || '127.0.0.1';
+server.listen(PORT, BIND_HOST, () => {
+  console.log(`[WHATSAPP BRIDGE] Servidor HTTP ativo em http://${BIND_HOST}:${PORT}`);
   console.log(`[WHATSAPP BRIDGE] Admin Configurado: ${ADMIN_NUMBER}`);
   initBaileys();
 });

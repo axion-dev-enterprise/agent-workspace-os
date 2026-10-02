@@ -9,3 +9,5 @@ Auditoria: python scripts/vault_loader.py audit.
 Código de uso único solicitado pela Shopify permanece pendente; não persistir códigos transitórios.
 
 O app `n8n SpaPharma (SERVIDOR)` possui credenciais próprias no Dev Dashboard. A chave de cliente e qualquer token efêmero ficam apenas neste `.env`. Não revele, rotacione, desinstale ou reutilize a integração sem validação do token e autorização para mudanças. O token de acesso, quando emitido, expira conforme o fluxo da Shopify e deve ser renovado programaticamente.
+
+A variável `SPAPHARMA_OPS_KEY` autentica exclusivamente rotas operacionais de finalidade fixa no bridge Vercel. Rotacione-a se houver suspeita de exposição; ela nunca deve ser enviada ao navegador ou registrada em logs.
