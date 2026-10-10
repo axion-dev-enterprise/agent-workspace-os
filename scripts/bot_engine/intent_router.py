@@ -7,6 +7,7 @@ returning instant, high-quality pre-formatted responses with quick action button
 Zero LLM latency (< 2ms) and 100% immune to file crawling hallucinations.
 """
 
+import os
 import re
 import unicodedata
 from typing import Optional, Tuple, Dict, Any, List
