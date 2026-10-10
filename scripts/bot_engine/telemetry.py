@@ -55,6 +55,7 @@ def _default_stats() -> dict:
             "success_calls": 0,
             "error_calls": 0,
             "retries": 0,
+            "total_cached_tokens": 0,
             "total_latency_ms": 0,
             "avg_latency_ms": 0.0
         },
@@ -185,7 +186,7 @@ def record_request_metric(success: bool) -> None:
         _write_stats(stats)
 
 
-def record_llm_metric(model: str, duration_ms: int, success: bool, retries: int = 0, error: str = None) -> None:
+def record_llm_metric(model: str, duration_ms: int, success: bool, retries: int = 0, error: str = None, cached_tokens: int = 0) -> None:
     """Records LLM query latency and reliability metrics"""
     _ensure_dirs()
     with _LOCK:
@@ -193,6 +194,9 @@ def record_llm_metric(model: str, duration_ms: int, success: bool, retries: int 
         llm = stats["llm"]
         llm["total_calls"] += 1
         llm["retries"] += retries
+        if "total_cached_tokens" not in llm:
+            llm["total_cached_tokens"] = 0
+        llm["total_cached_tokens"] += cached_tokens
         if success:
             llm["success_calls"] += 1
             llm["total_latency_ms"] += duration_ms
@@ -206,6 +210,7 @@ def record_llm_metric(model: str, duration_ms: int, success: bool, retries: int 
         "duration_ms": duration_ms,
         "success": success,
         "retries": retries,
+        "cached_tokens": cached_tokens,
         "error": error
     }, severity="INFO" if success else "WARNING")
 

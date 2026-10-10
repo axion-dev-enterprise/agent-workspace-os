@@ -25,3 +25,7 @@ Before invoking `agent-browser`, define an isolated named session and restrict n
 2. Fetch the source into a temporary directory outside the repository; never overwrite local changes blindly.
 3. Diff the candidate against `.skills/<name>/`, review the change, and update this catalog's pinned revision.
 4. Run the repository pre-flight in [REPOSITORY_PREFLIGHT.md](REPOSITORY_PREFLIGHT.md), then commit the reviewed update with no credentials or generated runtime artifacts.
+
+## Application package provenance
+
+- `apps/isabela-platform/apps/web` adds `qrcode.react@4.2.0` from the npm registry; package metadata reports the ISC license. It renders certificate verification QR codes locally as SVG and sends no certificate data to an external QR service.

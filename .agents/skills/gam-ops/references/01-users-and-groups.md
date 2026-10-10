@@ -48,7 +48,7 @@ gam delete user <email>
 
 ```powershell
 # Criar alias (ex: suporte@ apontando para equipe ou pessoa)
-gam create alias suporte@example.com user iago@example.com
+gam create alias suporte@example.com user Operator@example.com
 
 # Listar aliases de um usuário
 gam info user <email>
@@ -69,10 +69,10 @@ gam print groups
 gam create group financeiro@example.com name "Setor Financeiro" description "Grupo de comunicação financeira"
 
 # Adicionar membro ao grupo
-gam update group financeiro@example.com add member user iago@example.com
+gam update group financeiro@example.com add member user Operator@example.com
 
 # Adicionar gerente ou proprietário ao grupo
-gam update group financeiro@example.com add manager user iago@example.com
+gam update group financeiro@example.com add manager user Operator@example.com
 
 # Listar membros de um grupo
 gam print group-members group financeiro@example.com

@@ -1,10 +1,10 @@
 # Registro Canônico de Skills Operacionais — AXION Enterprise
 
-> **Última Sincronização Automática**: 2026-10-02  
+> **Última Sincronização Automática**: 2026-10-10  
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
-> **Total de Skills Ativas**: 63  
+> **Total de Skills Ativas**: 70  
 
 ---
 
@@ -18,11 +18,16 @@
 | **`anti-slop-ui-craft`** | UI/UX & Design | Protocolo anti-slop, proibição de clichês visuais de IA, tipografia editorial, WCAG 2.2 AA e dials de controle estético | [`anti-slop-ui-craft/SKILL.md`](file:///C:/workspace/.agents/skills/anti-slop-ui-craft/SKILL.md) |
 | **`antigravity-cli`** | Ferramentas de IA & CLI | Antigravity CLI (agy), agentes autônomos, workflows e automações de terminal | [`antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **`claude-nine-loops-reasoning`** | Geral / Utilitário | Implementa ciclos recursivos de reflexão e auto-correção em agentes autônomos, replicando loops conceituais encadeados com verificação intermediária de consistência lógica. Utilize esta skill para construir pipelines de raciocínio iterativo que convergem para respostas de alta fidelidade com detecção de estagnação e guarda de alucinação. | [`claude-nine-loops-reasoning/SKILL.md`](file:///C:/workspace/.agents/skills/claude-nine-loops-reasoning/SKILL.md) |
+| **`client-otp-approval`** | Segurança & Human-in-the-Loop | Protocolo de solicitação de aprovação e recursos externos sensíveis (OTP, 2FA, acessos) via WhatsApp | [`client-otp-approval/SKILL.md`](file:///C:/workspace/.agents/skills/client-otp-approval/SKILL.md) |
 | **`cloudflare-edge-ops`** | Edge & Serverless | Workers, Pages, D1 SQL, KV, R2 Storage, Queues e DNS example.com | [`cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **`cloudflare-zero-trust-tunnels`** | Segurança & Rede | Cloudflare Zero Trust, túneis cloudflared, eliminação de portas públicas, WAF e Access | [`cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **`content-3d-social-studio`** | Multimídia & Criação | Automação de estúdio para posts de redes sociais, renders 3D e copy com IA | [`content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **`cron-scheduled-tasks`** | Automação & SRE | Windows Task Scheduler, Linux Systemd Timers, Cloudflare Cron Triggers e GitHub Scheduled Workflows | [`cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
+| **`desktop-agents-cli`** | Geral / Utilitário | Orquestração, execução e diagnóstico direto das CLIs dos agentes desktop de IA (OpenAI Codex, Google Antigravity e OpenCode) para o agente WhatsApp e Brain Server com execução não-interativa e telemetria. | [`desktop-agents-cli/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-cli/SKILL.md) |
+| **`desktop-agents-orchestrator`** | Observabilidade & Agentes Desktop | Orquestração executiva e despacho inteligente de tarefas para os agentes desktop (Codex, Antigravity, OpenCode), modelos e quotas | [`desktop-agents-orchestrator/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-orchestrator/SKILL.md) |
+| **`desktop-agents-watcher`** | Observabilidade & Agentes Desktop | Supervisão em tempo real de tarefas dos agentes desktop (Antigravity, Codex, OpenCode) e alertas para a liderança executiva | [`desktop-agents-watcher/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-watcher/SKILL.md) |
 | **`deterministic-3d-motion-pipeline`** | Multimídia & Criação | Render 3D nativo headless ModernGL/OpenGL, shaders GLSL, síntese sonora NumPy e FFmpeg pipe | [`deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
+| **`executive-notification-governance`** | Comunicação & Mensageria | Governança executiva de notificações, eliminação de alertas de tarefas efêmeras/scratch, histerese e deadband de telemetria de RAM | [`executive-notification-governance/SKILL.md`](file:///C:/workspace/.agents/skills/executive-notification-governance/SKILL.md) |
 | **`fastapi-async-api`** | Backend & APIs | APIs assíncronas em Python com Pydantic v2, dependency injection, background tasks e OpenAPI | [`fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
 | **`gam-ops`** | Google Workspace | Drive, Gmail, Docs, Sheets, OUs, Service Accounts e Domain-wide Delegation | [`gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |
 | **`gcp-cloud-ops`** | Google Cloud Platform | Cloud Run, Secret Manager, Cloud Storage, Artifact Registry, IAM e políticas organizacionais GCP | [`gcp-cloud-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gcp-cloud-ops/SKILL.md) |
@@ -61,9 +66,10 @@
 | **`remotion-video-studio`** | Vídeo & Remotion | Produção programática de vídeo em React, Remotion Studio, renderização SSR e animações dinâmicas | [`remotion-video-studio/SKILL.md`](file:///C:/workspace/.agents/skills/remotion-video-studio/SKILL.md) |
 | **`sentry-error-tracking`** | DevOps & CI/CD | Monitoramento de erros em tempo real, upload de source maps, session replay e profiling com Sentry | [`sentry-error-tracking/SKILL.md`](file:///C:/workspace/.agents/skills/sentry-error-tracking/SKILL.md) |
 | **`seo-technical-structured-data`** | SEO & Performance | SEO técnico, Schema.org JSON-LD, metatags OpenGraph/Twitter, sitemaps XML e indexação no Google | [`seo-technical-structured-data/SKILL.md`](file:///C:/workspace/.agents/skills/seo-technical-structured-data/SKILL.md) |
-| **`stripe-payments-engine`** | Backend & APIs | Checkout global, verificação de webhooks, assinaturas recorrentes e split de pagamentos com Stripe | [`stripe-payments-engine/SKILL.md`](file:///C:/workspace/.agents/skills/stripe-payments-engine/SKILL.md) |
+| **`stripe-payments-engine`** | Backend & APIs | Cobranças e pagamentos com Stripe: Checkout Sessions, Payment Intents, Webhooks com HMAC-SHA256 e Customer Portal | [`stripe-payments-engine/SKILL.md`](file:///C:/workspace/.agents/skills/stripe-payments-engine/SKILL.md) |
 | **`tailscale-mesh-vpn`** | Rede & Conectividade | Rede mesh WireGuard privada, nós remotos, MagicDNS, Tailscale SSH e Funnel | [`tailscale-mesh-vpn/SKILL.md`](file:///C:/workspace/.agents/skills/tailscale-mesh-vpn/SKILL.md) |
 | **`tailwind-shadcn-ux`** | UI/UX & Design | Design tokens, componentes Radix UI (WCAG AAA), Dark/Light mode, microinterações e skeleton loaders | [`tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
+| **`task-completion-observability`** | Governança & SRE | Execução autônoma integral, proibição de tarefas incompletas, transparência de passos e conclusão garantida | [`task-completion-observability/SKILL.md`](file:///C:/workspace/.agents/skills/task-completion-observability/SKILL.md) |
 | **`telegram-bot-ops`** | Comunicação & Mensageria | Telegram Bot API, BotFather metadados, comandos, inline keyboards, SRE alerts e daemons | [`telegram-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/telegram-bot-ops/SKILL.md) |
 | **`terraform-iac-automation`** | DevOps & CI/CD | Infraestrutura como Código (IaC) com Terraform, módulos reutilizáveis e gestão de estado seguro | [`terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **`threejs-gsap-animation`** | 2D/3D & Animações | Cenas 3D Three.js / React Three Fiber, shaders GLSL, modelos Draco e GSAP ScrollTrigger | [`threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
@@ -75,6 +81,7 @@
 | **`web-vitals-performance`** | Frontend & Mobile | Otimização de Core Web Vitals (LCP, INP, CLS), auditoria Lighthouse 100/100 e code-splitting | [`web-vitals-performance/SKILL.md`](file:///C:/workspace/.agents/skills/web-vitals-performance/SKILL.md) |
 | **`whatsapp-baileys-bot-ops`** | Comunicação & Mensageria | Arquitetura Baileys WhatsApp bot, reconexões resilientes, auth state e dispatch de webhooks | [`whatsapp-baileys-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/whatsapp-baileys-bot-ops/SKILL.md) |
 | **`windows-hardware-performance-tuning`** | Sistemas & Performance | Tuning de kernel, NDIS Realtek, AMD GPU ULPS/FlipQueueSize, CPU High Performance, DisablePagingExecutive e I/O | [`windows-hardware-performance-tuning/SKILL.md`](file:///C:/workspace/.agents/skills/windows-hardware-performance-tuning/SKILL.md) |
+| **`zero-bypass-auth-governance`** | Geral / Utilitário | Governança de segurança mandatória para autenticação e controle de acesso no ecossistema AXION. Proíbe terminantemente rotas de bypass, botões de login direto sem validação, emissão de tokens mockados ou atalhos em interfaces e APIs. Exige validação criptográfica (Google OAuth 2.0 / TOTP 2FA / hash seguro), conferência obrigatória em banco de dados (PostgreSQL dashboard_users e merchant_accounts) e fail-closed com HTTP 503 quando credenciais estiverem ausentes. | [`zero-bypass-auth-governance/SKILL.md`](file:///C:/workspace/.agents/skills/zero-bypass-auth-governance/SKILL.md) |
 
 ---
 

@@ -263,8 +263,23 @@ def execute_task(task_id: str) -> dict:
     success = res.get("success", False)
     out_val = res.get("output") or ""
     err_val = res.get("error") or ""
-    output = out_val if success else (err_val if err_val else out_val)
-    result = f"Sucesso (exit 0) em {res.get('elapsed_seconds', 0)}s" if success else f"Falha (exit {res.get('returncode', -1)}) em {res.get('elapsed_seconds', 0)}s"
+    clean_out = (output or "").strip()
+    summary_line = ""
+    if clean_out:
+        lines = [l.strip() for l in clean_out.splitlines() if l.strip()]
+        for l in reversed(lines):
+            if any(k in l.lower() for k in ["http://", "https://", "porta", "success", "sucesso", "ok", "concluíd", "liberad", "finalizad"]):
+                summary_line = l[:180]
+                break
+        if not summary_line and lines:
+            summary_line = lines[-1][:180]
+
+    elapsed = res.get('elapsed_seconds', 0)
+    if success:
+        result = f"{summary_line} ({elapsed}s)" if summary_line else f"Comando executado com êxito em {elapsed}s"
+    else:
+        err_msg = err_val.strip().splitlines()[-1][:140] if err_val else "Falha de execução"
+        result = f"Erro (exit {res.get('returncode', -1)}): {err_msg} ({elapsed}s)"
 
     target_task["status"] = "completed" if success else "failed"
     target_task["finished_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()

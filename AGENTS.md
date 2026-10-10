@@ -104,6 +104,15 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
   - Execução de comandos destrutivos de banco de dados (`DROP DATABASE`, `DROP TABLE`, `TRUNCATE`) fora do ciclo de vida isolado de testes e fixtures automatizadas.
   - Encerramento forçado de processos do sistema ou de terceiros (`taskkill /F`, `Stop-Process`) sem alvo e PID rigorosamente identificados e restritos à tarefa corrente.
 
+### Regra #4B: Proibição Absoluta de Atalhos de Autenticação, Mock Backdoors e Bypasses de Acesso (Zero-Bypass Auth Invariant)
+- **INVARIANTE CRÍTICO E INEGOCIÁVEL**: É expressamente e terminantemente PROIBIDO para qualquer agente implementar botões de login direto sem validação, rotas de atalho (ex: `/login/ceo`, `/login/mock`, `/login/cliente`), emissão arbitrária de tokens JWT sem validação factual de credenciais, ou qualquer forma de backdoor/bypass em interfaces ou APIs públicas e privadas.
+- **Validação Mandatória em Banco de Dados**: Todo fluxo de autenticação e concessão de privilégios DEVE obrigatoriamente:
+  1. Passar por validação criptográfica rigorosa: Google OAuth 2.0 (com handshake PKCE / HMAC State na API do Google), TOTP 2FA, ou verificação de hash forte (`bcrypt`/`argon2`).
+  2. Consultar factualmente a tabela oficial no PostgreSQL (`dashboard_users`), validando status ativo, tenant e papéis autorizados (`roles`).
+  3. Vincular regras e permissões estritas em banco (ex: `merchant_accounts` vinculado a `owner_auth_user_id`).
+- **Proibição Estrita de Mocks em Auth**: Se credenciais de terceiros (ex: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) estiverem ausentes no Vault em tempo de execução, o agente DEVE interromper a operação e retornar erro explícito (ex: HTTP 503 com instrução clara de configuração). É expressamente PROIBIDO "simular" ou contornar a autenticação emitindo sessões válidas sem a validação autêntica do provedor.
+- **Governança de Frontend**: Proibido adicionar à interface botões de atalho ou links que burlem a etapa de consentimento e validação de identidade.
+
 ### Regra #5: Sonda Prévia de Validação (Whoami Probe First)
 - Antes de disparar deploys ou mutações críticas em serviços externos (GitHub, Cloudflare, Vercel, Stripe, AWS, VPS), o agente DEVE executar uma sonda leve (`whoami` ou verify token) para validar a autenticidade e o tenant antes de prosseguir.
 
@@ -202,11 +211,16 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **UI/UX & Design** | `anti-slop-ui-craft` | [`.agents/skills/anti-slop-ui-craft/SKILL.md`](file:///C:/workspace/.agents/skills/anti-slop-ui-craft/SKILL.md) |
 | **Ferramentas de IA & CLI** | `antigravity-cli` | [`.agents/skills/antigravity-cli/SKILL.md`](file:///C:/workspace/.agents/skills/antigravity-cli/SKILL.md) |
 | **Geral / Utilitário** | `claude-nine-loops-reasoning` | [`.agents/skills/claude-nine-loops-reasoning/SKILL.md`](file:///C:/workspace/.agents/skills/claude-nine-loops-reasoning/SKILL.md) |
+| **Segurança & Human-in-the-Loop** | `client-otp-approval` | [`.agents/skills/client-otp-approval/SKILL.md`](file:///C:/workspace/.agents/skills/client-otp-approval/SKILL.md) |
 | **Edge & Serverless** | `cloudflare-edge-ops` | [`.agents/skills/cloudflare-edge-ops/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-edge-ops/SKILL.md) |
 | **Segurança & Rede** | `cloudflare-zero-trust-tunnels` | [`.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md`](file:///C:/workspace/.agents/skills/cloudflare-zero-trust-tunnels/SKILL.md) |
 | **Multimídia & Criação** | `content-3d-social-studio` | [`.agents/skills/content-3d-social-studio/SKILL.md`](file:///C:/workspace/.agents/skills/content-3d-social-studio/SKILL.md) |
 | **Automação & SRE** | `cron-scheduled-tasks` | [`.agents/skills/cron-scheduled-tasks/SKILL.md`](file:///C:/workspace/.agents/skills/cron-scheduled-tasks/SKILL.md) |
+| **Geral / Utilitário** | `desktop-agents-cli` | [`.agents/skills/desktop-agents-cli/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-cli/SKILL.md) |
+| **Observabilidade & Agentes Desktop** | `desktop-agents-orchestrator` | [`.agents/skills/desktop-agents-orchestrator/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-orchestrator/SKILL.md) |
+| **Observabilidade & Agentes Desktop** | `desktop-agents-watcher` | [`.agents/skills/desktop-agents-watcher/SKILL.md`](file:///C:/workspace/.agents/skills/desktop-agents-watcher/SKILL.md) |
 | **Multimídia & Criação** | `deterministic-3d-motion-pipeline` | [`.agents/skills/deterministic-3d-motion-pipeline/SKILL.md`](file:///C:/workspace/.agents/skills/deterministic-3d-motion-pipeline/SKILL.md) |
+| **Comunicação & Mensageria** | `executive-notification-governance` | [`.agents/skills/executive-notification-governance/SKILL.md`](file:///C:/workspace/.agents/skills/executive-notification-governance/SKILL.md) |
 | **Backend & APIs** | `fastapi-async-api` | [`.agents/skills/fastapi-async-api/SKILL.md`](file:///C:/workspace/.agents/skills/fastapi-async-api/SKILL.md) |
 | **Google Workspace** | `gam-ops` | [`.agents/skills/gam-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gam-ops/SKILL.md) |
 | **Google Cloud Platform** | `gcp-cloud-ops` | [`.agents/skills/gcp-cloud-ops/SKILL.md`](file:///C:/workspace/.agents/skills/gcp-cloud-ops/SKILL.md) |
@@ -248,6 +262,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Backend & APIs** | `stripe-payments-engine` | [`.agents/skills/stripe-payments-engine/SKILL.md`](file:///C:/workspace/.agents/skills/stripe-payments-engine/SKILL.md) |
 | **Rede & Conectividade** | `tailscale-mesh-vpn` | [`.agents/skills/tailscale-mesh-vpn/SKILL.md`](file:///C:/workspace/.agents/skills/tailscale-mesh-vpn/SKILL.md) |
 | **UI/UX & Design** | `tailwind-shadcn-ux` | [`.agents/skills/tailwind-shadcn-ux/SKILL.md`](file:///C:/workspace/.agents/skills/tailwind-shadcn-ux/SKILL.md) |
+| **Governança & SRE** | `task-completion-observability` | [`.agents/skills/task-completion-observability/SKILL.md`](file:///C:/workspace/.agents/skills/task-completion-observability/SKILL.md) |
 | **Comunicação & Mensageria** | `telegram-bot-ops` | [`.agents/skills/telegram-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/telegram-bot-ops/SKILL.md) |
 | **DevOps & CI/CD** | `terraform-iac-automation` | [`.agents/skills/terraform-iac-automation/SKILL.md`](file:///C:/workspace/.agents/skills/terraform-iac-automation/SKILL.md) |
 | **2D/3D & Animações** | `threejs-gsap-animation` | [`.agents/skills/threejs-gsap-animation/SKILL.md`](file:///C:/workspace/.agents/skills/threejs-gsap-animation/SKILL.md) |
@@ -259,6 +274,7 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 | **Frontend & Mobile** | `web-vitals-performance` | [`.agents/skills/web-vitals-performance/SKILL.md`](file:///C:/workspace/.agents/skills/web-vitals-performance/SKILL.md) |
 | **Comunicação & Mensageria** | `whatsapp-baileys-bot-ops` | [`.agents/skills/whatsapp-baileys-bot-ops/SKILL.md`](file:///C:/workspace/.agents/skills/whatsapp-baileys-bot-ops/SKILL.md) |
 | **Sistemas & Performance** | `windows-hardware-performance-tuning` | [`.agents/skills/windows-hardware-performance-tuning/SKILL.md`](file:///C:/workspace/.agents/skills/windows-hardware-performance-tuning/SKILL.md) |
+| **Geral / Utilitário** | `zero-bypass-auth-governance` | [`.agents/skills/zero-bypass-auth-governance/SKILL.md`](file:///C:/workspace/.agents/skills/zero-bypass-auth-governance/SKILL.md) |
 <!-- SKILLS_REGISTRY_END -->
 
 ### Regra #13A: Critérios Mandatórios para Criação de Skills e Regras (The Meta-Rule & Anti-Silo Mandate)
@@ -322,6 +338,98 @@ Toda e qualquer skill ou regra adicionada ao ecossistema AXION DEVE obedecer rig
   - **Execução Headless Mandatória**: Proibido rodar comandos que aguardem confirmação interativa no terminal (`[y/n]`, senhas ou pagers). Sempre utilizar flags `--yes`, `-y` ou `--no-input`.
   - **Prioridade para Compound Tools**: Manipulações de arquivo devem utilizar ferramentas estruturadas (`write_file`, `replace_in_file`) em vez de redirecionamento de shell (`echo >`, `cat << EOF`).
   - **Diagnóstico Ativo & Anti-Retry Cego**: Em caso de falha de comando, analisar a dica de diagnóstico retornada e pivotar a abordagem antes de reexecutar.
+
+### Regra #20: Observabilidade de Tarefas de Agentes Desktop & Alertas Executivos (Desktop Agents Supervision Guard)
+- **Supervisão Contínua de Agentes Desktop**: Todo agente atuando no ecossistema (seja ele orquestrador, subagente ou daemon em background) DEVE manter a observabilidade ativa sobre as tarefas em andamento executadas pelos agentes desktop concorrentes (**Google Antigravity**, **OpenAI Codex** e **OpenCode**).
+- **Emissão Compulsória de Alertas de Conclusão**: Assim que qualquer agente desktop finalizar uma tarefa (seja com status `completed` ou `failed`), um alerta estruturado DEVE ser emitido proativamente para os canais executivos configurados:
+  - **WhatsApp**: Configurado via `WHATSAPP_ADMIN_NUMBER` (ou `WHATSAPP_ADMIN_LID`), despachado via `/send-internal` (porta 4114).
+  - **Telegram**: Configurado via `TELEGRAM_ADMIN_CHAT_ID` (via `broadcast_alert` ou API oficial do bot).
+- **Conteúdo Mínimo do Alerta**: O alerta deve ser conciso e de alta densidade informativa, contendo: Identificador do Agente (`Antigravity`, `Codex` ou `OpenCode`), Título e ID da tarefa, Status factual (`✅ Concluída` ou `❌ Falha`), Horário/Duração e Resumo factual do entregável ou causa raiz do erro.
+- **Ledger Anti-Fadiga e Anti-Spam**: O sentinela desktop (`scripts/bot_engine/desktop_watcher.py`) deve registrar a assinatura de toda tarefa notificada em `workspace/memory/desktop_watcher_state.json`. É expressamente PROIBIDO emitir alertas duplicados para uma mesma execução já reportada.
+- **Registro Explícito de Conclusão**: Agentes autônomos ao finalizar tarefas críticas podem registrar sua conclusão chamando diretamente `desktop_watcher.record_desktop_task_completion(...)` ou a ferramenta `check_desktop_agent_tasks`.
+
+### Regra #21: Protocolo de Aprovação Humana & Recursos Externos / OTP via WhatsApp de Clientes (Client OTP & External Resources Human-in-the-Loop)
+- **Zero Hang & Proibição de Bloqueios Silenciosos**: Quando a execução de qualquer tarefa técnica exigir recursos externos dependentes do cliente (códigos **OTP via SMS/E-mail**, autenticação **2FA**, aprovação prévia de deploy, faturamento ou credenciais temporárias de terceiros como Shopify, Meta Ads, Google ou Cloudflare), o agente é terminantemente PROIBIDO de:
+  - Travar em loops infinitos de polling ou prompts de terminal aguardando input manual invisível.
+  - Abortar a esteira com erro prematuro sem acionar o canal do cliente.
+  - Tentar força bruta ou adivinhar códigos/senhas.
+- **Coleta Obrigatória do WhatsApp do Cliente**: O agente DEVE solicitar imediatamente ao operador ou recuperar nos metadados do projeto/lead o número de **WhatsApp do cliente responsável** (no formato canônico E.164: `55 + DDD + Número`).
+- **Disparo Formal, Seguro e com Prazo de Expiração (SLA)**: O agente DEVE disparar uma mensagem padronizada e segura para o cliente via canal interno do WhatsApp Bridge (`/send-internal`), informando:
+  1. Identificação corporativa da AXION Enterprise e nome do projeto.
+  2. O item específico necessário (ex: "Código OTP de 6 dígitos enviado por SMS").
+  3. A justificativa clara do porquê o código é necessário.
+  4. Janela de expiração rigorosa (SLA padrão de 10 a 15 minutos).
+  5. Instrução direta para responder na mensagem ou utilizar botões interativos de aprovação.
+- **Notificação Espelhada ao CEO Executive Operator**: Toda solicitação de aprovação ou OTP enviada a clientes externos DEVE gerar simultaneamente uma notificação executiva no WhatsApp e Telegram do CEO, permitindo acompanhamento gerencial e auditoria.
+- **Retomada Autônoma do Pipeline**: O módulo `client_approval` monitora a chegada da resposta do cliente no histórico de conversas do WhatsApp. Assim que o código/aprovação for recebido e validado, o status em `memory/cowork/pending_approvals.json` transiciona para `approved`, o CEO é informado e o agente retoma automaticamente o pipeline técnico.
+
+### Regra #22: Disponibilidade e Orquestração das CLIs dos Agentes Desktop (Codex, Antigravity e OpenCode) via WhatsApp e Brain Server (Desktop Agent CLIs Integration Guard)
+- **Topologia de Acesso Universal**: O ecossistema corporativo da AXION disponibiliza no host Windows acesso de primeira classe e execução não-bloqueante às 3 CLIs dos agentes desktop:
+  1. **Google Antigravity CLI (`agy` / `antigravity`)**: Binário `agy.exe` em `~/.local/agy/bin/agy.exe` e wrapper `antigravity.cmd`. Opera no modo não-interativo com `--print "<prompt>" --dangerously-skip-permissions`.
+  2. **OpenAI Codex CLI (`codex`)**: Binário `codex.exe` e wrapper `codex.cmd` (com bypass de stdin `<nul`). Opera no modo não-interativo com `codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --color never "<prompt>"`.
+  3. **OpenCode CLI (`opencode`)**: Binário `opencode.cmd` (npm `opencode-ai`). Opera no modo não-interativo com `opencode run --auto "<prompt>"` utilizando por padrão o modelo neural integrado `opencode/mimo-v2.6-flash-free`.
+- **Ferramentas Nativas para Agentes e Chatbots**: O agente autônomo (WhatsApp e Telegram) DEVE utilizar as ferramentas dedicadas do `tool_executor` sempre que o usuário solicitar execução ou inspeção nas CLIs:
+  - `run_codex_cli`: Disparo direto para o agente Codex com subcomandos (`exec`, `review`, `doctor`, `agents`, `features`).
+  - `run_antigravity_cli`: Disparo direto para o agente Antigravity com subcomandos (`print`, `agents`, `models`, `mcp`, `changelog`).
+  - `run_opencode_cli`: Disparo direto para o agente OpenCode com subcomandos (`run`, `models`, `stats`, `session`).
+  - `get_desktop_clis_status`: Relatório instantâneo de versões, caminhos e processos ativos das 3 CLIs.
+- **Roteamento de API HTTP no Brain Server**: O Brain Server expõe os endpoints `/v1/desktop/clis` (GET) e `/v1/desktop/cli` (POST) para orquestração remota e integração contínua.
+- **Auditoria Automática**: Toda execução finalizada com sucesso via CLI desktop registra automaticamente o evento no sentinela `desktop_watcher` para emissão de relatório ao CEO.
+
+### Regra #23: Execução Autônoma Compulsória, Transparência de Passos e Proibição de Tarefas Incompletas (Mandatory Task Completion & Step Observability Guard)
+- **Execução Autônoma Até o Fim (Compulsory Completion)**: Todo agente atuando no ecossistema da AXION (WhatsApp, Telegram, Brain Server, orquestradores e subagentes) DEVE conduzir tarefas solicitadas até a sua finalização conclusiva absoluta, independentemente de erros intermediários ou imprevistos.
+- **Proibição Estrita de Evasivas e Perguntas de Permissão ("Se quiser eu faço")**:
+  - É expressamente PROIBIDO responder com ofertas condicionais ou transferências de responsabilidade ao usuário como *"se quiser eu posso verificar X"*, *"quer que eu investigue mais a fundo?"* ou *"é só mandar"*, quando a ação envolve diagnósticos técnicos, leituras de arquivos, auditoria de portas, checagem de chaves SSH ou inspeção de código que já estão dentro do escopo operacional do agente.
+  - O agente possui autorização prévia e o DEVER de esgotar autonomamente todos os caminhos técnicos alternativos plausíveis antes de encerrar o turno. Se um caminho falhar (ex: credencial não encontrada no vault ou porta SSH padrão recusada), o agente DEVE prosseguir no mesmo turno inspecionando chaves locais (`.ssh/`), portas alternativas (`known_hosts`), configurações ou documentação correlata.
+- **Proibição de Promessas Futuras Sem Execução Imediata**:
+  - É expressamente proibido emitir respostas puramente promissórias como *"Vou investigar..."* ou *"Vou extrair o link..."* sem emitir as ferramentas de execução no mesmo turno. Respostas contendo apenas promessas sem execução são classificadas como falha crítica de autonomia.
+- **Transparência Compulsória dos Passos de Execução (Step Observability)**:
+  - Todo relatório de ação/diagnóstico entregue ao operador ou CEO DEVE conter a seção estruturada:
+    `<b>📋 Passos de Execução Realizados:</b>`
+    listando detalhadamente cada passo, ferramenta executada (`read_file`, `exec_command`, `fetch_url`, etc.) e o resultado factual de cada etapa com ícones claros (`✅`/`❌`).
+- **Finalização Conclusiva Obrigatória**:
+  - Nenhuma tarefa pode ser deixada em estado ambíguo, aberto ou pendente. Toda resposta final DEVE apresentar status conclusivo explícito:
+    `<b>🎯 Status da Tarefa:</b> ✅ Concluída` (ou `⚠️ Finalizada com impedimento externo comprovado: [motivo factual detalhado]`).
+
+### Regra #24: Governança de Notificações Executivas, Filtro Anti-Ruído e Histerese Operacional (Executive Notification Governance & Anti-Noise Protocol)
+- **Eliminação Absoluta de Spam e Alertas de Tarefas Efêmeras (Anti-Scratch Shield)**:
+  - É expressamente PROIBIDO despachar push notifications (Telegram ou WhatsApp) à liderança sobre tarefas corriqueiras de background, comandos auxiliares do terminal, rotinas internas de shell ou logs efêmeros do Antigravity (`task-*.log`).
+  - Tarefas internas menores que 150 bytes ou desprovidas de marco de negócio explícito DEVEM ser registradas de forma puramente silenciosa (`silent_scratch: True`), sem emissão de mensagem push.
+- **Critérios Mandatórios de Elegibilidade Executiva**:
+  - Toda notificação enviada à liderança DEVE conter comprovadamente:
+    1. **Identificação do Marco ou Entregável**: Declaração explícita de valor de negócio (`[executive_delivery]`, `deploy_success`, `liberado_ok`, `produção` ou `release_completed`).
+    2. **Evidência Factual Verificável**: URL de acesso público/staging (`https://...`), porta local em execução (`http://localhost:...`), hash de commit ou migração de banco finalizada.
+    3. **Estrutura Executiva Padronizada**: Cabeçalho `🚀 [ENTREGA EXECUTIVA]`, projeto, agente executor, entregáveis em bullet points e ação direta esperada.
+- **Histerese e Deadband de Telemetria de Hardware (Anti-Flapping)**:
+  - Oscilações transitórias de memória RAM e CPU não devem gerar tempestades de alertas (ping-pong). O sistema de sentinelas (`tentacles`, `desktop_watcher`) DEVE operar com zona morta (*deadband*):
+    - Alerta Amarelo (`WARNING`): Apenas em $\ge 92.0\%$.
+    - Alerta Crítico (`CRITICAL`): Apenas em $\ge 96.0\%$.
+    - Normalização (`NORM`): Somente quando recuar a $\le 80.0\%$.
+    - Faixa intermediária ($80.0\% < \text{RAM} < 92.0\%$): Mantém o estado prévio em silêncio.
+  - **Cooldown Mandatório**: Janela mínima de 4 horas (14.400s) para repetição de alertas de hardware no mesmo nível.
+  - **Diagnóstico Rico Obrigatório**: Todo alerta de hardware deve detalhar os Top 3 processos consumidores com consumo real calculado em GB (proibido valores zerados ou relatórios cegos).
+- **Linguagem Amigável nos Passos de Execução**: Comandos brutos de shell (`git status`, `tasklist`, `netstat`) devem ser traduzidos para descrições semânticas de alto nível (`_friendly_step_description`) antes de serem exibidos ao CEO.
+
+### Regra #25: Modo Orquestrador Maestro e Despacho para Agentes Desktop por Quota e Especialização (Desktop Agents Maestro & Quota-Aware Dispatch Guard)
+- **Modo de Operação Central (Maestro & Orquestrador)**:
+  - Todo agente conversacional ou interface de atendimento corporativo (WhatsApp, Telegram, Brain Server) opera prioritariamente como o **Maestro / Orquestrador** dos agentes desktop no host Windows.
+  - Ao receber tarefas técnicas do usuário (programação, refatoração profunda, caça a bugs, testes automatizados, criação de skills, governança, infraestrutura ou automações pesadas), o agente NÃO deve tentar executar código bruto isolado ou improvisar; ele DEVE orquestrar e delegar a execução aos agentes desktop através da ferramenta `dispatch_desktop_task` (ou subcomandos dedicados).
+- **Critérios de Roteamento por Especialização e Modelo Neural**:
+  1. **OpenAI Codex CLI (`codex`)**:
+     - *Domínio*: Engenharia de código, refatoração de alta complexidade, resolução de bugs, escrita de testes automatizados (`pytest`/`vitest`), revisão cirúrgica (`codex review`) e commits Git.
+     - *Modelo*: OpenAI o1 / GPT-4o / Codex-Alpha (Tier Premium).
+  2. **Google Antigravity CLI (`antigravity` / `agy`)**:
+     - *Domínio*: Arquitetura de workspace, governança de regras (`AGENTS.md`), criação/auditoria de skills, fluxos complexos multi-etapas, infraestrutura (Cloudflare/Tailscale/VPS), servidores MCP e RAG.
+     - *Modelo*: Google Gemini 2.0 / 1.5 Pro e Flash (Tier Enterprise).
+  3. **OpenCode CLI (`opencode`)**:
+     - *Domínio*: Execução rápida, scripts leves, conversões e formatações, tarefas econômicas ou de custo zero com modelo `opencode/mimo-v2.6-flash-free` e como fallback de alta disponibilidade.
+     - *Modelo*: opencode/mimo-v2.6-flash-free (Tier Free).
+- **Governança de Quotas, Rate Limits (429) e Failover Automático**:
+  - O orquestrador mantém ledger persistente em `memory/desktop_agents/quota_status.json`.
+  - Ao detectar erros de rate limit (`429 Too Many Requests`) ou esgotamento de quota (`quota exceeded`, `insufficient_quota`), o agente atingido entra imediatamente em cooldown protegido e o orquestrador aciona failover instantâneo para o próximo agente elegível da cadeia (ex: Codex -> Antigravity -> OpenCode).
+  - É expressamente proibido abortar a demanda do usuário por indisponibilidade transitória de um único agente: a cadeia de fallback deve ser exaurida até a conclusão.
+- **Rastreabilidade e Entrega Executiva**:
+  - Toda tarefa orquestrada concluída registra o evento no `desktop_watcher` para notificação executiva e persiste o histórico em `memory/desktop_agents/dispatch_history.jsonl`.
 
 ---
 

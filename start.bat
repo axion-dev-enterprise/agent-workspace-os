@@ -1,15 +1,26 @@
 @echo off
 chcp 65001 >nul
-title Agent Workspace OS - Setup & Control Center
-echo ============================================================
-echo   Agent Workspace OS v1.1.0 - Setup & Control Center
-echo ============================================================
+cd /d "%~dp0"
+title Autonomous Agent Workspace OS
+echo =================================================================
+echo   Autonomous Agent Workspace OS - Starting System Services
+echo =================================================================
 echo.
-echo Abrindo painel visual no seu navegador...
-start "" "http://127.0.0.1:8765"
-echo.
-echo Servidor ativo em: http://127.0.0.1:8765
-echo Pressione Ctrl+C para encerrar o servidor.
-echo.
-python scripts/setup_server.py
+
+where pm2 >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo [*] Iniciando servicos via PM2 Process Manager...
+    call pm2 start ecosystem.config.js
+    call pm2 status
+    echo.
+    echo [OK] Servicos iniciados no background.
+    echo Brain API: http://127.0.0.1:8765
+    echo.
+) else (
+    echo [!] PM2 nao detectado. Iniciando Brain API diretamente via Python...
+    echo Para gerenciar em background, instale: npm install -g pm2
+    echo.
+    python scripts/brain_server.py
+)
+
 pause

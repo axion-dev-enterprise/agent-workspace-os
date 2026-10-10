@@ -22,6 +22,8 @@ import ssl
 import shutil
 import datetime
 import threading
+import re
+import html
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +39,13 @@ STATE_FILE = WORKSPACE_ROOT / "workspace" / "memory" / "tentacles_state.json"
 SUBSCRIBERS_PATH = WORKSPACE_ROOT / "workspace" / "telegram_subscribers.json"
 BACKUP_ROOT = Path(r"E:\backups\axion_enterprise")
 
-# Thresholds & SLAs
+# Thresholds & SLAs (Hysteresis & Anti-Fatigue Governance)
 DISK_C_WARN_PCT = 15.0
 DISK_C_CRIT_PCT = 8.0
+RAM_WARN_PCT = 92.0
+RAM_CRIT_PCT = 96.0
+RAM_NORM_PCT = 80.0                # Strict hysteresis deadband (must drop below 80% to normalize)
+RAM_ALERT_COOLDOWN_SECS = 14400    # 4 hours between repeat alerts of the same level
 SSL_WARN_DAYS = 30
 BACKUP_STALE_HOURS = 24
 STARTUP_COOLDOWN_SECS = 600       # 10 minutes between startup greetings
@@ -377,7 +383,7 @@ def sweep_backup_vault(send_fn):
 # TENTACLE 6: AUTONOMOUS TASK DISPATCHER
 # ==========================================
 def sweep_workspace_tasks(send_fn):
-    """Executes critical/auto_run tasks in background and announces completion"""
+    """Executes critical/auto_run tasks in background and announces completion with executive clarity"""
     tasks = task_queue.list_tasks(status="pending")
     for t in tasks:
         task_id = t["id"]
@@ -387,16 +393,27 @@ def sweep_workspace_tasks(send_fn):
         if is_critical or auto_run:
             log(f"Iniciando execução autônoma da tarefa {task_id}: {t.get('title')}")
             res = task_queue.execute_task(task_id)
-            status_icon = "✅" if res.get("status") == "completed" else "❌"
+            is_success = res.get("status") == "completed"
+            status_icon = "✅" if is_success else "❌"
+            status_label = "Concluída com Sucesso" if is_success else "Falha na Execução"
+            action_needed = "Nenhuma ação requerida — entrega operando normalmente." if is_success else "Atenção requerida — falha na execução precisa de intervenção."
+
+            output = res.get("output") or ""
+            clean_summary = res.get("result") or output[:250] or "Tarefa executada com êxito."
+            
+            url_m = re.search(r'https?://[^\s<>"]+', output)
+            link_line = f"\n• <b>Link / Evidência:</b> <code>{url_m.group(0)}</code>" if url_m else ""
             
             completion_msg = (
-                f"{status_icon} <b>Tentáculo de Execução: Tarefa Autônoma Concluída!</b>\n"
+                f"🚀 <b>[AXION ENTREGA EXECUTIVA]</b>\n"
                 f"━━━━━━━━━━━━━━━━━━━━━━\n"
+                f"• <b>Projeto/Tarefa:</b> <b>{html.escape(t.get('title', 'Tarefa Autônoma'))}</b>\n"
                 f"• <b>ID:</b> <code>{task_id}</code>\n"
-                f"• <b>Título:</b> {t.get('title', 'Sem título')}\n"
-                f"• <b>Status:</b> <code>{res.get('status')}</code>\n"
-                f"• <b>Resultado:</b> {res.get('result')}\n"
-                f"━━━━━━━━━━━━━━━━━━━━━━"
+                f"• <b>Status:</b> {status_icon} <b>{status_label}</b>\n"
+                f"• <b>Entregável / Resumo:</b> {clean_summary}{link_line}\n"
+                f"• <b>Ação para o CEO:</b> <i>{action_needed}</i>\n"
+                f"━━━━━━━━━━━━━━━━━━━━━━\n"
+                f"<i>Execução autônoma governada no workspace.</i>"
             )
             buttons = [
                 [
@@ -477,6 +494,104 @@ def broadcast_to_subscribers(send_fn, message: str, reply_markup: dict = None):
                 log(f"Falha ao enviar broadcast para {cid_str}: {e}")
 
 # ==========================================
+# ==========================================
+# TENTACLE 8: DESKTOP AGENTS SENTINEL
+# ==========================================
+def sweep_desktop_agents(send_fn):
+    """Monitors desktop agents (Antigravity, Codex, OpenCode) and alerts CEO Executive Operator upon task completion"""
+    try:
+        from bot_engine import desktop_watcher
+        desktop_watcher.scan_and_notify_finished_tasks(send_fn=send_fn)
+    except Exception as e:
+        log(f"Erro no tentáculo de observabilidade desktop: {e}")
+
+# ==========================================
+# TENTACLE 9: RAM MEMORY PRESSURE SENTINEL
+# ==========================================
+def sweep_ram_pressure(send_fn):
+    """Surveils workstation RAM usage with strict hysteresis, cooldown and informative process tracking"""
+    try:
+        state = load_state()
+        ram_state = state.get("ram_state", {"level": "NOMINAL", "last_alert_ts": 0.0, "last_norm_ts": 0.0})
+        
+        telemetry = tool_executor.get_system_telemetry()
+        ram = telemetry.get("ram", {})
+        pct = ram.get("percent_used", 0)
+        used_gb = ram.get("used_gb", 0)
+        total_gb = ram.get("total_gb", 0)
+        top_procs = ram.get("top_processes", [])
+        now_ts = time.time()
+        
+        previous_level = ram_state.get("level", "NOMINAL")
+        last_alert_ts = ram_state.get("last_alert_ts", 0.0)
+        
+        # Determina nível atual com histerese estrita
+        if pct >= RAM_CRIT_PCT:
+            current_level = "CRITICAL"
+        elif pct >= RAM_WARN_PCT:
+            current_level = "WARNING"
+        elif pct <= RAM_NORM_PCT:
+            current_level = "NOMINAL"
+        else:
+            # Zona de histerese (entre 80.0% e 92.0%): mantém o estado anterior
+            current_level = previous_level
+
+        # Cooldown check: alertas do mesmo nível só podem disparar após 4h
+        is_cooldown_expired = (now_ts - last_alert_ts) >= RAM_ALERT_COOLDOWN_SECS
+        is_escalation = (previous_level == "WARNING" and current_level == "CRITICAL")
+        
+        should_alert = False
+        if current_level in ["WARNING", "CRITICAL"]:
+            if previous_level != current_level or is_cooldown_expired or is_escalation:
+                should_alert = True
+
+        if should_alert:
+            # Lista de processos reais
+            procs_lines = []
+            for idx, p in enumerate(top_procs[:3], 1):
+                p_name = p.get("name", "unknown")
+                p_mb = p.get("memory_mb", 0)
+                procs_lines.append(f"  {idx}. <code>{p_name}</code>: <b>{p_mb} MB</b>")
+            procs_str = "\n".join(procs_lines) if procs_lines else "  • <i>Identificando via tasklist...</i>"
+
+            alert_text = (
+                f"🧠 <b>[TELEMETRIA DO HOST] Pressão Sustentada de RAM ({pct}%)</b>\n"
+                f"━━━━━━━━━━━━━━━━━━━━━━\n"
+                f"• <b>Consumo Real:</b> <code>{used_gb} GB de {total_gb} GB ({pct}%)</code>\n"
+                f"• <b>Severidade:</b> <code>{current_level}</code> (limite: &gt; {RAM_WARN_PCT}%)\n"
+                f"• <b>Maiores Consumidores de Memória:</b>\n{procs_str}\n\n"
+                f"• <b>Ação Recomendada:</b> Encerre abas inativas ou recicle workers pesados.\n"
+                f"━━━━━━━━━━━━━━━━━━━━━━\n"
+                f"<i>Anti-fadiga: Próximo alerta para este nível retido por 4 horas.</i>"
+            )
+            buttons = [
+                [
+                    {"text": "📊 Processos Detalhados", "callback_data": dynamic_keyboard.register_callback_action({"query": "Liste os 10 processos com maior consumo de RAM no Windows"})},
+                    {"text": "🔕 Silenciar 4h", "callback_data": dynamic_keyboard.register_callback_action({"action": "tentacle:silence:ram_pressure:4"})}
+                ]
+            ]
+            broadcast_to_subscribers(send_fn, alert_text, reply_markup={"inline_keyboard": buttons})
+            ram_state["level"] = current_level
+            ram_state["last_alert_ts"] = now_ts
+            state["ram_state"] = ram_state
+            save_state(state)
+
+        elif current_level == "NOMINAL" and previous_level in ["WARNING", "CRITICAL"]:
+            # Só notifica normalização se houve alerta prévio E caiu abaixo de 80%
+            broadcast_to_subscribers(
+                send_fn,
+                f"✅ <b>[TELEMETRIA DO HOST] Pressão de RAM Normalizada!</b>\n"
+                f"Consumo atual estabilizado em <code>{pct}% ({used_gb} GB / {total_gb} GB)</code>."
+            )
+            ram_state["level"] = "NOMINAL"
+            ram_state["last_norm_ts"] = now_ts
+            state["ram_state"] = ram_state
+            save_state(state)
+            
+    except Exception as e:
+        log(f"Erro no tentáculo de pressão de RAM: {e}")
+
+# ==========================================
 # MASTER TENTACLES BACKGROUND THREAD
 # ==========================================
 def _tentacles_worker(send_fn):
@@ -485,6 +600,7 @@ def _tentacles_worker(send_fn):
     
     last_mesh = 0
     last_disks = 0
+    last_ram = 0
     last_ssl = 0
     last_backup = 0
     
@@ -494,11 +610,19 @@ def _tentacles_worker(send_fn):
             
             # 1. Sweep workspace tasks (every 25 seconds)
             sweep_workspace_tasks(send_fn)
+
+            # 1B. Sweep desktop agents tasks (Antigravity, Codex, OpenCode) (every 25 seconds)
+            sweep_desktop_agents(send_fn)
             
             # 2. Check storage disks (every 10 minutes = 600s)
             if now - last_disks > 600:
                 last_disks = now
                 sweep_storage_disks(send_fn)
+                
+            # 2B. Check RAM pressure (every 5 minutes = 300s)
+            if now - last_ram > 300:
+                last_ram = now
+                sweep_ram_pressure(send_fn)
                 
             # 3. Check Tailnet Mesh nodes (every 15 minutes = 900s)
             if now - last_mesh > 900:

@@ -14,6 +14,7 @@ import re
 import html
 import uuid
 import threading
+import concurrent.futures
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -127,13 +128,11 @@ def get_live_system_context() -> str:
     e_drive = telemetry.get("e_backup_drive", {})
 
     lines = [
-        "TELEMETRIA EM TEMPO REAL — AXION ENTERPRISE:",
+        "TELEMETRIA EM TEMPO REAL — HOST LOCAL (DINÂMICO):",
         f"- Timestamp Atual: {datetime.datetime.now(datetime.timezone.utc).isoformat()}",
         f"- PC Local: Windows 10 (desktop-1t1e46h) | RAM: {ram.get('free_gb')} GB livres de {ram.get('total_gb')} GB ({ram.get('percent_used')}% em uso)",
         f"- Armazenamento C: (SSD SO): {c_drive.get('free_gb')} GB livres ({c_drive.get('percent_free')}%)",
         f"- Armazenamento E: (Cofre Frio): {e_drive.get('free_gb')} GB livres ({e_drive.get('percent_free')}%)",
-        f"- Rede Tailscale Mesh: {telemetry.get('tailscale_summary')} (vps-node-01: 100.64.0.1, debian-2vcpu: 100.64.0.2)",
-        "- Nós Descomissionados: juliana-vps (100.81.231.111), juliana.example.com e proxionmidia.com (100% descomissionados em 25/09/2026, dados em cofre permanente E:\\)",
         f"- Certificados SSL: {ssl.get('total_audited', 16)} auditados e saudáveis",
         f"- Fila de Tarefas do Workspace: {len(tasks)} registradas ({pending_tasks_count} pendentes)"
     ]
@@ -187,19 +186,39 @@ def sanitize_and_convert_to_tg_html(text: str) -> str:
 # System prompt (always loads AGENTS.md dynamically from disk)
 # ---------------------------------------------------------------------------
 
+_AGENTS_MD_CACHE = {"mtime": 0.0, "content": ""}
+
 def load_agents_markdown() -> str:
-    """Loads canonical AGENTS.md governance rules directly from the workspace root."""
+    """Loads canonical AGENTS.md governance rules directly from the workspace root (cached with mtime check)."""
     agents_path = WORKSPACE_ROOT / "AGENTS.md"
     if agents_path.exists():
         try:
-            return agents_path.read_text(encoding="utf-8", errors="replace").strip()
+            mtime = agents_path.stat().st_mtime
+            if mtime != _AGENTS_MD_CACHE["mtime"]:
+                _AGENTS_MD_CACHE["content"] = agents_path.read_text(encoding="utf-8", errors="replace").strip()
+                _AGENTS_MD_CACHE["mtime"] = mtime
+            return _AGENTS_MD_CACHE["content"]
         except Exception as e:
             return f"[Aviso: Erro ao carregar AGENTS.md: {e}]"
     return "[Aviso: Arquivo AGENTS.md não encontrado na raiz do workspace]"
 
-def build_system_prompt() -> str:
-    live_ctx     = get_live_system_context()
-    tools_desc   = json.dumps(tool_executor.TOOL_DEFINITIONS, indent=2, ensure_ascii=False)
+_TOOLS_DESC_CACHE = None
+
+def get_tools_description() -> str:
+    """Retorna definições de ferramentas pré-serializadas em JSON para o prompt estático."""
+    global _TOOLS_DESC_CACHE
+    if _TOOLS_DESC_CACHE is None:
+        _TOOLS_DESC_CACHE = json.dumps(tool_executor.TOOL_DEFINITIONS, indent=2, ensure_ascii=False)
+    return _TOOLS_DESC_CACHE
+
+def build_static_system_prompt() -> str:
+    """
+    Camada 1 (100% Estática e Determinística):
+    Contém a identidade AXION, governança de AGENTS.md, catálogo de ferramentas,
+    regras de ReAct paralelo, sintaxe de chamadas e restrições de execução.
+    ESTE BLOCO NUNCA MUDA ENTRE TURNOS E PERMITE 99%+ DE HIT NO KV-CACHE DA OPENROUTER.
+    """
+    tools_desc   = get_tools_description()
     agents_rules = load_agents_markdown()
 
     return (
@@ -207,22 +226,46 @@ def build_system_prompt() -> str:
         "motorizado pelo modelo neural Xiaomi Mimo.\n"
         "Você opera com AUTONOMIA TOTAL no PC local (C:\\workspace), servidores na Tailnet, "
         "borda Cloudflare, Vercel e sistemas de backup.\n\n"
+        "TOPOLOGIA DE REDE E INFRAESTRUTURA CANÔNICA:\n"
+        "• Rede Tailscale Mesh: vps-node-01: 100.64.0.1, debian-2vcpu: 100.64.0.2\n"
+        "• Nós Descomissionados: juliana-vps (100.81.231.111), juliana.example.com e proxionmidia.com "
+        "(100% descomissionados em 25/09/2026, dados em cofre permanente E:\\)\n\n"
         "======================================================================\n"
         "REGRAS CANÔNICAS DE GOVERNANÇA DO WORKSPACE (AGENTS.md):\n"
         "As diretrizes abaixo são mandatórias e regem todas as suas ações, ferramentas, caminhos e código:\n"
         "======================================================================\n"
         f"{agents_rules}\n"
         "======================================================================\n\n"
-        f"{live_ctx}\n\n"
         "FERRAMENTAS DISPONÍVEIS NO PC LOCAL:\n"
         f"{tools_desc}\n\n"
-        "COMANDOS CANÔNICOS DA CLI ANTIGRAVITY (AGY):\n"
-        "• agy : Iniciar a sessão interativa TUI\n"
-        "• agy -c : Continuar a conversa mais recente\n"
-        "• agy -p \"<prompt>\" : Executar um prompt direto sem entrar no modo interativo (headless)\n"
-        "• agy models : Listar modelos disponíveis\n"
-        "• agy mcp list : Listar e gerenciar servidores MCP\n"
-        "• agy update : Atualizar a CLI para a versão mais recente\n\n"
+        "BASE DE CONHECIMENTO CANÔNICA & RAG (search_knowledge_base):\n"
+        "• A AXION Enterprise possui base documental canônica oficial em docs/knowledge/ cobrindo 6 Verticais:\n"
+        "  1. AXION Comm: Autoatendimento IA WhatsApp (30D grátis, R$ 0 / R$ 50 chip, R$ 97 após trial, Pixel & CAPI).\n"
+        "  2. AXION Dev: Software House sob demanda (Landing Pages, Sites, SPAs, Dashboards de BI e Agentes de IA customizados sob medida por escopo fechado ou retainer mensal).\n"
+        "  3. AXION Pay: Gateway de pagamentos, checkout transparente e gestão de assinaturas SaaS.\n"
+        "  4. AXION Flow: Plataforma SaaS multi-tenant de agentes especialistas autônomos.\n"
+        "  5. AXION Performance: Gestão de tráfego pago (Meta/Google Ads) e CAPI com Yan Nascimento.\n"
+        "  6. AXION Media & Voice: Motion 3D determinístico e agentes de voz neurais.\n"
+        "• Sempre que o usuário fizer perguntas conceituais, comerciais ou técnicas sobre a empresa, priorize estritamente os trechos em <base_conhecimento_canonica> ou chame a ferramenta `search_knowledge_base`.\n"
+        "MODO DE OPERAÇÃO CENTRAL: MAESTRO & ORQUESTRADOR DOS AGENTES DESKTOP (CODEX, ANTIGRAVITY E OPENCODE):\n"
+        "O seu papel operacional principal é atuar como o MAESTRO e DESPACHANTE INTELIGENTE dos agentes desktop corporativos.\n"
+        "Quando você receber demandas técnicas do usuário (criação de código, refatoração, correção de bugs, escrita de testes, automações, scripts, planejamento de arquitetura ou inspeções):\n"
+        "Você DEVE DELEGAR E SOLICITAR a execução para os agentes desktop através da ferramenta `dispatch_desktop_task`!\n\n"
+        "CRITÉRIOS DE ROTEAMENTO, MODELOS E QUOTAS DE USO:\n"
+        "1. OpenAI Codex CLI ('codex'):\n"
+        "   • Especialidade: Engenharia e síntese de código, refatoração profunda, caça a bugs, testes automatizados (pytest/vitest), code review cirúrgico (`codex review`).\n"
+        "   • Modelo: OpenAI o1 / GPT-4o / Codex-Alpha (Tier Premium).\n"
+        "2. Google Antigravity CLI ('antigravity' / 'agy'):\n"
+        "   • Especialidade: Arquitetura de workspace, governança de regras (AGENTS.md), criação de skills, fluxos complexos multi-agente, infraestrutura (Cloudflare/Tailscale/VPS), RAG e servidores MCP.\n"
+        "   • Modelo: Google Gemini 2.0 / 1.5 Pro e Flash (Tier Enterprise).\n"
+        "3. OpenCode CLI ('opencode'):\n"
+        "   • Especialidade: Execução rápida, scripts leves, formatações, extração rápida de dados, tarefas de custo zero / gratuitas com o modelo `opencode/mimo-v2.6-flash-free` e como fallback imediato.\n"
+        "   • Modelo: opencode/mimo-v2.6-flash-free (Tier Free).\n\n"
+        "GESTÃO DE QUOTAS, RATE LIMITS (429) E FAILOVER AUTOMÁTICO:\n"
+        "• A ferramenta `dispatch_desktop_task(task_description=..., preferred_agent=...)` gerencia automaticamente as quotas diárias e limiares de taxa.\n"
+        "• Se um agente atingir rate limit (429), esgotamento de quota ou falhar, o orquestrador executa failover automático instantâneo para o próximo agente elegível da cadeia!\n"
+        "• Para inspecionar as quotas, modelos e saúde operacional de todos os 3 agentes, chame `get_desktop_orchestrator_status` ou `get_desktop_clis_status`.\n"
+        "• Se você precisar executar diretamente um subcomando específico em um dos agentes, utilize `run_codex_cli`, `run_antigravity_cli` ou `run_opencode_cli`.\n\n"
         "COMO CHAMAR FERRAMENTAS:\n"
         "Se o usuário pedir um diagnóstico, execução de comando, teste de rotas, verificação de status, "
         "ou se você precisar de dados para responder, você DEVE invocar a ferramenta correspondente.\n\n"
@@ -241,19 +284,34 @@ def build_system_prompt() -> str:
         '<invoke name="exec_command">\n'
         '<parameter name="cmd">comando powershell</parameter>\n'
         '</invoke>\n\n'
+        "EXECUÇÃO PARALELA / EM LOTE (MÁXIMA VELOCIDADE E ROBUSTEZ):\n"
+        "Se a sua análise exigir inspecionar múltiplos recursos independentes (ex: ler mais de um arquivo, "
+        "executar comandos de diagnóstico independentes ou auditar portas e logs ao mesmo tempo):\n"
+        "Você PODE e DEVE emitir todas as chamadas de ferramentas juntas no mesmo turno!\n"
+        "O motor da AXION detecta automaticamente e executa todas as chamadas independentes EM PARALELO simultaneamente via threads nativas, "
+        "retornando todos os resultados de uma vez só e economizando até 70% do tempo de resposta.\n"
+        "Exemplo em XML:\n"
+        '<invoke name="read_file"><parameter name="file_path">C:/workspace/scripts/arquivo1.py</parameter></invoke>\n'
+        '<invoke name="read_file"><parameter name="file_path">C:/workspace/scripts/arquivo2.py</parameter></invoke>\n'
+        '<invoke name="exec_command"><parameter name="cmd">git status</parameter></invoke>\n\n'
         "REGRA CRÍTICA DE EXECUÇÃO:\n"
         "1. NUNCA escreva scripts de PowerShell soltos no texto da mensagem dizendo 'vou executar agora'.\n"
         "   Se você precisa testar ou executar algo, você DEVE emitir a chamada de ferramenta `<invoke name=...>` "
         "ou ````tool_call { ... } ````. O bot executará no PC e fornecerá a saída real para você sintetizar o relatório.\n"
         "2. CAMINHOS NO WINDOWS: Use SEMPRE barras normais `/` (ex: `C:/workspace/scripts`), pois a contrabarra `\\` é caractere de escape em JSON/Python.\n"
         "3. COMANDOS HEADLESS: NUNCA execute comandos que aguardem confirmação interativa (`[y/n]`, editores ou senhas). Use sempre `-y`, `--yes` ou `--no-input`.\n"
-        "4. EDIÇÃO CIRÚRGICA: Prefira usar `replace_in_file` para alterar trechos pontuais de código existente, sem reescrever o arquivo todo.\n\n"
+        "4. EDIÇÃO CIRÚRGICA: Prefira usar `replace_in_file` para alterar trechos pontuais de código existente, sem reescrever o arquivo todo.\n"
+        "5. VARIÁVEIS NO POWERSHELL: NUNCA crie variáveis inline com `$` no comando (ex: `$d = ...`), pois o subshell pode expandir como vazio antes da execução. Prefira comandos diretos com pipes simples (ex: `pm2 ls`, `git status`) ou execute via script Python (`python -c \"...\"`).\n\n"
         "AUTONOMIA COM ARQUIVOS E PASTAS LOCAIS (PC WINDOWS):\n"
         "1. Você opera DIRETAMENTE no computador da AXION (C:\\workspace). Você NÃO é um chatbot isolado em nuvem.\n"
         "2. Se o usuário fornecer um caminho de pasta/arquivo (ex: 'C:\\workspace\\apps\\projeto-exemplo') ou pedir 'analise a pasta enviada', "
         "você DEVE chamar 'list_directory' ou 'read_file' IMEDIATAMENTE para ler os dados do disco.\n"
         "3. É ESTRITAMENTE PROIBIDO pedir ao usuário para 'enviar arquivo ZIP', 'subir a pasta' ou 'colar código no chat'. "
         "Você tem acesso total ao disco rígido local e DEVE usar suas ferramentas 'list_directory' e 'read_file' autonomamente.\n\n"
+        "LEITURA DE LINKS E DOCUMENTOS WEB (fetch_url):\n"
+        "1. Quando o usuário fornecer qualquer link (URL pública, artigos, APIs, Google Docs ou Google Sheets):\n"
+        "2. Você DEVE invocar a ferramenta `fetch_url(url=...)` IMEDIATAMENTE para ler o documento ou página.\n"
+        "3. NUNCA diga 'vou extrair o documento' sem emitir a chamada de ferramenta `<invoke name=\"fetch_url\">`.\n\n"
         "REGRA DE DEPLOY (CRÍTICA — NUNCA IGNORE):\n"
         "Quando o usuário pedir para criar E hospedar/publicar/deploiar um site:\n"
         "1. Você DEVE usar a ferramenta `vercel_deploy` passando o HTML COMPLETO no parâmetro `html_content`.\n"
@@ -304,35 +362,106 @@ def build_system_prompt() -> str:
         "completa e conclusiva em HTML para o usuário.\n"
         "• Se o objetivo NÃO foi alcançado ainda: continue raciocinando e emita a próxima chamada de ferramenta.\n"
         "• NUNCA pare após uma única ferramenta sem verificar se o objetivo foi atingido.\n"
-        "• NUNCA emita <goal_achieved>YES</goal_achieved> sem ter os dados reais para responder o objetivo."
+        "• NUNCA emita <goal_achieved>YES</goal_achieved> sem ter os dados reais para responder o objetivo.\n\n"
+        "REGRA DE FINALIZAÇÃO COMPULSÓRIA E TRANSPARÊNCIA DE PASSOS (REGRA #23 — INVIOLÁVEL):\n"
+        "1. TRANSPARÊNCIA TOTAL DOS PASSOS DE EXECUÇÃO:\n"
+        "   • Toda resposta final que envolva ações, diagnósticos ou ferramentas DEVE conter a seção estruturada:\n"
+        "     <b>📋 Passos de Execução Realizados:</b>\n"
+        "     • Passo 1: [Ação/Ferramenta] ➔ [Resultado factual obtido]\n"
+        "     • Passo 2: [Ação/Ferramenta] ➔ [Resultado factual obtido]\n"
+        "   • O operador/CEO deve sempre enxergar com transparência cirúrgica o que foi testado, lido ou executado.\n"
+        "2. FINALIZAÇÃO OBRIGATÓRIA DA TAREFA:\n"
+        "   • Toda tarefa DEVE ser finalizada de forma conclusiva, independente do que aconteça.\n"
+        "   • Conclua SEMPRE com: <b>🎯 Status da Tarefa:</b> ✅ Concluída (ou ⚠️ Finalizada com impedimento externo comprovado).\n"
+        "   • NUNCA deixe uma tarefa aberta, sem conclusão ou 'aguardando' sem emitir o parecer final definitivo.\n"
+        "3. PROIBIÇÃO ABSOLUTA DE RESPOSTAS EVASIVAS OU PERGUNTAS DE PERMISSÃO ('SE QUISER EU FAÇO'):\n"
+        "   • É TERMINANTEMENTE PROIBIDO responder com 'se você quiser posso verificar X', 'é só mandar', 'quer que eu investigue?'.\n"
+        "   • Você possui AUTONOMIA TOTAL para realizar diagnósticos técnicos e leituras no ambiente.\n"
+        "   • Se uma primeira tentativa não encontrou o dado (ex: credencial não achada no cofre principal, ou porta SSH padrão 22 fechada), "
+        "você NÃO PODE PARAR e perguntar se deve olhar as chaves SSH ou portas alternativas. VOCÊ DEVE EXECUTAR ESSAS VERIFICAÇÕES AGORA "
+        "no mesmo turno até esgotar todas as vias cabíveis antes de responder.\n"
+        "4. PROIBIÇÃO DE PROMESSAS FUTURAS SEM EXECUÇÃO IMEDIATA:\n"
+        "   • NUNCA responda apenas 'Vou investigar...', 'Vou extrair o link...', 'Vou verificar o código...' sem emitir ferramentas no mesmo turno.\n"
+        "   • Quem promete sem executar no mesmo turno tem o comportamento classificado como falha crítica de autonomia."
     )
+
+def build_system_prompt() -> str:
+    """Retorna o prompt completo como string com a telemetria ao final (compatibilidade legada)."""
+    static_rules = build_static_system_prompt()
+    live_ctx = get_live_system_context()
+    return (
+        f"{static_rules}\n\n"
+        "======================================================================\n"
+        f"{live_ctx}\n"
+        "======================================================================\n"
+    )
+
+def build_system_message(allow_tools: bool = True) -> dict:
+    """
+    Constrói a mensagem de sistema formatada com blocos de cache_control para KV-Cache hit rate máximo.
+    O bloco estático é preservado intacto entre todas as requisições.
+    A telemetria volátil fica isolada no final do prompt.
+    """
+    if not allow_tools:
+        return {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": build_lead_system_prompt(),
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ]
+        }
+
+    static_prompt = build_static_system_prompt()
+    live_ctx = get_live_system_context()
+
+    return {
+        "role": "system",
+        "content": [
+            {
+                "type": "text",
+                "text": static_prompt,
+                "cache_control": {"type": "ephemeral"}
+            },
+            {
+                "type": "text",
+                "text": f"\n\n======================================================================\n{live_ctx}\n======================================================================\n"
+            }
+        ]
+    }
 
 def build_lead_system_prompt() -> str:
     """Dedicated prompt for customer service and lead conversations (fast, polite, tool-free)."""
     return (
         "Você é o Consultor Comercial e Especialista de Soluções da AXION Enterprise no WhatsApp.\n"
         "Atenda sempre em Português do Brasil de forma simpática, prestativa, transparente e altamente persuasiva.\n\n"
-        "PRODUTO PRINCIPAL: Sistema de Autoatendimento com Inteligência Artificial para WhatsApp.\n"
-        "• 🤖 Atendimento e qualificação de clientes 24/7 com inteligência humanizada e botões interativos.\n"
-        "• ⚡ Respostas instantâneas (< 1s) para eliminar o tempo de espera do cliente.\n"
-        "• 📱 SEM TAXAS DA META: Não precisa integrar com a API oficial da Meta nem pagar tarifas por conversa ao Facebook.\n"
-        "• 🎯 INTEGRAÇÃO COM PIXEL DO FACEBOOK & CAPI: Basta o cliente informar o Pixel ID ou token da CAPI. "
-        "O agente classifica os contatos e dispara eventos automáticos de conversão para o Gerenciador de Anúncios, otimizando as campanhas de tráfego pago.\n\n"
-        "OFERTA & MODELO COMERCIAL (CONDIÇÃO DE LANÇAMENTO):\n"
-        "• 🎁 30 DIAS 100% GRATUITOS para o cliente testar na empresa dele.\n"
-        "• Opção 1 (WhatsApp Próprio): R$ 0,00 nos primeiros 30 dias (conecta direto por QR Code).\n"
-        "• Opção 2 (Número Dedicado AXION): Apenas R$ 50,00/mês referente ao chip/linha virtual que fornecemos.\n"
-        "• Ativação simples via cartão de crédito para liberar os 30 dias grátis sem cobrança antecipada.\n\n"
+        "CATÁLOGO DE SOLUÇÕES & VERTICAIS DA AXION ENTERPRISE:\n"
+        "1. 📱 AUTOATENDIMENTO IA WHATSAPP (FLAGSHIP):\n"
+        "   • Atendimento humanizado 24/7 com botões rápidos, transcrição de áudio e zero filas.\n"
+        "   • Zero taxas em dólar por conversa da Meta (conexão direta Baileys multi-device).\n"
+        "   • Integração em 1 clique com Pixel do Facebook e CAPI (Conversions API) para otimizar anúncios.\n"
+        "   • Condição de Lançamento: 30 DIAS 100% GRATUITOS via cartão sem cobrança hoje (R$ 0,00).\n"
+        "   • Mensalidade após o trial: R$ 97,00/mês (Número Próprio) ou R$ 50,00/mês fixos (Chip Dedicado AXION).\n\n"
+        "2. 💻 AXION DEV (SOFTWARE HOUSE & ENGENHARIA SOB DEMANDA):\n"
+        "   • Desenvolvimento sob medida de Landing Pages de alta conversão, Sites corporativos e SPAs (React, Vite, Next.js 15).\n"
+        "   • Sistemas Web, Dashboards de BI e Painéis Administrativos sob medida (ex: ifood-dashboard, positivemind).\n"
+        "   • Desenvolvimento de Agentes de IA Customizados integrados aos sistemas e APIs da empresa do cliente.\n"
+        "   • Modelos de Contratação: Projeto Fechado por Escopo/Marcos ou Retainer Mensal de Horas/Engenharia.\n\n"
+        "3. 💳 AXION PAY & PLATAFORMAS:\n"
+        "   • Gateway de pagamentos, checkout transparente sem redirecionamento e gestão de assinaturas recorrentes.\n"
+        "   • AXION Flow: Plataforma SaaS de agentes especialistas em tráfego, copywriting, SDR e engenharia.\n\n"
         "DIRETRIZES DE ATENDIMENTO:\n"
-        "1. Responda diretamente à dúvida do lead com entusiasmo, clareza e objetividade (máximo 2 a 3 parágrafos).\n"
-        "2. Sempre incentive o lead a aproveitar os 30 dias grátis ou tirar dúvidas sobre o Pixel/CAPI.\n"
+        "1. Se a mensagem contiver <base_conhecimento_canonica>, use estritamente essas fontes como verdade factual absoluta para responder a dúvidas de preços, escopos ou regras.\n"
+        "2. Responda diretamente à dúvida do lead com entusiasmo, clareza e concisão (máximo 2 a 3 parágrafos curtos, ideal para leitura em celular).\n"
         "3. É ESTRITAMENTE PROIBIDO emitir comandos de terminal, scripts de código ou tags de ferramentas.\n"
         "4. Ao final da resposta, sugira de 2 a 3 opções rápidas de continuidade no formato de botões:\n"
         "```buttons\n"
         "[\n"
         '  {"text": "🚀 Ativar 30 Dias Grátis", "query": "Gostaria de ativar os 30 dias grátis"},\n'
-        '  {"text": "💰 Ver Planos & Valores", "query": "lead_pricing"},\n'
-        '  {"text": "🎯 Dúvidas sobre Pixel/CAPI", "query": "Como funciona o rastreamento com Pixel e CAPI?"}\n'
+        '  {"text": "💻 Orçamento de Site/Sistema", "query": "Quero orçamento para desenvolvimento de site ou sistema"},\n'
+        '  {"text": "💰 Ver Planos & Valores", "query": "lead_pricing"}\n'
         "]\n"
         "```"
     )
@@ -372,7 +501,13 @@ def call_openrouter_api(messages: list, model: str = None, timeout: int = 90, ma
             circuit=error_handlers.OPENROUTER_CIRCUIT
         )
         duration_ms = int((time.monotonic() - t0) * 1000)
-        telemetry.record_llm_metric(target_model, duration_ms, success=True)
+        usage = res.get("usage", {})
+        cached_tokens = usage.get("prompt_tokens_details", {}).get("cached_tokens", 0)
+        prompt_tokens = usage.get("prompt_tokens", 0)
+        if cached_tokens > 0:
+            hit_pct = round(cached_tokens / max(1, prompt_tokens) * 100, 1)
+            print(f"[OpenRouter Cache] KV-Cache HIT: {cached_tokens}/{prompt_tokens} tokens ({hit_pct}%) no modelo {target_model}")
+        telemetry.record_llm_metric(target_model, duration_ms, success=True, cached_tokens=cached_tokens)
         return res
     except Exception as e:
         duration_ms = int((time.monotonic() - t0) * 1000)
@@ -427,11 +562,11 @@ class ToolCircuitBreaker:
 
 
 
-def repair_json(raw_str: str) -> dict:
+def repair_json(raw_str: str) -> dict | list:
     """
     Robust Auto-Fix parser for imperfect JSON produced by LLMs.
     Handles trailing commas, single quotes, unquoted keys, unescaped backslashes,
-    unclosed brackets/braces, and extracts valid dictionary objects.
+    unclosed brackets/braces, and extracts valid dictionary or list objects.
     """
     if not raw_str or not raw_str.strip():
         return {}
@@ -441,15 +576,20 @@ def repair_json(raw_str: str) -> dict:
     # Try standard json parse first
     try:
         data = json.loads(cleaned)
-        if isinstance(data, dict):
+        if isinstance(data, (dict, list)):
             return data
     except Exception:
         pass
 
-    # Extract JSON object substring if surrounded by markdown or extra text
-    obj_match = re.search(r'\{[\s\S]*\}', cleaned)
-    if obj_match:
-        cleaned = obj_match.group(0)
+    # Extract JSON array or object substring if surrounded by markdown or extra text
+    if cleaned.startswith("[") or (re.search(r'^\s*\[', cleaned) and "]" in cleaned):
+        arr_match = re.search(r'\[[\s\S]*\]', cleaned)
+        if arr_match:
+            cleaned = arr_match.group(0)
+    else:
+        obj_match = re.search(r'\{[\s\S]*\}', cleaned)
+        if obj_match:
+            cleaned = obj_match.group(0)
 
     # 1. Normalize unescaped Windows backslashes in paths
     cleaned = re.sub(r'([A-Za-z]:)\\([^\s"\'<>`]+)', lambda m: m.group(1) + '/' + m.group(2).replace('\\', '/'), cleaned)
@@ -485,12 +625,15 @@ def repair_json(raw_str: str) -> dict:
 
     try:
         data = json.loads(cleaned)
-        if isinstance(data, dict):
+        if isinstance(data, (dict, list)):
             return data
     except Exception:
         pass
 
     # 6. Fallback regex extractor for key: value pairs if JSON parser still fails
+    if "<" in cleaned or ">" in cleaned:
+        return {}
+
     fallback_dict = {}
     for kv_match in re.finditer(r'["\']?([a-zA-Z0-9_\-]+)["\']?\s*[:=]\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s,}]+))', cleaned):
         k = kv_match.group(1)
@@ -515,6 +658,8 @@ def normalize_tool_call(tool_name: str, args: dict) -> tuple[str, dict]:
     - Fixes Windows backslashes in paths
     """
     clean_name = tool_name.strip().lower()
+    if not clean_name or "<" in clean_name or ">" in clean_name:
+        return "", {}
 
     # Tool synonym mapping
     synonyms = {
@@ -557,6 +702,18 @@ def normalize_tool_call(tool_name: str, args: dict) -> tuple[str, dict]:
         "encerrar_processo": "kill_command",
         "status_command": "check_command_status",
         "check_process": "check_command_status",
+        "fetch_url": "fetch_url",
+        "read_url": "fetch_url",
+        "get_url": "fetch_url",
+        "curl_url": "fetch_url",
+        "browse_url": "fetch_url",
+        "ler_url": "fetch_url",
+        "extrair_url": "fetch_url",
+        "fetch_email_otp": "fetch_email_otp",
+        "get_email_otp": "fetch_email_otp",
+        "get_otp": "fetch_email_otp",
+        "ler_otp": "fetch_email_otp",
+        "obter_otp": "fetch_email_otp",
     }
     canonical_name = synonyms.get(clean_name, clean_name)
 
@@ -579,6 +736,8 @@ def normalize_tool_call(tool_name: str, args: dict) -> tuple[str, dict]:
         "wait_command": {"seconds": "wait_seconds", "time": "wait_seconds", "timeout": "wait_seconds", "duration": "wait_seconds", "process_id": "pid", "id": "pid"},
         "kill_command": {"process_id": "pid", "id": "pid"},
         "check_command_status": {"process_id": "pid", "id": "pid"},
+        "fetch_url": {"link": "url", "uri": "url", "address": "url", "input": "url", "website": "url"},
+        "fetch_email_otp": {"email": "recipient", "to": "recipient", "target": "recipient", "timeout": "timeout_seconds"},
     }
     if canonical_name in param_synonyms:
         for old_k, canon_k in param_synonyms[canonical_name].items():
@@ -648,31 +807,56 @@ def parse_all_tool_calls(text: str) -> list[tuple[str, dict]]:
         if tool_name:
             raw_calls.append((tool_name, args))
 
-    # 2. JSON style ```tool_call ... ``` or ```json ... ``` with auto-fix
-    for m in re.finditer(r'```(?:tool_call|toolcall|tool|json)\s*([\s\S]*?)\s*```', sanitized_text, re.IGNORECASE):
-        block_text = m.group(1).strip()
-        if any(k in block_text for k in ["tool", "action", "function", "cmd", "path"]):
-            data = repair_json(block_text)
-            if isinstance(data, dict):
+    def _extract_from_json_data(data):
+        extracted = []
+        if isinstance(data, dict):
+            if isinstance(data.get("tools"), list):
+                for sub in data["tools"]:
+                    if isinstance(sub, dict):
+                        t_name = sub.get("tool") or sub.get("action") or sub.get("function")
+                        t_args = sub.get("args") or sub.get("parameters") or {k: v for k, v in sub.items() if k not in ["tool", "action", "function"]}
+                        if t_name:
+                            extracted.append((t_name, t_args if isinstance(t_args, dict) else {"input": str(t_args)}))
+            else:
                 t_name = data.get("tool") or data.get("action") or data.get("function")
                 t_args = data.get("args") or data.get("parameters") or data.get("action_input") or {k: v for k, v in data.items() if k not in ["tool", "action", "function"]}
                 if t_name:
-                    raw_calls.append((t_name, t_args if isinstance(t_args, dict) else {"input": str(t_args)}))
+                    extracted.append((t_name, t_args if isinstance(t_args, dict) else {"input": str(t_args)}))
+        elif isinstance(data, list):
+            for sub in data:
+                if isinstance(sub, dict):
+                    t_name = sub.get("tool") or sub.get("action") or sub.get("function")
+                    t_args = sub.get("args") or sub.get("parameters") or {k: v for k, v in sub.items() if k not in ["tool", "action", "function"]}
+                    if t_name:
+                        extracted.append((t_name, t_args if isinstance(t_args, dict) else {"input": str(t_args)}))
+        return extracted
+
+    # 2. JSON style ```tool_call ... ``` or ```json ... ``` with auto-fix
+    for m in re.finditer(r'```(?:tool_call|toolcall|tool|json)\s*([\s\S]*?)\s*```', sanitized_text, re.IGNORECASE):
+        block_text = m.group(1).strip()
+        if any(k in block_text for k in ["tool", "action", "function", "cmd", "path", "tools"]):
+            data = repair_json(block_text)
+            raw_calls.extend(_extract_from_json_data(data))
 
     # 3. JSON tag <tool_call> ... </tool_call> or <action> ... </action> with auto-fix
     for m in re.finditer(r'<(?:tool_call|action)>\s*([\s\S]*?)\s*</(?:tool_call|action)>', sanitized_text, re.IGNORECASE):
-        data = repair_json(m.group(1).strip())
-        if isinstance(data, dict):
-            t_name = data.get("tool") or data.get("action")
-            t_args = data.get("args") or data.get("parameters") or data.get("action_input") or {k: v for k, v in data.items() if k not in ["tool", "action"]}
-            if t_name:
-                raw_calls.append((t_name, t_args if isinstance(t_args, dict) else {"input": str(t_args)}))
+        block = m.group(1).strip()
+        # If the block contains XML tags (<invoke, <function, etc.), it was already handled by Section 1
+        if re.search(r'<(?:invoke|function|tool|call|parameter|param)\b', block, re.IGNORECASE):
+            continue
+        data = repair_json(block)
+        raw_calls.extend(_extract_from_json_data(data))
 
-    # Apply Auto-Fix & Synonym Normalization on all calls
+    # Apply Auto-Fix & Synonym Normalization on all calls with deduplication
     final_calls = []
+    seen = set()
     for tool_name, args in raw_calls:
         c_name, c_args = normalize_tool_call(tool_name, args)
-        final_calls.append((c_name, c_args))
+        if c_name:
+            sig = (c_name, json.dumps(c_args, sort_keys=True, default=str))
+            if sig not in seen:
+                seen.add(sig)
+                final_calls.append((c_name, c_args))
 
     return final_calls
 
@@ -696,7 +880,16 @@ def _check_goal_achieved(goal: str, tool_results_summary: str) -> tuple[bool, st
     Returns (achieved: bool, response_text: str).
     """
     messages = [
-        {"role": "system", "content": _GOAL_CHECK_SYSTEM},
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": _GOAL_CHECK_SYSTEM,
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ]
+        },
         {"role": "user",   "content": (
             f"Objetivo do usuário: {goal}\n\n"
             f"Resultados das ferramentas executadas:\n{tool_results_summary}\n\n"
@@ -719,23 +912,141 @@ def _check_goal_achieved(goal: str, tool_results_summary: str) -> tuple[bool, st
         print(f"[Agent] Erro no goal check: {e}")
         return False, ""
 
+
+def get_tool_friendly_desc(tool_name: str, tool_args: dict) -> str:
+    """Retorna uma descrição amigável e semântica da etapa da ferramenta."""
+    if tool_name in ("write_file", "replace_in_file", "read_file"):
+        raw_target = tool_args.get("file_path") or tool_args.get("path") or tool_args.get("file") or ""
+        f_name = Path(str(raw_target)).name if raw_target else "arquivo"
+        if tool_name == "read_file":
+            return f"Consultando configurações em <code>{f_name}</code>..."
+        elif tool_name == "write_file":
+            return f"Gravando alterações em <code>{f_name}</code>..."
+        else:
+            return f"Aplicando edição em <code>{f_name}</code>..."
+    elif tool_name == "list_directory":
+        raw_dir = tool_args.get("path") or tool_args.get("directory") or tool_args.get("dir") or ""
+        d_name = Path(str(raw_dir)).name or str(raw_dir) or "diretório"
+        return f"Inspecionando estrutura de <code>{d_name}</code>..."
+    elif tool_name == "search_in_files":
+        raw_query = tool_args.get("query") or tool_args.get("text") or tool_args.get("pattern") or ""
+        return f"Buscando referências no código: <code>{str(raw_query)[:35]}</code>..."
+    elif tool_name == "exec_command":
+        cmd_val = str(tool_args.get("cmd") or tool_args.get("command") or "").strip()
+        cmd_low = cmd_val.lower()
+        if "pm2" in cmd_low:
+            return "Diagnosticando processos e serviços ativos no PM2..."
+        elif "git" in cmd_low:
+            return "Inspecionando sincronização dos repositórios Git..."
+        elif "netstat" in cmd_low or "port" in cmd_low:
+            return "Auditando portas de rede e conexões ativas..."
+        elif "tasklist" in cmd_low or "taskkill" in cmd_low:
+            return "Gerenciando processos do sistema operacional..."
+        else:
+            return f"Executando diagnóstico no ambiente: <code>{cmd_val[:45]}</code>"
+    elif tool_name == "get_system_telemetry":
+        return "Coletando telemetria do host (CPU, RAM, disco)..."
+    elif tool_name == "run_health_check":
+        return "Executando health check dos serviços essenciais..."
+    elif tool_name == "run_ssl_sentinel":
+        return "Auditando certificados SSL e renovações de domínio..."
+    elif tool_name == "run_backup":
+        return "Disparando rotina de contingência e backup..."
+    elif tool_name == "read_backup_log":
+        return "Auditando integridade dos logs de backup..."
+    elif tool_name == "vercel_deploy":
+        return "Realizando deploy de produção no Vercel..."
+    elif tool_name == "dispatch_desktop_task":
+        ag = str(tool_args.get("preferred_agent") or "automático").strip()
+        ag_label = "Orquestrador Inteligente" if ag in ["auto", "", "automático"] else ag.title()
+        return f"Delegando tarefa para Agente Desktop ({ag_label})..."
+    elif tool_name == "get_desktop_orchestrator_status":
+        return "Auditando quotas, status e saúde dos agentes desktop..."
+    elif tool_name == "run_codex_cli":
+        return "Executando tarefa no OpenAI Codex CLI..."
+    elif tool_name == "run_antigravity_cli":
+        return "Executando tarefa no Google Antigravity CLI..."
+    elif tool_name == "run_opencode_cli":
+        return "Executando tarefa no OpenCode CLI..."
+    elif tool_name == "get_desktop_clis_status":
+        return "Verificando inventário e processos das CLIs desktop..."
+    else:
+        return f"Executando etapa: {tool_name}"
+
+
+def format_tool_feedback(tool_name: str, tool_result: any) -> str:
+    """Formata o retorno da ferramenta para ser consumido no prompt ReAct."""
+    is_running = bool(isinstance(tool_result, dict) and tool_result.get("running"))
+    success = not (isinstance(tool_result, dict) and tool_result.get("error"))
+
+    if is_running:
+        pid = tool_result.get("pid")
+        logs = tool_result.get("partial_output", "")
+        elapsed = tool_result.get("elapsed_seconds", 0)
+        return (
+            f"[PROCESSO EM ANDAMENTO - CHECKPOINT ATINGIDO]:\n"
+            f"A ferramenta '{tool_name}' (PID {pid}) continua executando ativamente ({elapsed}s decorridos).\n"
+            f"NENHUM timeout forçado foi aplicado — o processo NÃO foi finalizado.\n\n"
+            f"LOGS ATUAIS DO PROCESSO:\n"
+            f"----------------------------------------\n"
+            f"{logs}\n"
+            f"----------------------------------------\n\n"
+            f"[DECISÃO OBRIGATÓRIA DA IA]:\n"
+            f"Analise os logs parciais acima para avaliar o andamento da tarefa:\n"
+            f"• Se a tarefa estiver evoluindo normalmente (ex: download, compilação, deploy Vercel), chame 'wait_command':\n"
+            f"  <invoke name=\"wait_command\">\n"
+            f"    <parameter name=\"pid\">{pid}</parameter>\n"
+            f"    <parameter name=\"wait_seconds\">30</parameter>\n"
+            f"  </invoke>\n"
+            f"• Se a tarefa estiver travada, em loop ou esperando confirmação impossível, chame 'kill_command' para encerrar e decida reiniciar:\n"
+            f"  <invoke name=\"kill_command\">\n"
+            f"    <parameter name=\"pid\">{pid}</parameter>\n"
+            f"  </invoke>\n"
+        )
+    else:
+        _STRIP_FIELDS = {"command", "returncode", "elapsed_seconds"}
+        llm_result = {k: v for k, v in tool_result.items() if k not in _STRIP_FIELDS} if isinstance(tool_result, dict) else tool_result
+        result_str = json.dumps(llm_result, ensure_ascii=False, indent=2)[:3000]
+        feedback_entry = f"[RESULTADO DA TOOL '{tool_name}']:\n{result_str}"
+
+        if isinstance(tool_result, dict) and tool_result.get("diagnosis"):
+            feedback_entry += (
+                f"\n\n[DICA DE CORREÇÃO AUTOMÁTICA]: {tool_result['diagnosis']}\n"
+                "NÃO repita a mesma chamada falha sem aplicar a correção recomendada acima."
+            )
+        if not success:
+            err_msg = str(tool_result.get("error", "Falha na execução")) if isinstance(tool_result, dict) else "Falha na execução"
+            feedback_entry += (
+                f"\n\n[ERRO NA EXECUÇÃO DA FERRAMENTA]: A chamada para '{tool_name}' falhou: {err_msg}\n"
+                "Analise o erro acima. Se os parâmetros estavam incorretos ou o recurso não existe, "
+                "chame a ferramenta novamente com os parâmetros corrigidos ou use uma alternativa adequada."
+            )
+        return feedback_entry
+
+
 # ---------------------------------------------------------------------------
 # Dedicated Two-Stage Synthesizer (Natural Language Summarizer LLM)
 # ---------------------------------------------------------------------------
 
 _SYNTHESIZER_SYSTEM = (
-    "Você é o Assistente Oficial da AXION Enterprise no Telegram.\n"
+    "Você é o Co-piloto Oficial da AXION Enterprise.\n"
     "Sua ÚNICA missão é responder diretamente ao usuário em Português do Brasil com linguagem natural, "
-    "humana, profissional e acolhedora.\n\n"
-    "REGRAS MANDATÓRIAS (INVIOLÁVEIS):\n"
-    "1. É ESTRITAMENTE PROIBIDO escrever comandos de terminal, scripts de PowerShell ou bash (ex: Get-Content, Test-Path, powershell.exe, dir, cat).\n"
+    "humana, profissional, conclusiva e de alta precisão técnica.\n\n"
+    "REGRAS MANDATÓRIAS (INVIOLÁVEIS — REGRA #23):\n"
+    "1. É ESTRITAMENTE PROIBIDO escrever comandos de terminal, scripts de PowerShell ou bash brutos (ex: Get-Content, Test-Path, dir, powershell.exe).\n"
     "2. Responda à pergunta do usuário baseando-se nos dados coletados pelas ferramentas no computador.\n"
-    "3. Se arquivos foram lidos, resuma as tarefas, códigos e estruturas encontradas de forma clara e organizada com marcadores.\n"
-    "4. Se nenhum dado foi encontrado ou o arquivo estava vazio/inexistente, informe isso com naturalidade.\n"
-    "5. Formate a resposta usando HTML do Telegram (<b>negrito</b>, <i>itálico</i>, <code>nomes curtos de arquivos/status</code>).\n"
-    "6. NUNCA mencione códigos de saída ou termos brutos como 'ARQUIVO_NAO_ENCONTRADO' ou 'SilentlyContinue'.\n"
-    "7. NUNCA, SOB NENHUMA HIPÓTESE, peça ao usuário para 'enviar arquivo ZIP', 'subir a pasta', 'fazer upload' ou 'colar arquivos'. "
-    "Você opera DENTRO do PC local da AXION e tem acesso direto ao disco rígido. Se você não possui os dados de uma pasta, apenas explique isso cordialmente."
+    "3. TRANSPARÊNCIA OBRIGATÓRIA DE PASSOS: Sempre inclua de forma limpa os passos executados na seção:\n"
+    "   <b>📋 Passos de Execução Realizados:</b>\n"
+    "   • Passo 1: [Ação/Ferramenta] ➔ [Resultado objetivo]\n"
+    "4. STATUS FINAL DA TAREFA: Sempre finalize com o status conclusivo da demanda:\n"
+    "   <b>🎯 Status da Tarefa:</b> ✅ Concluída (ou ⚠️ Finalizada com impedimento externo comprovado).\n"
+    "5. PROIBIÇÃO DE EVASIVAS: NUNCA diga 'se você quiser posso verificar X', 'é só mandar', 'quer que eu investigue?'. Apresente conclusões definitivas.\n"
+    "6. Se arquivos foram lidos, resuma as tarefas, códigos e estruturas encontradas de forma clara e organizada com marcadores.\n"
+    "7. Se nenhum dado foi encontrado ou o arquivo estava vazio/inexistente, informe isso com clareza factual.\n"
+    "8. Formate a resposta usando HTML do Telegram (<b>negrito</b>, <i>itálico</i>, <code>nomes curtos de arquivos/status</code>).\n"
+    "9. NUNCA mencione códigos de saída ou termos brutos como 'ARQUIVO_NAO_ENCONTRADO' ou 'SilentlyContinue'.\n"
+    "10. NUNCA, SOB NENHUMA HIPÓTESE, peça ao usuário para 'enviar arquivo ZIP', 'subir a pasta', 'fazer upload' ou 'colar arquivos'. "
+    "Você opera DENTRO do PC local da AXION e tem acesso direto ao disco rígido."
 )
 
 def synthesize_in_natural_language(
@@ -764,7 +1075,16 @@ def synthesize_in_natural_language(
     )
 
     messages = [
-        {"role": "system", "content": _SYNTHESIZER_SYSTEM},
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": _SYNTHESIZER_SYSTEM,
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ]
+        },
         {"role": "user", "content": user_content}
     ]
 
@@ -833,6 +1153,88 @@ def detect_and_enrich_path_context(user_prompt: str, history: list) -> str:
             continue
 
     return ""
+
+def _friendly_step_description(tool_name: str, args_summary: str) -> str:
+    """Traduz nomes crus de ferramentas e argumentos para descrições semânticas executivas."""
+    if not tool_name:
+        return ""
+    t_clean = tool_name.lower()
+    a_clean = (args_summary or "").strip().lower()
+
+    if t_clean == "exec_command":
+        if "git status" in a_clean:
+            return "Auditoria do repositório Git"
+        if "git diff" in a_clean:
+            return "Inspeção de alterações de código"
+        if "pm2 status" in a_clean or "pm2 ls" in a_clean:
+            return "Verificação de processos PM2"
+        if "pm2 restart" in a_clean:
+            return "Reinicialização de serviços no PM2"
+        if "tasklist" in a_clean:
+            return "Inspeção de processos ativos no Windows"
+        if "curl" in a_clean or "fetch" in a_clean:
+            return "Sonda de conectividade HTTP/API"
+        if "dir" in a_clean or "get-childitem" in a_clean:
+            return "Listagem de arquivos do diretório"
+        if "get-content" in a_clean or "cat " in a_clean:
+            return "Leitura de arquivo no host"
+        return f"Comando: {args_summary[:40]}" if args_summary else "Execução no terminal Windows"
+    elif t_clean in ["read_file", "view_file"]:
+        return "Leitura de arquivo no workspace"
+    elif t_clean in ["write_file", "write_to_file", "replace_file_content", "replace_in_file"]:
+        return "Edição de código no workspace"
+    elif t_clean in ["list_dir", "list_directory"]:
+        return "Varredura de estrutura de pastas"
+    elif t_clean == "fetch_url":
+        return "Consulta de recurso web/documentação"
+    elif t_clean == "vercel_deploy":
+        return "Publicação/Deploy no Vercel"
+    elif t_clean == "search_knowledge_base":
+        return "Consulta à Base de Conhecimento RAG"
+    elif "cli" in t_clean or t_clean in ["run_antigravity_cli", "run_codex_cli", "run_opencode_cli"]:
+        return f"Operação CLI Desktop ({tool_name})"
+    return ""
+
+def format_execution_steps_block(steps: list[dict], tools_executed: list[str] = None, terminated_by: str = "completed") -> str:
+    """Gera bloco padronizado, legível e auditável de passos de execução e status final para a resposta (Regra #23)."""
+    if not steps and not tools_executed:
+        return ""
+
+    lines = ["\n\n<b>📋 Passos de Execução Realizados:</b>"]
+    if steps:
+        for idx, s in enumerate(steps, 1):
+            s_name = s.get("name", "ação")
+            s_succ = s.get("success", True)
+            s_dur = f" ({s.get('duration_ms', 0) / 1000:.1f}s)" if s.get('duration_ms') else ""
+            status_icon = "✅" if s_succ else "❌"
+            summary = s.get("args_summary", "")
+            
+            friendly = _friendly_step_description(s_name, summary)
+            if friendly:
+                summary_clean = f" — <i>{html.escape(friendly)}</i>"
+            elif summary:
+                summary_clean = f" — <code>{html.escape(summary[:60])}</code>"
+            else:
+                summary_clean = ""
+                
+            lines.append(f"• Passo {idx}: {status_icon} <code>{html.escape(s_name)}</code>{summary_clean}{s_dur}")
+    elif tools_executed:
+        for idx, t in enumerate(tools_executed, 1):
+            friendly = _friendly_step_description(t, "")
+            friendly_clean = f" — <i>{html.escape(friendly)}</i>" if friendly else ""
+            lines.append(f"• Passo {idx}: ✅ <code>{html.escape(t)}</code>{friendly_clean}")
+
+    # Status conclusivo obrigatório da demanda
+    if terminated_by in ("goal_achieved", "completed"):
+        lines.append("• <b>Status da Tarefa:</b> ✅ <i>Concluída</i>")
+    elif terminated_by == "circuit_breaker_tripped":
+        lines.append("• <b>Status da Tarefa:</b> ⚠️ <i>Finalizada com proteção de circuito ativada</i>")
+    elif terminated_by == "max_steps":
+        lines.append("• <b>Status da Tarefa:</b> ⚠️ <i>Finalizada (limite de passos atingido)</i>")
+    else:
+        lines.append(f"• <b>Status da Tarefa:</b> ℹ️ <i>Concluída ({terminated_by})</i>")
+
+    return "\n".join(lines)
 
 # ---------------------------------------------------------------------------
 # Main autonomous turn
@@ -923,7 +1325,7 @@ def run_autonomous_turn(
         # Resume from checkpoint — restore saved conversation
         messages = resume_context["messages"]
         if messages and messages[0].get("role") == "system":
-            messages[0]["content"] = build_system_prompt() if allow_tools else build_lead_system_prompt()
+            messages[0] = build_system_message(allow_tools=allow_tools)
         tools_executed = list(resume_context.get("tools_executed", []))
         _resume_step = resume_context.get("step_idx", 0)
         step_counter[0] = _resume_step
@@ -932,7 +1334,7 @@ def run_autonomous_turn(
     else:
         # Fresh start
         history  = message_store.get_clean_dialogue_history(chat_id, limit=8)
-        messages = [{"role": "system", "content": build_system_prompt() if allow_tools else build_lead_system_prompt()}]
+        messages = [build_system_message(allow_tools=allow_tools)]
         messages.extend(history)
 
         # Etapa 4: TaskDoneBarrier
@@ -958,6 +1360,27 @@ def run_autonomous_turn(
 
         path_directive = detect_and_enrich_path_context(user_prompt, history)
         enriched_user_prompt = user_prompt + path_directive if path_directive else user_prompt
+
+        # Detecção e enriquecimento de URLs (Google Docs, links web)
+        url_match = re.search(r'https?://[^\s<>"]+', user_prompt)
+        if url_match:
+            detected_url = url_match.group(0)
+            url_directive = (
+                f"\n\n[RECURSO WEB DETECTADO]: O usuário forneceu o link '{detected_url}'. "
+                "Para ler e processar o conteúdo, use a ferramenta 'fetch_url' "
+                "(ou 'exec_command' com curl.exe) imediatamente para obter os dados reais."
+            )
+            enriched_user_prompt += url_directive
+
+        # RAG Canônico In-Memory (< 2ms) com Intent Gate
+        try:
+            from . import knowledge_rag
+            rag_context = knowledge_rag.get_context_for_message(user_prompt)
+            if rag_context:
+                enriched_user_prompt = f"{rag_context}\n\n{enriched_user_prompt}"
+        except Exception as rag_err:
+            print(f"[Agent RAG Warning] Falha na recuperação de contexto: {rag_err}")
+
         messages.append({"role": "user", "content": enriched_user_prompt})
         tools_executed: list[str] = []
 
@@ -966,19 +1389,28 @@ def run_autonomous_turn(
     streamed_full_content = [None]
     stream_done_event = threading.Event()
 
-    if not resume_context and not resolved_intent:
-        intent_holder = [None]
+    if not resume_context:
+        intent_holder = [resolved_intent]
         intent_event = threading.Event()
+        if resolved_intent:
+            intent_event.set()
 
         def _on_intent_cb(det_intent):
-            intent_holder[0] = det_intent
+            if not intent_holder[0]:
+                intent_holder[0] = det_intent
             intent_event.set()
 
         def _stream_worker():
             try:
                 from . import first_content_stream
+                clean_p = user_prompt.strip()
+                if "Mensagem do Lead:" in clean_p:
+                    clean_p = clean_p.split("Mensagem do Lead:", 1)[1].strip()
+                elif "Mensagem do Usuário:" in clean_p:
+                    clean_p = clean_p.split("Mensagem do Usuário:", 1)[1].strip()
+
                 full_text, _, _ = first_content_stream.generate_first_content_stream(
-                    user_prompt,
+                    clean_p,
                     on_first_content_callback=on_first_content,
                     on_stream_update_callback=on_stream_update,
                     on_intent_callback=_on_intent_cb,
@@ -994,25 +1426,56 @@ def run_autonomous_turn(
 
         threading.Thread(target=_stream_worker, daemon=True, name=f"FirstContent-{chat_id}").start()
 
-        # Wait up to 6.0s for the intent tag from SSE stream
-        intent_event.wait(timeout=6.0)
-        resolved_intent = intent_holder[0] or ("CHAT_ONLY" if is_lead else "ACTION")
+        # Se a intenção ainda não foi definida, aguarda até 6.0s pela tag do stream
+        if not resolved_intent:
+            intent_event.wait(timeout=6.0)
+            resolved_intent = intent_holder[0] or ("CHAT_ONLY" if is_lead else "ACTION")
+
         if is_lead:
             resolved_intent = "CHAT_ONLY"
+        else:
+            # Proteção contra falso CHAT_ONLY em turnos operacionais ou com links/URLs
+            has_actionable_signals = bool(
+                re.search(r'https?://[^\s<>"]+', user_prompt)
+                or any(w in user_prompt.lower() for w in [
+                    "veja", "analise", "verifique", "execute", "leia", "extraia",
+                    "inspecione", "deploy", "git", "status", "código", "repositório", "pm2", "axion pay",
+                    "codex", "antigravity", "opencode", "agy", "cli", "clis", "vps", "senha", "root",
+                    "logs", "erro", "teste", "porta", "ssh", "onde", "ache", "procure", "como está",
+                    "qual a versão", "qual o uso", "investigue", "cheque", "resolva", "conserte", "arrume",
+                    "faça", "rode", "disco", "memória", "ip", "tailscale", "backup", "bateria"
+                ])
+            )
+            if has_actionable_signals and resolved_intent == "CHAT_ONLY":
+                print(f"[Agent Intent Guard] Intenção 'CHAT_ONLY' corrigida para 'DIAGNOSTIC' (sinais operacionais detectados na mensagem)")
+                resolved_intent = "DIAGNOSTIC"
+                allow_tools = True
 
     if resolved_intent:
         print(f"[Agent] Turn Intent aplicado: {resolved_intent}")
         if resolved_intent == "CHAT_ONLY":
             allow_tools = False
             max_steps = 1
-            # Se o stream já está gerando a resposta completa de CHAT_ONLY, aguarda o término e finaliza direto
-            stream_done_event.wait(timeout=10.0)
+            # Single-Pass Streaming Handoff: Aguarda o término do stream contínuo (até 35s, wake-up imediato)
+            stream_done_event.wait(timeout=35.0)
             full_ans = streamed_full_content[0]
-            if full_ans and len(full_ans.strip()) >= 8:
-                print(f"[Agent] CHAT_ONLY finalizado via streaming contínuo ({len(full_ans)} chars)")
+            future_promise_patterns = [
+                r'\b(?:vou|irei|estou a|estou indo|vamos)\s+(?:investigar|extrair|verificar|analisar|buscar|ler|checar|inspecionar|fazer|executar|olhar|pesquisar|baixar|rodar|testar|coletar|abrir|obter|validar)\b',
+                r'\b(?:aguarde|um momento|iniciando a|começando a|vou dar uma olhada|vou checar|deixe-me|vou agora)\b',
+            ]
+            is_promise = any(re.search(pat, full_ans, re.IGNORECASE) for pat in future_promise_patterns) if full_ans else False
+            if full_ans and len(full_ans.strip()) >= 8 and not is_promise:
+                print(f"[Agent] CHAT_ONLY finalizado via streaming contínuo Single-Pass ({len(full_ans)} chars)")
                 clean_ans, reply_markup = dynamic_keyboard.parse_ai_buttons(full_ans) if dynamic_keyboard else (full_ans, None)
                 formatted = sanitize_and_convert_to_tg_html(clean_ans)
                 return _finalize(formatted, reply_markup, [], "completed")
+            elif is_promise:
+                print(f"[Agent] CHAT_ONLY continha promessa de ação ('{full_ans[:50]}...'). Revertendo para DIAGNOSTIC com ferramentas!")
+                resolved_intent = "DIAGNOSTIC"
+                allow_tools = True
+                max_steps = 4
+            else:
+                print("[Agent] CHAT_ONLY streaming incompleto ou vazio; prosseguindo para síntese síncrona.")
 
         elif resolved_intent == "DIAGNOSTIC":
             allow_tools = True
@@ -1034,6 +1497,7 @@ def run_autonomous_turn(
     if not allow_tools:
         max_steps = 1
 
+    anti_stall_nudges = 0
 
     # ---- ReAct loop --------------------------------------------------------
     for step in range(max_steps):
@@ -1084,7 +1548,24 @@ def run_autonomous_turn(
             break
 
         choice       = choices[0] or {}
-        step_content = ((choice.get("message") or {}).get("content", "") or "").strip()
+        msg_obj      = choice.get("message") or {}
+        step_content = (msg_obj.get("content", "") or "").strip()
+
+        # Resiliência para modelos neurais que colocam tool calls em reasoning ou tool_calls nativo
+        if not step_content and msg_obj.get("reasoning"):
+            reasoning_str = str(msg_obj.get("reasoning", "")).strip()
+            if "<invoke" in reasoning_str or "```tool" in reasoning_str:
+                step_content = reasoning_str
+        if not step_content and msg_obj.get("tool_calls"):
+            native_invokes = []
+            for tc in msg_obj.get("tool_calls", []):
+                fn = tc.get("function", {})
+                fn_name = fn.get("name")
+                fn_args = fn.get("arguments", "{}")
+                if fn_name:
+                    native_invokes.append(f"<invoke name=\"{fn_name}\">\n{fn_args}\n</invoke>")
+            if native_invokes:
+                step_content = "\n".join(native_invokes)
 
         # --- check if LLM itself declared goal achieved ---------------------
         if re.search(r'<goal_achieved>\s*YES\s*</goal_achieved>', step_content, re.IGNORECASE):
@@ -1110,67 +1591,55 @@ def run_autonomous_turn(
             circuit_tripped = False
             trip_tool_name = ""
             trip_err_detail = ""
-
-            for tool_name, tool_args in tool_calls:
-                # Format semantic step description without technical noise or inverted parameter keys
-                if tool_name in ("write_file", "replace_in_file", "read_file"):
-                    raw_target = tool_args.get("file_path") or tool_args.get("path") or tool_args.get("file") or ""
-                    f_name = Path(str(raw_target)).name if raw_target else "arquivo"
-                    if tool_name == "read_file":
-                        step_desc = f"Consultando configurações em <code>{f_name}</code>..."
-                    elif tool_name == "write_file":
-                        step_desc = f"Gravando alterações em <code>{f_name}</code>..."
-                    else:
-                        step_desc = f"Aplicando edição em <code>{f_name}</code>..."
-                elif tool_name == "list_directory":
-                    raw_dir = tool_args.get("path") or tool_args.get("directory") or tool_args.get("dir") or ""
-                    d_name = Path(str(raw_dir)).name or str(raw_dir) or "diretório"
-                    step_desc = f"Inspecionando estrutura de <code>{d_name}</code>..."
-                elif tool_name == "search_in_files":
-                    raw_query = tool_args.get("query") or tool_args.get("text") or tool_args.get("pattern") or ""
-                    step_desc = f"Buscando referências no código: <code>{str(raw_query)[:35]}</code>..."
-                elif tool_name == "exec_command":
-                    cmd_val = str(tool_args.get("cmd") or tool_args.get("command") or "").strip()
-                    cmd_low = cmd_val.lower()
-                    if "pm2" in cmd_low:
-                        step_desc = "Diagnosticando processos e serviços ativos no PM2..."
-                    elif "git" in cmd_low:
-                        step_desc = "Inspecionando sincronização dos repositórios Git..."
-                    elif "netstat" in cmd_low or "port" in cmd_low:
-                        step_desc = "Auditando portas de rede e conexões ativas..."
-                    elif "tasklist" in cmd_low or "taskkill" in cmd_low:
-                        step_desc = "Gerenciando processos do sistema operacional..."
-                    else:
-                        step_desc = f"Executando diagnóstico no ambiente: <code>{cmd_val[:45]}</code>"
-                elif tool_name == "get_system_telemetry":
-                    step_desc = "Coletando telemetria do host (CPU, RAM, disco)..."
-                elif tool_name == "run_health_check":
-                    step_desc = "Executando health check dos serviços essenciais..."
-                elif tool_name == "run_ssl_sentinel":
-                    step_desc = "Auditando certificados SSL e renovações de domínio..."
-                elif tool_name == "run_backup":
-                    step_desc = "Disparando rotina de contingência e backup..."
-                elif tool_name == "read_backup_log":
-                    step_desc = "Auditando integridade dos logs de backup..."
-                elif tool_name == "vercel_deploy":
-                    step_desc = "Realizando deploy de produção no Vercel..."
-                else:
-                    step_desc = f"Executando etapa: {tool_name}"
-
-                friendly = step_desc.rstrip(".").rstrip()
+            if len(tool_calls) == 1:
+                t_name, t_args = tool_calls[0]
+                step_desc = get_tool_friendly_desc(t_name, t_args)
                 _emit("tool", step_desc)
                 if on_status_update:
-                    on_status_update(f"tool:{tool_name}")
-
-                print(f"[Agent] Executando autonomamente tool: {tool_name}")
-                args_summary = ", ".join(f"{k}={str(v)[:60]}" for k, v in tool_args.items())
+                    on_status_update(f"tool:{t_name}")
+                print(f"[Agent] Executando autonomamente tool: {t_name}")
                 t_start = time.monotonic()
-
-                tool_result = tool_executor.execute_tool(tool_name, tool_args)
-
+                try:
+                    res = tool_executor.execute_tool(t_name, t_args)
+                except Exception as ex:
+                    res = {"error": f"Exceção interna ao executar ferramenta: {ex}"}
                 t_elapsed_ms = int((time.monotonic() - t_start) * 1000)
-                is_running   = bool(isinstance(tool_result, dict) and tool_result.get("running"))
-                success      = not (isinstance(tool_result, dict) and tool_result.get("error"))
+                executed_results = [(t_name, t_args, res, t_elapsed_ms)]
+            else:
+                tool_names_str = ", ".join(t[0] for t in tool_calls)
+                _emit("tool", f"Executando {len(tool_calls)} ferramentas em lote paralelo ({tool_names_str})...")
+                if on_status_update:
+                    on_status_update(f"tools_batch:{len(tool_calls)}")
+                print(f"[Agent] Executando {len(tool_calls)} ferramentas em paralelo ({tool_names_str})...")
+
+                def _run_tool_worker(idx, name, args):
+                    ts = time.monotonic()
+                    try:
+                        r = tool_executor.execute_tool(name, args)
+                    except Exception as ex:
+                        r = {"error": f"Exceção interna ao executar ferramenta: {ex}"}
+                    el_ms = int((time.monotonic() - ts) * 1000)
+                    return idx, name, args, r, el_ms
+
+                worker_count = min(len(tool_calls), 8)
+                results_by_index = [None] * len(tool_calls)
+                with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as pool:
+                    futures = [
+                        pool.submit(_run_tool_worker, i, t_name, t_args)
+                        for i, (t_name, t_args) in enumerate(tool_calls)
+                    ]
+                    for fut in concurrent.futures.as_completed(futures):
+                        idx, name, args, r, el_ms = fut.result()
+                        results_by_index[idx] = (name, args, r, el_ms)
+                executed_results = results_by_index
+
+            for tool_name, tool_args, tool_result, t_elapsed_ms in executed_results:
+                step_desc = get_tool_friendly_desc(tool_name, tool_args)
+                friendly = step_desc.rstrip(".").rstrip()
+                args_summary = ", ".join(f"{k}={str(v)[:60]}" for k, v in tool_args.items())
+
+                is_running = bool(isinstance(tool_result, dict) and tool_result.get("running"))
+                success = not (isinstance(tool_result, dict) and tool_result.get("error"))
 
                 tools_executed.append(tool_name)
 
@@ -1180,58 +1649,15 @@ def run_autonomous_turn(
 
                 # Record step in telemetry
                 exec_record["steps"].append({
-                    "step":         step + 1,
-                    "type":         "tool",
-                    "name":         tool_name,
+                    "step": step + 1,
+                    "type": "tool",
+                    "name": tool_name,
                     "args_summary": args_summary[:200],
-                    "success":      success or is_running,
-                    "duration_ms":  t_elapsed_ms,
+                    "success": success or is_running,
+                    "duration_ms": t_elapsed_ms,
                 })
 
-                if is_running:
-                    pid = tool_result.get("pid")
-                    logs = tool_result.get("partial_output", "")
-                    elapsed = tool_result.get("elapsed_seconds", 0)
-                    feedback_entry = (
-                        f"[PROCESSO EM ANDAMENTO - CHECKPOINT ATINGIDO]:\n"
-                        f"A ferramenta '{tool_name}' (PID {pid}) continua executando ativamente ({elapsed}s decorridos).\n"
-                        f"NENHUM timeout forçado foi aplicado — o processo NÃO foi finalizado.\n\n"
-                        f"LOGS ATUAIS DO PROCESSO:\n"
-                        f"----------------------------------------\n"
-                        f"{logs}\n"
-                        f"----------------------------------------\n\n"
-                        f"[DECISÃO OBRIGATÓRIA DA IA]:\n"
-                        f"Analise os logs parciais acima para avaliar o andamento da tarefa:\n"
-                        f"• Se a tarefa estiver evoluindo normalmente (ex: download, compilação, deploy Vercel), chame 'wait_command':\n"
-                        f"  <invoke name=\"wait_command\">\n"
-                        f"    <parameter name=\"pid\">{pid}</parameter>\n"
-                        f"    <parameter name=\"wait_seconds\">30</parameter>\n"
-                        f"  </invoke>\n"
-                        f"• Se a tarefa estiver travada, em loop ou esperando confirmação impossível, chame 'kill_command' para encerrar e decida reiniciar:\n"
-                        f"  <invoke name=\"kill_command\">\n"
-                        f"    <parameter name=\"pid\">{pid}</parameter>\n"
-                        f"  </invoke>\n"
-                    )
-                else:
-                    # Strip internal/noisy fields that cause LLM to echo them verbatim
-                    _STRIP_FIELDS = {"command", "returncode", "elapsed_seconds"}
-                    llm_result = {k: v for k, v in tool_result.items() if k not in _STRIP_FIELDS} if isinstance(tool_result, dict) else tool_result
-                    result_str = json.dumps(llm_result, ensure_ascii=False, indent=2)[:3000]
-                    feedback_entry = f"[RESULTADO DA TOOL '{tool_name}']:\n{result_str}"
-
-                    if isinstance(tool_result, dict) and tool_result.get("diagnosis"):
-                        feedback_entry += (
-                            f"\n\n[DICA DE CORREÇÃO AUTOMÁTICA]: {tool_result['diagnosis']}\n"
-                            "NÃO repita a mesma chamada falha sem aplicar a correção recomendada acima."
-                        )
-                    if not success:
-                        err_msg = str(tool_result.get("error", "Falha na execução")) if isinstance(tool_result, dict) else "Falha na execução"
-                        feedback_entry += (
-                            f"\n\n[ERRO NA EXECUÇÃO DA FERRAMENTA]: A chamada para '{tool_name}' falhou: {err_msg}\n"
-                            "Analise o erro acima. Se os parâmetros estavam incorretos ou o recurso não existe, "
-                            "chame a ferramenta novamente com os parâmetros corrigidos ou use uma alternativa adequada."
-                        )
-
+                feedback_entry = format_tool_feedback(tool_name, tool_result)
                 tool_feedbacks.append(feedback_entry)
                 tool_results_accumulator.append(f"Tool '{tool_name}' ({t_elapsed_ms}ms):\n{feedback_entry[:800]}")
 
@@ -1375,6 +1801,56 @@ def run_autonomous_turn(
 
             # No tool calls — check if model provided a response
             if step_content:
+                # Anti-Stalling / Trava Anti-Promessa & Anti-Evasão Condicional (Regra #23):
+                # Detecta se o modelo respondeu com promessas de ação futura ou ofertas condicionais sem executar ferramentas.
+                future_promise_patterns = [
+                    r'\b(?:vou|irei|estou a|estou indo|vamos)\s+(?:investigar|extrair|verificar|analisar|buscar|ler|checar|inspecionar|fazer|executar|olhar|pesquisar|baixar|rodar|testar|coletar|abrir|obter|validar)\b',
+                    r'\b(?:aguarde|um momento|iniciando a|começando a|vou dar uma olhada|vou checar|deixe-me|vou agora)\b',
+                ]
+                conditional_offer_patterns = [
+                    r'\b(?:se (?:você )?quiser|caso queira|se desejar|quer que eu|se preferir)\b',
+                    r'\b(?:posso (?:também |agora )?(?:verificar|investigar|analisar|checar|testar|rodar|olhar|abrir|executar))\b',
+                    r'\b(?:é só (?:me )?(?:avisar|falar|mandar|dizer|pedir))\b',
+                ]
+                is_future_promise = any(re.search(pat, step_content, re.IGNORECASE) for pat in future_promise_patterns)
+                is_conditional_offer = any(re.search(pat, step_content, re.IGNORECASE) for pat in conditional_offer_patterns)
+                has_actionable_context = any(w in enriched_user_prompt.lower() for w in [
+                    "http://", "https://", "veja", "analise", "verifique", "execute", "leia", "extraia",
+                    "inspecione", "deploy", "git", "status", "código", "repositório", "pm2", "qual a versão",
+                    "codex", "antigravity", "opencode", "agy", "cli", "clis", "vps", "senha", "root",
+                    "logs", "erro", "teste", "porta", "ssh", "onde", "ache", "procure", "como está",
+                    "qual o uso", "investigue", "cheque", "resolva", "conserte", "arrume"
+                ])
+                has_goal_tag = bool(re.search(r'<goal_achieved>\s*YES\s*</goal_achieved>', step_content, re.IGNORECASE))
+
+                should_nudge = (
+                    allow_tools and step < max_steps - 1 and anti_stall_nudges < 2 and (
+                        is_future_promise or
+                        (is_conditional_offer and not has_goal_tag) or
+                        (has_actionable_context and len(tools_executed) == 0 and not has_goal_tag and len(step_content) < 220)
+                    )
+                )
+
+                if should_nudge:
+                    anti_stall_nudges += 1
+                    nudge_reason = "promessa futura" if is_future_promise else ("oferta condicional evasiva" if is_conditional_offer else "ausência de tools em contexto acionável")
+                    print(f"[Agent Nudge] Anti-stalling/anti-evasão ativado no step {step + 1} (nudge #{anti_stall_nudges} - {nudge_reason}): '{step_content[:70]}...'")
+                    _emit("think", "Executando verificações adicionais autonomamente (Regra #23)...")
+                    nudge_instruction = (
+                        "[SISTEMA - EXECUÇÃO AUTÔNOMA COMPULSÓRIA / REGRA #23]:\n"
+                        f"Você respondeu: \"{step_content[:200]}\"\n"
+                        "No ecossistema corporativo da AXION Enterprise, é TERMINANTEMENTE PROIBIDO transferir decisões de volta ao operador com perguntas como 'se quiser posso verificar...' ou promessas sem execução imediata.\n"
+                        "Se você sugeriu uma verificação adicional (ex: chaves SSH, portas no known_hosts, configurações, logs, arquivos de código), VOCÊ DEVE EXECUTÁ-LA AGORA via ferramentas no computador local.\n"
+                        "Invoque as ferramentas necessárias imediatamente:\n"
+                        "<invoke name=\"nome_da_ferramenta\">\n"
+                        "  <parameter name=\"parametro\">valor</parameter>\n"
+                        "</invoke>\n\n"
+                        "Finalize a tarefa com dados reais e relatório conclusivo completo contendo passos e status final."
+                    )
+                    messages.append({"role": "assistant", "content": step_content})
+                    messages.append({"role": "user", "content": nudge_instruction})
+                    continue
+
                 final_raw_content = step_content
                 if re.search(r'<goal_achieved>\s*YES\s*</goal_achieved>', step_content, re.IGNORECASE):
                     final_raw_content = re.sub(
@@ -1394,7 +1870,17 @@ def run_autonomous_turn(
                 # step_content is empty but choices was valid — nudge the LLM
                 if step < max_steps - 2:
                     print(f"[Agent] step_content vazio no step {step}, tentando nudge...")
-                    messages.append({"role": "user", "content": "Sua resposta ficou em branco. Escreva a resposta final para o usuário agora."})
+                    if allow_tools and len(tools_executed) == 0:
+                        messages.append({
+                            "role": "user",
+                            "content": (
+                                "Sua resposta ficou em branco e nenhuma ferramenta foi executada ainda. "
+                                "Execute imediatamente as ferramentas necessárias via <invoke name=\"...\"> "
+                                "para cumprir o pedido do usuário (ex: fetch_url, exec_command, list_dir, read_file)."
+                            )
+                        })
+                    else:
+                        messages.append({"role": "user", "content": "Sua resposta ficou em branco. Escreva a resposta final conclusiva para o usuário agora."})
                     continue
                 terminated_by = "empty_response"
             break
@@ -1472,6 +1958,14 @@ def run_autonomous_turn(
 
     if not formatted_html.strip():
         formatted_html = "<b>Execução Concluída</b>\nAs operações solicitadas foram processadas no PC local."
+
+    # ---- Ensure Execution Steps & Task Completion are ALWAYS present (Regra #23) ----
+    steps_block = format_execution_steps_block(exec_record.get("steps", []), tools_executed, terminated_by)
+    if steps_block and not any(kw in formatted_html.lower() for kw in ["passos de execução", "passos realizados", "passos executados"]):
+        formatted_html = f"{formatted_html.rstrip()}{steps_block}"
+    elif "status da tarefa" not in formatted_html.lower() and tools_executed:
+        status_line = "\n\n• <b>Status da Tarefa:</b> ✅ <i>Concluída</i>" if terminated_by in ("goal_achieved", "completed") else f"\n\n• <b>Status da Tarefa:</b> ⚠️ <i>Finalizada ({terminated_by})</i>"
+        formatted_html = f"{formatted_html.rstrip()}{status_line}"
 
     # ---- Model badge -------------------------------------------------------
     badge_model = "Mimo 2.6 Pro" if "pro" in model_used else "Mimo 2.6 Flash"

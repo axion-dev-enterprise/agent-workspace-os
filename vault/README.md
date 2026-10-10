@@ -27,7 +27,8 @@ vault/
 │   └── whatsapp/                  # .env, index.json, README.md
 │
 ├── ai/                            # Inteligência Artificial & LLMs
-│   └── llm-providers/             # OpenRouter, HuggingFace, OpenAI, Gemini
+│   ├── llm-providers/             # Providers AXION gerais e Flow
+│   └── isabela-clients/           # OpenRouter exclusivo para workloads de clientes
 │
 ├── cloud/                         # Provedores de Nuvem & Serverless
 │   ├── cloudflare/                # API Tokens, Account ID, Workers, D1, R2
@@ -38,10 +39,13 @@ vault/
 │
 ├── security/                      # Redes & VPN
 │   ├── proton/                    # Proton VPN & Drive
-│   └── tailscale/                 # Tailnet Auth Keys
+│   ├── tailscale/                 # Tailnet Auth Keys
+│   ├── auth-center-core/          # Auth Center JWT e papel DB least-privilege
+│   └── juliana-legacy-vps/        # Credencial recebida; validar chave SSH do host antes de usar
 │
 └── payments/                      # Pagamentos & Credenciais de Teste
-    └── axion-staging/             # API key de teste Pay e segredo HMAC do webhook Flow (staging)
+    ├── axion-staging/             # API key de teste Pay e segredo HMAC do webhook Flow
+    └── isabela-staging/           # Credenciais MP/Stripe exclusivamente sandbox do pivô Isabela
 ```
 
 ---
@@ -65,4 +69,8 @@ Para auditar quais credenciais estão ativas sem expor chaves sensíveis:
 python scripts/vault_loader.py audit
 ```
 
-O comando exibe cada chave com status (`✅ CONFIGURADO` ou `⚠️ PENDENTE`) e com valores mascarados (ex: `sk-o...5cb6`).
+O comando exibe cada chave somente com o status (`CONFIGURADO` ou `PENDENTE`).
+Não imprime prefixos, sufixos, comprimentos ou qualquer fragmento do segredo.
+
+- `cloud/isabela-clients`: dedicated Isabela PostgreSQL owner/runtime; credentials only in platform .env.
+- `security/auth-center-core`: Auth Center runtime key and least-privilege database URL; only in its categorized `.env`.

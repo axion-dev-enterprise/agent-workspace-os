@@ -49,9 +49,9 @@ module.exports = {
       restart_delay: 3000,
       env: {
         WHATSAPP_PORT: process.env.WHATSAPP_PORT || '4114',
-        WHATSAPP_PAIRING_NUMBER: process.env.WHATSAPP_PAIRING_NUMBER || '551151041784',
-        WHATSAPP_ADMIN_NUMBER: process.env.WHATSAPP_ADMIN_NUMBER || '5511988045139',
-        WHATSAPP_ADMIN_LID: process.env.WHATSAPP_ADMIN_LID || '36735559962762',
+        WHATSAPP_PAIRING_NUMBER: process.env.WHATSAPP_PAIRING_NUMBER || '',
+        WHATSAPP_ADMIN_NUMBER: process.env.WHATSAPP_ADMIN_NUMBER || '',
+        WHATSAPP_ADMIN_LID: process.env.WHATSAPP_ADMIN_LID || '',
         BRAIN_URL: process.env.BRAIN_URL || 'http://127.0.0.1:8765'
       },
       error_file: 'memory/whatsapp/pm2_logs/error.log',

@@ -15,6 +15,9 @@ import shutil
 import ctypes
 import re
 import threading
+import urllib.request
+import urllib.error
+import html
 from pathlib import Path
 
 
@@ -638,18 +641,43 @@ def list_directory(path: str = None, max_items: int = 40) -> dict:
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def get_top_ram_processes(limit: int = 3) -> list[dict]:
+    """Returns top N processes grouped by RAM usage in MB using native tasklist"""
+    try:
+        import csv
+        out = subprocess.check_output(['tasklist', '/FO', 'CSV', '/NH'], text=True, timeout=4, **_get_silent_windows_execution_kwargs())
+        proc_map = {}
+        for row in csv.reader(out.strip().splitlines()):
+            if len(row) > 4 and ' K' in row[4]:
+                pname = row[0]
+                kb_str = row[4].replace('.', '').replace(',', '').replace(' K', '').strip()
+                kb = int(kb_str) if kb_str.isdigit() else 0
+                proc_map[pname] = proc_map.get(pname, 0) + kb
+        sorted_procs = sorted(proc_map.items(), key=lambda x: x[1], reverse=True)[:limit]
+        return [{"name": p, "memory_mb": round(kb / 1024, 1)} for p, kb in sorted_procs]
+    except Exception:
+        return []
+
+
 def get_system_telemetry() -> dict:
     """Gets real-time OS stats (CPU, RAM, Disks, Tailscale) natively"""
     # RAM via Windows Kernel32
-    ram_info = {"total_gb": 12.0, "free_gb": 6.0, "percent_used": 50}
+    ram_info = {"total_gb": 12.0, "free_gb": 6.0, "used_gb": 6.0, "percent_used": 50, "top_processes": []}
     try:
         stat = MEMORYSTATUSEX()
         stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
         if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+            tot = round(stat.ullTotalPhys / (1024**3), 2)
+            fre = round(stat.ullAvailPhys / (1024**3), 2)
+            usd = round(max(0.0, tot - fre), 2)
+            pct = stat.dwMemoryLoad
+            top_procs = get_top_ram_processes(3) if pct >= 80 else []
             ram_info = {
-                "total_gb": round(stat.ullTotalPhys / (1024**3), 2),
-                "free_gb": round(stat.ullAvailPhys / (1024**3), 2),
-                "percent_used": stat.dwMemoryLoad
+                "total_gb": tot,
+                "free_gb": fre,
+                "used_gb": usd,
+                "percent_used": pct,
+                "top_processes": top_procs
             }
     except Exception:
         pass
@@ -1051,7 +1079,7 @@ TOOL_DEFINITIONS = {
     "send_whatsapp_message": {
         "description": "Envia mensagem via WhatsApp com proteção estrita Anti-Ban da Meta. SEMPRE verifica se o número destinatário já enviou mensagem prévia (opt-in) antes de disparar. Mensagens para números virgens que nunca interagiram são bloqueadas para evitar banimento da conta.",
         "parameters": {
-            "to": "string obrigatório (número de telefone com DDI e DDD, ex: '5511988045139')",
+            "to": "string obrigatório (número de telefone com DDI e DDD, ex: '5511999999999')",
             "message": "string obrigatório (texto da mensagem)",
             "type": "string opcional ('comercial' ou 'utilidade', padrão 'utilidade')",
             "force": "bool opcional (ignora trava anti-ban apenas sob ordem expressa)"
@@ -1084,11 +1112,127 @@ TOOL_DEFINITIONS = {
             "lines": "int opcional (número de linhas finais, padrão 50)",
             "query": "string opcional (filtra apenas linhas contendo esta palavra-chave)"
         }
+    },
+    "search_knowledge_base": {
+        "description": "Consulta a base de conhecimento canônica da AXION Enterprise sobre planos, preços (WhatsApp R$ 0 trial, R$ 97/mês, R$ 50 chip), verticais de desenvolvimento (sites, sistemas, agentes sob demanda), AXION Pay, infraestrutura e governança.",
+        "parameters": {
+            "query": "string obrigatório (termo de pesquisa ou dúvida sobre produtos, serviços ou regras)",
+            "limit": "int opcional (quantidade máxima de trechos, padrão 2)",
+            "vertical": "string opcional ('all', 'commercial', 'technical', 'operations', 'governance', padrão 'all')"
+        }
+    },
+    "check_desktop_agent_tasks": {
+        "description": "Inspeciona em tempo real tarefas em andamento e concluídas dos agentes desktop (Antigravity, Codex, OpenCode) e emite alertas proativos ao CEO Executive Operator.",
+        "parameters": {
+            "notify_ceo": "bool opcional (se True, notifica o CEO imediatamente para tarefas recém-finalizadas, padrão True)"
+        }
+    },
+    "request_client_resource_approval": {
+        "description": "Solicita aprovação direta ou código OTP/2FA via WhatsApp para o cliente do projeto informado, com cópia carbono para o CEO Executive Operator e registro de auditoria.",
+        "parameters": {
+            "project_name": "string obrigatório (nome do projeto ou cliente, ex: 'SpaPharma Loja Virtual')",
+            "client_phone": "string obrigatório (número de WhatsApp do cliente com DDI e DDD, ex: '5511999998888')",
+            "resource_type": "string obrigatório (tipo de recurso, ex: 'OTP SMS', '2FA Authenticator', 'Aprovação de Deploy')",
+            "reason": "string obrigatório (motivo detalhado da solicitação para o cliente)",
+            "client_name": "string opcional (nome do contato do cliente, padrão 'Cliente')",
+            "timeout_minutes": "int opcional (validade em minutos, padrão 15)"
+        }
+    },
+    "check_client_resource_approval": {
+        "description": "Verifica o status de uma solicitação de aprovação ou código OTP enviado ao cliente, checando se houve resposta no WhatsApp.",
+        "parameters": {
+            "approval_id": "string obrigatório (ID da aprovação gerada, ex: 'appr_a1b2c3d4')"
+        }
+    },
+    "submit_client_otp": {
+        "description": "Valida e registra manualmente o código OTP ou confirmação informada pelo cliente.",
+        "parameters": {
+            "approval_id": "string obrigatório (ID da aprovação)",
+            "otp_code": "string obrigatório (código ou termo de aprovação)"
+        }
+    },
+    "fetch_url": {
+        "description": "Acessa e extrai o conteúdo textual de qualquer URL pública ou link da web (artigos, documentação, status, APIs). Suporta nativamente Google Docs e Google Sheets, extraindo o texto limpo.",
+        "parameters": {
+            "url": "string obrigatório (URL completa com http:// ou https://)",
+            "max_chars": "int opcional (limite de caracteres retornados, padrão 15000)"
+        }
+    },
+    "run_codex_cli": {
+        "description": "Executa comandos diretamente na CLI do OpenAI Codex (v0.160.0). Suporta subcomandos como 'exec' (execução headless autônoma de prompts com bypass de confirmação), 'review', 'doctor', 'agents', 'features'. Notifica automaticamente a conclusão no Desktop Watcher.",
+        "parameters": {
+            "prompt": "string opcional (instrução ou prompt para o agente Codex)",
+            "subcommand": "string opcional (subcomando: 'exec' (padrão), 'review', 'doctor', 'agents', 'features')",
+            "extra_args": "string opcional (argumentos adicionais de linha de comando, ex: '--model gpt-5.4-mini')",
+            "timeout": "int opcional (limite de execução em segundos, padrão 120)"
+        }
+    },
+    "run_antigravity_cli": {
+        "description": "Executa comandos diretamente na CLI do Google Antigravity (agy / antigravity v1.2.11). Suporta subcomandos como 'print' (modo headless não-interativo de prompts), 'agents', 'models', 'mcp', 'changelog'. Notifica automaticamente a conclusão no Desktop Watcher.",
+        "parameters": {
+            "prompt": "string opcional (instrução ou prompt para o Antigravity)",
+            "subcommand": "string opcional (subcomando: 'print' (padrão), 'agents', 'models', 'mcp', 'changelog')",
+            "extra_args": "string opcional (argumentos adicionais de linha de comando)",
+            "timeout": "int opcional (limite de execução em segundos, padrão 120)"
+        }
+    },
+    "run_opencode_cli": {
+        "description": "Executa comandos diretamente na CLI do OpenCode (v1.18.34). Suporta subcomandos como 'run' (execução headless autônoma com modelo free e auto-aprovação de permissões), 'models', 'stats', 'session', 'export'. Notifica automaticamente a conclusão no Desktop Watcher.",
+        "parameters": {
+            "prompt": "string opcional (instrução ou prompt para o OpenCode)",
+            "subcommand": "string opcional (subcomando: 'run' (padrão), 'models', 'stats', 'session', 'export')",
+            "extra_args": "string opcional (argumentos adicionais de linha de comando)",
+            "timeout": "int opcional (limite de execução em segundos, padrão 120)"
+        }
+    },
+    "get_desktop_clis_status": {
+        "description": "Retorna o inventário completo, versão instalada, caminhos de binário e contagem de processos em execução das 3 CLIs dos agentes desktop: OpenAI Codex, Google Antigravity e OpenCode.",
+        "parameters": {}
+    },
+    "dispatch_desktop_task": {
+        "description": "Orquestra e delega a execução autônoma de uma tarefa de engenharia para o agente desktop ideal (OpenAI Codex, Google Antigravity ou OpenCode), considerando afinidade técnica, modelos neurais, limites de rate limit (429), quotas de uso e failover automático.",
+        "parameters": {
+            "task_description": "string obrigatório (descrição detalhada e clara da tarefa técnica para o agente desktop)",
+            "preferred_agent": "string opcional ('codex', 'antigravity', 'opencode' ou 'auto', padrão 'auto')",
+            "timeout": "int opcional (limite de execução em segundos, padrão 180)"
+        }
+    },
+    "get_desktop_orchestrator_status": {
+        "description": "Retorna o painel completo de orquestração dos agentes desktop: status operacional, quotas, rate limits ativos, modelos neurais e processos concorrentes.",
+        "parameters": {}
     }
 }
 
 # Fuzzy synonym mapping for tool names
 TOOL_SYNONYMS = {
+    "run_codex_cli": "run_codex_cli",
+    "codex_cli": "run_codex_cli",
+    "codex": "run_codex_cli",
+    "run_codex": "run_codex_cli",
+    "run_antigravity_cli": "run_antigravity_cli",
+    "antigravity_cli": "run_antigravity_cli",
+    "agy_cli": "run_antigravity_cli",
+    "antigravity": "run_antigravity_cli",
+    "agy": "run_antigravity_cli",
+    "run_antigravity": "run_antigravity_cli",
+    "run_agy": "run_antigravity_cli",
+    "run_opencode_cli": "run_opencode_cli",
+    "opencode_cli": "run_opencode_cli",
+    "opencode": "run_opencode_cli",
+    "run_opencode": "run_opencode_cli",
+    "get_desktop_clis_status": "get_desktop_clis_status",
+    "desktop_clis_status": "get_desktop_clis_status",
+    "check_desktop_clis": "get_desktop_clis_status",
+    "clis_status": "get_desktop_clis_status",
+    "desktop_agents_status": "get_desktop_clis_status",
+    "status_clis": "get_desktop_clis_status",
+    "fetch_url": "fetch_url",
+    "read_url": "fetch_url",
+    "get_url": "fetch_url",
+    "curl_url": "fetch_url",
+    "browse_url": "fetch_url",
+    "ler_url": "fetch_url",
+    "extrair_url": "fetch_url",
     "run_command": "exec_command",
     "execute_command": "exec_command",
     "terminal": "exec_command",
@@ -1132,10 +1276,29 @@ TOOL_SYNONYMS = {
     "read_log": "read_daily_log",
     "daily_log": "read_daily_log",
     "get_daily_log": "read_daily_log",
+    "desktop_watcher": "check_desktop_agent_tasks",
+    "check_desktop_tasks": "check_desktop_agent_tasks",
+    "request_otp": "request_client_resource_approval",
+    "request_client_otp": "request_client_resource_approval",
+    "check_otp": "check_client_resource_approval",
+    "check_approval": "check_client_resource_approval",
+    "dispatch_desktop_task": "dispatch_desktop_task",
+    "dispatch_task": "dispatch_desktop_task",
+    "orchestrate_task": "dispatch_desktop_task",
+    "delegate_task": "dispatch_desktop_task",
+    "run_desktop_agent": "dispatch_desktop_task",
+    "solicitar_agente": "dispatch_desktop_task",
+    "pedir_agente": "dispatch_desktop_task",
+    "get_desktop_orchestrator_status": "get_desktop_orchestrator_status",
+    "orchestrator_status": "get_desktop_orchestrator_status",
 }
 
 # Fuzzy synonym mapping for parameters
 PARAM_SYNONYMS = {
+    "dispatch_desktop_task": {"task": "task_description", "prompt": "task_description", "instruction": "task_description", "agent": "preferred_agent", "agente": "preferred_agent"},
+    "run_codex_cli": {"instruction": "prompt", "message": "prompt", "p": "prompt", "query": "prompt", "action": "subcommand", "cmd": "subcommand"},
+    "run_antigravity_cli": {"instruction": "prompt", "message": "prompt", "p": "prompt", "query": "prompt", "action": "subcommand", "cmd": "subcommand"},
+    "run_opencode_cli": {"instruction": "prompt", "message": "prompt", "p": "prompt", "query": "prompt", "action": "subcommand", "cmd": "subcommand"},
     "exec_command": {"command": "cmd", "script": "cmd", "code": "cmd"},
     "read_file": {"path": "file_path", "filename": "file_path", "file": "file_path"},
     "write_file": {"path": "file_path", "filename": "file_path", "file": "file_path", "text": "content", "data": "content", "body": "content"},
@@ -1148,6 +1311,7 @@ PARAM_SYNONYMS = {
     "check_command_status": {"process_id": "pid", "id": "pid"},
     "search_chat_history": {"q": "query", "term": "query", "text": "query", "chat": "chat_id"},
     "read_daily_log": {"day": "date", "date_str": "date", "q": "query", "filter": "query"},
+    "fetch_url": {"link": "url", "uri": "url", "address": "url", "input": "url", "website": "url"},
 }
 
 def execute_tool(tool_name: str, args: dict) -> dict:
@@ -1254,6 +1418,70 @@ def execute_tool(tool_name: str, args: dict) -> dict:
             lines=int(resolved_args.get("lines", 50)),
             query=resolved_args.get("query")
         )
+    elif canonical_tool == "search_knowledge_base":
+        return search_knowledge_base(
+            query=str(resolved_args.get("query", "")),
+            limit=int(resolved_args.get("limit", 2)),
+            vertical=str(resolved_args.get("vertical", "all"))
+        )
+    elif canonical_tool == "check_desktop_agent_tasks":
+        return check_desktop_agent_tasks(
+            notify_ceo=bool(resolved_args.get("notify_ceo", True))
+        )
+    elif canonical_tool == "request_client_resource_approval":
+        return request_client_resource_approval(
+            project_name=str(resolved_args.get("project_name", "")),
+            client_phone=str(resolved_args.get("client_phone", "")),
+            resource_type=str(resolved_args.get("resource_type", "OTP")),
+            reason=str(resolved_args.get("reason", "")),
+            client_name=str(resolved_args.get("client_name", "Cliente")),
+            timeout_minutes=int(resolved_args.get("timeout_minutes", 15))
+        )
+    elif canonical_tool == "check_client_resource_approval":
+        return check_client_resource_approval(
+            approval_id=str(resolved_args.get("approval_id", ""))
+        )
+    elif canonical_tool == "submit_client_otp":
+        return submit_client_otp(
+            approval_id=str(resolved_args.get("approval_id", "")),
+            otp_code=str(resolved_args.get("otp_code", resolved_args.get("code", "")))
+        )
+    elif canonical_tool == "fetch_url":
+        return fetch_url(
+            url=str(resolved_args.get("url", "")),
+            max_chars=int(resolved_args.get("max_chars", 15000))
+        )
+    elif canonical_tool == "run_codex_cli":
+        return run_codex_cli(
+            prompt=str(resolved_args.get("prompt", "")),
+            subcommand=str(resolved_args.get("subcommand", "exec")),
+            extra_args=str(resolved_args.get("extra_args", "")),
+            timeout=int(resolved_args.get("timeout", 120))
+        )
+    elif canonical_tool == "run_antigravity_cli":
+        return run_antigravity_cli(
+            prompt=str(resolved_args.get("prompt", "")),
+            subcommand=str(resolved_args.get("subcommand", "print")),
+            extra_args=str(resolved_args.get("extra_args", "")),
+            timeout=int(resolved_args.get("timeout", 120))
+        )
+    elif canonical_tool == "run_opencode_cli":
+        return run_opencode_cli(
+            prompt=str(resolved_args.get("prompt", "")),
+            subcommand=str(resolved_args.get("subcommand", "run")),
+            extra_args=str(resolved_args.get("extra_args", "")),
+            timeout=int(resolved_args.get("timeout", 120))
+        )
+    elif canonical_tool == "get_desktop_clis_status":
+        return get_desktop_clis_status()
+    elif canonical_tool == "dispatch_desktop_task":
+        return dispatch_desktop_task(
+            task_description=str(resolved_args.get("task_description", resolved_args.get("prompt", ""))),
+            preferred_agent=str(resolved_args.get("preferred_agent", "auto")),
+            timeout=int(resolved_args.get("timeout", 180))
+        )
+    elif canonical_tool == "get_desktop_orchestrator_status":
+        return get_desktop_orchestrator_status()
     else:
         return {"success": False, "error": f"Ferramenta desconhecida: '{tool_name}'"}
 
@@ -1373,6 +1601,503 @@ def run_ai_intelligence_pipeline(action: str = "full", target: str = "") -> dict
             return {"success": True, "pipeline_summary": res}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+
+def search_knowledge_base(query: str, limit: int = 2, vertical: str = "all") -> dict:
+    """Consulta a base de conhecimento canônica em docs/knowledge via RAG in-memory de ultrabaixa latência (< 3ms)."""
+    try:
+        from . import knowledge_rag
+        results = knowledge_rag.search_knowledge_base(query=query, limit=limit, vertical=vertical)
+        return {
+            "success": True,
+            "query": query,
+            "vertical": vertical,
+            "count": len(results),
+            "results": results
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def check_desktop_agent_tasks(notify_ceo: bool = True) -> dict:
+    """Inspeciona tarefas em andamento e concluídas dos agentes desktop (Antigravity, Codex, OpenCode)."""
+    try:
+        from . import desktop_watcher
+        res = desktop_watcher.scan_and_notify_finished_tasks(force_notify=notify_ceo)
+        telemetry = desktop_watcher.get_desktop_watcher_status()
+        return {
+            "success": True,
+            "scan_results": res,
+            "status": telemetry
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def request_client_resource_approval(
+    project_name: str,
+    client_phone: str,
+    resource_type: str,
+    reason: str,
+    client_name: str = "Cliente",
+    timeout_minutes: int = 15
+) -> dict:
+    """Solicita aprovação ou código OTP/2FA via WhatsApp para cliente de projeto específico com cópia ao CEO."""
+    try:
+        from . import client_approval
+        return client_approval.request_client_resource_approval(
+            project_name=project_name,
+            client_phone=client_phone,
+            resource_type=resource_type,
+            reason=reason,
+            client_name=client_name,
+            timeout_minutes=timeout_minutes
+        )
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def check_client_resource_approval(approval_id: str) -> dict:
+    """Verifica o status de uma aprovação pendente ou código OTP enviado ao cliente."""
+    try:
+        from . import client_approval
+        return client_approval.check_client_approval_status(approval_id=approval_id)
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def submit_client_otp(approval_id: str, otp_code: str) -> dict:
+    """Insere e valida o código OTP/aprovação recebido para liberar a operação em andamento."""
+    try:
+        from . import client_approval
+        return client_approval.submit_approval_code(approval_id=approval_id, code=otp_code)
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def fetch_url(url: str, max_chars: int = 15000) -> dict:
+    """
+    Acessa e extrai o conteúdo textual de qualquer URL pública ou link web.
+    Suporta automaticamente:
+    - Google Docs (converte para exportação em texto limpo)
+    - Google Sheets (converte para CSV)
+    - Páginas Web / HTML (remove tags, scripts e estilos)
+    - APIs JSON / Arquivos de texto / Markdown
+    """
+    try:
+        clean_url = str(url or "").strip().strip('<>').strip('"').strip("'")
+        if not clean_url.startswith("http://") and not clean_url.startswith("https://"):
+            return {"success": False, "error": f"URL inválida: '{clean_url}'. Deve iniciar com http:// ou https://"}
+
+        # Suporte nativo e automático para Google Docs
+        gdoc_match = re.search(r'docs\.google\.com/document/d/([a-zA-Z0-9_-]+)', clean_url)
+        if gdoc_match:
+            doc_id = gdoc_match.group(1)
+            clean_url = f"https://docs.google.com/document/d/{doc_id}/export?format=txt"
+
+        # Suporte nativo e automático para Google Sheets
+        gsheet_match = re.search(r'docs\.google\.com/spreadsheets/d/([a-zA-Z0-9_-]+)', clean_url)
+        if gsheet_match:
+            sheet_id = gsheet_match.group(1)
+            clean_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv"
+
+        req = urllib.request.Request(
+            clean_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 AXION-Agent/2.0",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain,*/*;q=0.8"
+            }
+        )
+
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            content_type = resp.headers.get("Content-Type", "").lower()
+            raw_bytes = resp.read(max_chars * 4)
+
+            charset = "utf-8"
+            if "charset=" in content_type:
+                charset = content_type.split("charset=")[-1].split(";")[0].strip()
+
+            text = raw_bytes.decode(charset, errors="replace")
+
+            if "html" in content_type or "<html" in text.lower():
+                text = re.sub(r'<(?:script|style)[^>]*>[\s\S]*?</(?:script|style)>', ' ', text, flags=re.IGNORECASE)
+                text = re.sub(r'<[^>]+>', ' ', text)
+                text = html.unescape(text)
+                text = re.sub(r'[ \t]+', ' ', text)
+                text = re.sub(r'\n\s*\n', '\n\n', text).strip()
+
+            truncated = len(text) > max_chars
+            final_text = text[:max_chars]
+
+            return {
+                "success": True,
+                "url": url,
+                "resolved_url": clean_url,
+                "content": final_text,
+                "length": len(final_text),
+                "truncated": truncated
+            }
+    except Exception as e:
+        return {"success": False, "url": url, "error": str(e)}
+
+
+def run_codex_cli(prompt: str = "", subcommand: str = "exec", extra_args: str = "", timeout: int = 120) -> dict:
+    """
+    Executa comandos diretamente na CLI do OpenAI Codex (v0.160.0).
+    Suporta subcomandos como 'exec' (execução autônoma de prompts), 'review', 'doctor', 'agents', 'features'.
+    Registra automaticamente a conclusão da tarefa no sentinela Desktop Watcher.
+    """
+    clean_subcmd = (subcommand or "exec").strip().lower()
+    clean_extra = (extra_args or "").strip()
+    clean_prompt = (prompt or "").strip()
+
+    if clean_subcmd in ["exec", "e", "run"]:
+        if not clean_prompt:
+            return {"success": False, "error": "Prompt obrigatório para o subcomando 'exec' do Codex."}
+        escaped_prompt = clean_prompt.replace('"', '\"')
+        cmd = f'codex.cmd exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check --color never "{escaped_prompt}"'
+        if clean_extra:
+            cmd += f" {clean_extra}"
+    elif clean_subcmd in ["review", "doctor", "agents", "features", "mcp", "update"]:
+        cmd = f"codex.cmd {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+    else:
+        cmd = f"codex.cmd {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+
+    res = exec_command(cmd, timeout=timeout)
+    # Registra no desktop_watcher se terminou com sucesso
+    if res.get("success"):
+        try:
+            from . import desktop_watcher
+            t_id = f"codex_cli_{int(time.time())}"
+            title = f"Codex CLI [{clean_subcmd}]: {clean_prompt[:50] or clean_subcmd}"
+            output_tail = res.get("output", "")[-300:]
+            desktop_watcher.record_desktop_task_completion(
+                agent="Codex",
+                task_id=t_id,
+                title=title,
+                status="completed",
+                result=output_tail or "Codex CLI finalizado com sucesso."
+            )
+        except Exception as dw_err:
+            print(f"[tool_executor] Aviso ao registrar Codex no watcher: {dw_err}")
+
+    return {
+        "success": res.get("success", False),
+        "agent": "Codex",
+        "cli": "codex",
+        "subcommand": clean_subcmd,
+        "cmd_executed": cmd[:150],
+        "output": res.get("output", ""),
+        "error": res.get("error"),
+        "elapsed_seconds": res.get("elapsed_seconds", 0.0),
+        "running": res.get("running", False)
+    }
+
+
+def run_antigravity_cli(prompt: str = "", subcommand: str = "print", extra_args: str = "", timeout: int = 120) -> dict:
+    """
+    Executa comandos diretamente na CLI do Google Antigravity (agy / antigravity v1.2.11).
+    Suporta subcomandos como 'print' (modo headless não-interativo de prompts), 'agents', 'models', 'mcp', 'changelog'.
+    Registra automaticamente a conclusão da tarefa no sentinela Desktop Watcher.
+    """
+    clean_subcmd = (subcommand or "print").strip().lower()
+    clean_extra = (extra_args or "").strip()
+    clean_prompt = (prompt or "").strip()
+
+    if clean_subcmd in ["print", "p", "prompt", "exec", "run"]:
+        if not clean_prompt:
+            return {"success": False, "error": "Prompt obrigatório para o modo 'print' do Antigravity CLI."}
+        escaped_prompt = clean_prompt.replace('"', '\"')
+        cmd = f'agy.exe --print "{escaped_prompt}" --dangerously-skip-permissions'
+        if clean_extra:
+            cmd += f" {clean_extra}"
+    elif clean_subcmd in ["agents", "agent", "models", "mcp", "changelog", "update"]:
+        cmd = f"agy.exe {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+    else:
+        cmd = f"agy.exe {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+
+    res = exec_command(cmd, timeout=timeout)
+    if res.get("success"):
+        try:
+            from . import desktop_watcher
+            t_id = f"agy_cli_{int(time.time())}"
+            title = f"Antigravity CLI [{clean_subcmd}]: {clean_prompt[:50] or clean_subcmd}"
+            output_tail = res.get("output", "")[-300:]
+            desktop_watcher.record_desktop_task_completion(
+                agent="Antigravity",
+                task_id=t_id,
+                title=title,
+                status="completed",
+                result=output_tail or "Antigravity CLI finalizado com sucesso."
+            )
+        except Exception as dw_err:
+            print(f"[tool_executor] Aviso ao registrar Antigravity no watcher: {dw_err}")
+
+    return {
+        "success": res.get("success", False),
+        "agent": "Antigravity",
+        "cli": "agy",
+        "subcommand": clean_subcmd,
+        "cmd_executed": cmd[:150],
+        "output": res.get("output", ""),
+        "error": res.get("error"),
+        "elapsed_seconds": res.get("elapsed_seconds", 0.0),
+        "running": res.get("running", False)
+    }
+
+
+def run_opencode_cli(prompt: str = "", subcommand: str = "run", extra_args: str = "", timeout: int = 120) -> dict:
+    """
+    Executa comandos diretamente na CLI do OpenCode (v1.18.34).
+    Suporta subcomandos como 'run' (execução headless autônoma com modelo free e auto-aprovação de permissões), 'models', 'stats', 'session', 'export'.
+    Registra automaticamente a conclusão da tarefa no sentinela Desktop Watcher.
+    """
+    clean_subcmd = (subcommand or "run").strip().lower()
+    clean_extra = (extra_args or "").strip()
+    clean_prompt = (prompt or "").strip()
+
+    if clean_subcmd in ["run", "exec"]:
+        if not clean_prompt:
+            return {"success": False, "error": "Prompt obrigatório para o comando 'run' do OpenCode."}
+        escaped_prompt = clean_prompt.replace('"', '\"')
+        cmd = f'$null | opencode.cmd run --auto "{escaped_prompt}"'
+        if clean_extra:
+            cmd += f" {clean_extra}"
+    elif clean_subcmd in ["models", "stats", "session", "providers", "export", "acp", "mcp"]:
+        cmd = f"opencode.cmd {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+    else:
+        cmd = f"opencode.cmd {clean_subcmd}"
+        if clean_extra:
+            cmd += f" {clean_extra}"
+        if clean_prompt:
+            escaped_prompt = clean_prompt.replace('"', '\"')
+            cmd += f' "{escaped_prompt}"'
+
+    res = exec_command(cmd, timeout=timeout)
+    if res.get("success"):
+        try:
+            from . import desktop_watcher
+            t_id = f"opencode_cli_{int(time.time())}"
+            title = f"OpenCode CLI [{clean_subcmd}]: {clean_prompt[:50] or clean_subcmd}"
+            output_tail = res.get("output", "")[-300:]
+            desktop_watcher.record_desktop_task_completion(
+                agent="OpenCode",
+                task_id=t_id,
+                title=title,
+                status="completed",
+                result=output_tail or "OpenCode CLI finalizado com sucesso."
+            )
+        except Exception as dw_err:
+            print(f"[tool_executor] Aviso ao registrar OpenCode no watcher: {dw_err}")
+
+    return {
+        "success": res.get("success", False),
+        "agent": "OpenCode",
+        "cli": "opencode",
+        "subcommand": clean_subcmd,
+        "cmd_executed": cmd[:150],
+        "output": res.get("output", ""),
+        "error": res.get("error"),
+        "elapsed_seconds": res.get("elapsed_seconds", 0.0),
+        "running": res.get("running", False)
+    }
+
+
+_DESKTOP_CLIS_CACHE = {"timestamp": 0.0, "data": None}
+_DESKTOP_CLIS_LOCK = threading.Lock()
+
+
+def get_desktop_clis_status(force_fresh: bool = False) -> dict:
+    """
+    Retorna o inventário completo, versão instalada, caminhos de binário e processos ativos
+    das 3 CLIs dos agentes desktop: OpenAI Codex, Google Antigravity e OpenCode.
+    Usa cache TTL de 10 segundos para máxima velocidade operacional.
+    """
+    global _DESKTOP_CLIS_CACHE
+    now = time.time()
+    with _DESKTOP_CLIS_LOCK:
+        if not force_fresh and _DESKTOP_CLIS_CACHE["data"] and (now - _DESKTOP_CLIS_CACHE["timestamp"] < 10.0):
+            return _DESKTOP_CLIS_CACHE["data"]
+
+    clis = {
+        "codex": {
+            "name": "OpenAI Codex CLI",
+            "command": "codex",
+            "installed": False,
+            "version": None,
+            "binary_path": r"C:\Users\AXION\AppData\Local\OpenAI\Codex\bin\9691020b546a15b2\codex.exe",
+            "wrapper_path": r"C:\Users\AXION\AppData\Local\agy\bin\codex.cmd",
+            "running_processes": 0,
+            "ready": False
+        },
+        "antigravity": {
+            "name": "Google Antigravity CLI",
+            "command": "agy",
+            "aliases": ["agy", "antigravity"],
+            "installed": False,
+            "version": None,
+            "binary_path": r"C:\Users\AXION\AppData\Local\agy\bin\agy.exe",
+            "wrapper_path": r"C:\Users\AXION\AppData\Local\agy\bin\antigravity.cmd",
+            "running_processes": 0,
+            "ready": False
+        },
+        "opencode": {
+            "name": "OpenCode CLI",
+            "command": "opencode",
+            "installed": False,
+            "version": None,
+            "binary_path": r"C:\Users\AXION\AppData\Local\Microsoft\WinGet\Packages\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\node-v24.19.0-win-x64\opencode.cmd",
+            "default_model": "opencode/mimo-v2.6-flash-free",
+            "running_processes": 0,
+            "ready": False
+        }
+    }
+
+    # Codex version & check
+    try:
+        r_codex = exec_command("codex.cmd --version", timeout=10)
+        if r_codex.get("success"):
+            clis["codex"]["installed"] = True
+            clis["codex"]["version"] = r_codex.get("output", "").strip()
+            clis["codex"]["ready"] = True
+    except Exception:
+        pass
+
+    # Antigravity version & check
+    try:
+        r_agy = exec_command("agy.exe --version", timeout=10)
+        if r_agy.get("success"):
+            clis["antigravity"]["installed"] = True
+            clis["antigravity"]["version"] = r_agy.get("output", "").strip()
+            clis["antigravity"]["ready"] = True
+    except Exception:
+        pass
+
+    # OpenCode version & check
+    try:
+        r_opencode = exec_command("opencode.cmd --version", timeout=10)
+        if r_opencode.get("success"):
+            clis["opencode"]["installed"] = True
+            clis["opencode"]["version"] = r_opencode.get("output", "").strip()
+            clis["opencode"]["ready"] = True
+    except Exception:
+        pass
+
+    # Check active running processes count for each
+    try:
+        r_proc = exec_command('Get-Process codex*, Antigravity*, OpenCode* -ErrorAction SilentlyContinue | Select-Object -ExpandProperty ProcessName', timeout=10)
+        if r_proc.get("success") and r_proc.get("output"):
+            p_names = [p.strip().lower() for p in r_proc.get("output", "").splitlines() if p.strip()]
+            clis["codex"]["running_processes"] = sum(1 for p in p_names if "codex" in p)
+            clis["antigravity"]["running_processes"] = sum(1 for p in p_names if "antigravity" in p or "agy" in p)
+            clis["opencode"]["running_processes"] = sum(1 for p in p_names if "opencode" in p)
+    except Exception:
+        pass
+
+    summary_lines = [
+        "🖥️ *[AXION Desktop CLIs] Inventário e Status Operacional*",
+        "━━━━━━━━━━━━━━━━━━━━━━",
+        f"• *OpenAI Codex:* {'✅ ' + str(clis['codex']['version']) if clis['codex']['ready'] else '❌ Não detectado'} (Processos ativos: {clis['codex']['running_processes']})",
+        f"• *Google Antigravity (`agy`):* {'✅ ' + str(clis['antigravity']['version']) if clis['antigravity']['ready'] else '❌ Não detectado'} (Processos ativos: {clis['antigravity']['running_processes']})",
+        f"• *OpenCode:* {'✅ ' + str(clis['opencode']['version']) if clis['opencode']['ready'] else '❌ Não detectado'} (Modelo: `{clis['opencode']['default_model']}`, Processos ativos: {clis['opencode']['running_processes']})",
+        "━━━━━━━━━━━━━━━━━━━━━━",
+        "_Todas as 3 CLIs estão disponíveis no PATH e integradas aos agentes WhatsApp e Brain Server._"
+    ]
+
+    result = {
+        "success": True,
+        "clis": clis,
+        "summary": "\n".join(summary_lines)
+    }
+    with _DESKTOP_CLIS_LOCK:
+        _DESKTOP_CLIS_CACHE["timestamp"] = time.time()
+        _DESKTOP_CLIS_CACHE["data"] = result
+    return result
+
+
+def fetch_email_otp(recipient: str = "dev@example.com", timeout_seconds: int = 40) -> dict:
+    """
+    Recupera de forma 100% autônoma o código OTP/2FA ou link de ativação mais recente
+    recebido via e-mail corporativo (Cloudflare Catch-All Engine) sem intervenção humana.
+    """
+    try:
+        import importlib.util
+        from pathlib import Path
+        otp_file = Path("c:/workspace/services/agent-email/otp_client.py")
+        spec = importlib.util.spec_from_file_location("axion_otp_client", otp_file)
+        otp_mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(otp_mod)
+        res = otp_mod.get_latest_email_otp(recipient=recipient, timeout_seconds=timeout_seconds)
+        return {
+            "success": res.get("status") == "ok",
+            "otp_code": res.get("otp_code"),
+            "verification_links": res.get("verification_links", []),
+            "from": res.get("from"),
+            "to": res.get("to"),
+            "subject": res.get("subject"),
+            "received_at": res.get("received_at"),
+            "details": res
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def dispatch_desktop_task(task_description: str, preferred_agent: str = "auto", timeout: int = 180) -> dict:
+    """
+    Orquestra e delega a execução autônoma de uma tarefa de engenharia para o agente desktop ideal
+    (OpenAI Codex, Google Antigravity ou OpenCode), considerando afinidade técnica, modelos neurais,
+    limites de rate limit (429), quotas de uso e failover automático.
+    """
+    try:
+        from . import desktop_orchestrator
+    except ImportError:
+        from bot_engine import desktop_orchestrator
+
+    pref = None if preferred_agent in ["auto", "", None] else preferred_agent
+    return desktop_orchestrator.dispatch_task_to_desktop_agent(
+        task_description=task_description,
+        preferred_agent=pref,
+        timeout=timeout
+    )
+
+
+def get_desktop_orchestrator_status() -> dict:
+    """
+    Retorna o painel completo de orquestração dos agentes desktop: status operacional,
+    quotas, rate limits ativos, modelos neurais e processos concorrentes.
+    """
+    try:
+        from . import desktop_orchestrator
+    except ImportError:
+        from bot_engine import desktop_orchestrator
+
+    return desktop_orchestrator.get_orchestrator_dashboard()
+
 
 if __name__ == "__main__":
     print("Testing get_system_telemetry:")

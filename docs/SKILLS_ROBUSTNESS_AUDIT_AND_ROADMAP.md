@@ -41,6 +41,10 @@ Skills criadas apenas para preencher tabela, com 1 parágrafo introdutório e 3 
 
 ### Patologia 4: O Bloqueio em Marca/Fornecedor (Vendor Lock Siloed)
 - `stripe-payments-engine`: Focada só na Stripe, ignorando Pix, Asaas e Mercado Pago.
+  **Resolvido**: substituída por `axion-payments-engine` — gateway canônico único
+  (AXION Pay) com cobranças Pix/cartão/assinaturas, webhook HMAC-SHA256 e CLI
+  próprio; providers diretos passaram a ser proibidos pela regra do operador e
+  reprovados no Quality Gate (`services/axion-flow/tests/no-direct-payment-integrations.test.js`).
 - `elevenlabs-tts-voiceover` (10 linhas) e `whisper-stt-neural-voice` (10 linhas): TTS e STT fatiados em 2 marcas comerciais de 10 linhas cada.
 - `whatsapp-baileys-bot-ops` e `telegram-bot-ops`: Separados por lib/plataforma em vez de uma arquitetura unificada de mensageria para agentes.
 

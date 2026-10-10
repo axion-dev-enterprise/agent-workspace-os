@@ -88,7 +88,7 @@ export const Scene4Lockup: React.FC = () => {
           AXION
         </h1>
 
-        {/* Diagonal Light Sweep Flare */}
+        {/* DOperatornal Light Sweep Flare */}
         <div
           style={{
             position: "absolute",

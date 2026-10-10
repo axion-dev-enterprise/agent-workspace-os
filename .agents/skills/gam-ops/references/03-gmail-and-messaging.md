@@ -8,7 +8,7 @@ Guia de comandos GAM para automação e padronização do Gmail corporativo.
 
 ```powershell
 # Definir assinatura HTML para um usuário
-gam user <email> signature html "<b>Iago Barreto</b><br>AXION Enterprise<br>https://example.com"
+gam user <email> signature html "<b>Executive Operator</b><br>AXION Enterprise<br>https://example.com"
 
 # Aplicar assinatura padrão para todos os usuários do domínio
 gam all users signature html "<b>Equipe AXION Enterprise</b><br>example.com"

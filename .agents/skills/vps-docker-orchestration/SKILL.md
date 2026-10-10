@@ -15,10 +15,21 @@ Skill operacional para administração de nós computacionais remotos (Linux/Ubu
 
 ## 1. Princípios de Segurança & Hardening de Nós VPS
 
-1. **Acesso SSH com Chaves**: Desativar autenticação por senha (`PasswordAuthentication no`) em `/etc/ssh/sshd_config`.
-2. **Firewall UFW Ativo**: Permitir apenas portas essenciais:
-   `ufw default deny incoming; ufw allow 22/tcp; ufw allow 80/tcp; ufw allow 443/tcp; ufw enable`
-3. **Isolamento de Containers**: Nunca rodar containers Docker como usuário `root`. Especificar sempre `USER node` ou criar usuário sem privilégios no `Dockerfile`.
+1. **Acesso SSH com Chaves Criptográficas (Ed25519)**: Desativar autenticação por senha (`PasswordAuthentication no`) em `/etc/ssh/sshd_config.d/00-custom.conf`. Operar em porta alta não-padrão (`Port 22022`).
+2. **Firewall UFW Ativo & Estrito**:
+   - `ufw default deny incoming; ufw default allow outgoing`
+   - Permitir apenas tráfego estritamente autorizado: `22022/tcp`, `80/tcp`, `443/tcp`.
+3. **Mitigação Ativa com Fail2ban**:
+   - Pacote `fail2ban` ativo com jail `sshd` monitorando a porta customizada:
+     - `bantime = 2h`, `findtime = 10m`, `maxretry = 3`, `banaction = ufw`.
+   - Inclusão mandatória de `ignoreip = 127.0.0.1/8 ::1 100.64.0.0/10` para proteger a Tailnet contra bloqueios acidentais.
+4. **Tailnet Mesh VPN (WireGuard Privado)**:
+   - Todo nó VPS de produção DEVE estar conectado à Tailnet corporativa (`tailscale up --ssh`).
+   - Priorizar conexões administrativas pelo IP privado `100.x.y.z` ou via MagicDNS (`vps-node-01-core`, `vps-node-01-clients`).
+5. **Zero Attack Surface em Bancos de Dados**:
+   - NUNCA mapear portas de banco de dados (`5432` PostgreSQL, `6379` Redis, etc.) para o host público (`0.0.0.0`).
+   - Bancos devem residir exclusivamente dentro de redes bridge isoladas do Docker (`driver: bridge`).
+6. **Isolamento de Containers**: Nunca rodar processos de aplicação como `root`. Especificar sempre `USER node` ou usuário restrito no `Dockerfile`.
 
 ---
 

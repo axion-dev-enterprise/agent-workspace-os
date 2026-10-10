@@ -228,7 +228,7 @@ class AgentEmailManager:
         # Enviar alerta de infra
         mgr.send_agent_email(
             agent="axion-core",
-            to="iago@example.com",
+            to="Operator@example.com",
             subject="[ALERTA] SSL expirando em 7 dias",
             body="Domínio api.example.com expira em 2026-10-03",
         )

@@ -20,10 +20,12 @@ def normalize_text(text: str) -> str:
     return ' '.join(text.split())
 
 # ── Pre-formatted Intent Knowledge Base ──────────────────────────────
+SUPPORT_PHONE = os.environ.get("WHATSAPP_SUPPORT_NUMBER", os.environ.get("WHATSAPP_ADMIN_NUMBER", "+5511999999999"))
+
 _INTENT_RESPONSES = {
     "demo": {
         "text": (
-            "📅 *Agendamento de Demonstração — AXION Enterprise*\n\n"
+            "📅 *Agendamento de Demonstração — Agent Workspace OS*\n\n"
             "Ficamos felizes com seu interesse em conhecer nosso ecossistema de soluções e agentes autônomos de IA!\n\n"
             "Nossas sessões de demonstração duram **30 minutos** e cobrem:\n"
             "• 🧠 Arquitetura de agentes autônomos 24/7 integrados aos seus canais\n"
@@ -34,7 +36,7 @@ _INTENT_RESPONSES = {
         "buttons": [
             {"type": "reply", "text": "💬 Falar com Especialista", "query": "Gostaria de agendar um horário com um especialista técnico"},
             {"type": "reply", "text": "💰 Ver Tabela de Planos", "query": "lead_pricing"},
-            {"type": "call", "text": "📞 Ligar Agora", "phoneNumber": "+5511988045139"}
+            {"type": "call", "text": "📞 Ligar Agora", "phoneNumber": SUPPORT_PHONE}
         ]
     },
     "pricing": {
@@ -55,12 +57,12 @@ _INTENT_RESPONSES = {
         "buttons": [
             {"type": "reply", "text": "🚀 Ativar 30 Dias Grátis", "query": "Gostaria de ativar o teste gratuito de 30 dias do Autoatendimento IA"},
             {"type": "reply", "text": "🎯 Dúvidas sobre Pixel/CAPI", "query": "Como funciona a integração com Pixel do Facebook e CAPI?"},
-            {"type": "call", "text": "📞 Falar com Consultor", "phoneNumber": "+5511988045139"}
+            {"type": "call", "text": "📞 Falar com Consultor", "phoneNumber": SUPPORT_PHONE}
         ]
     },
     "support": {
         "text": (
-            "🛠️ *Canal de Suporte & Operações AXION*\n\n"
+            "🛠️ *Canal de Suporte & Operações*\n\n"
             "Nosso time de engenharia e observabilidade monitora os sistemas 24 horas por dia.\n\n"
             "• Para dúvidas gerais ou solicitações de rotina, descreva seu pedido aqui.\n"
             "• Para incidentes críticos em produção, acione o canal telefônico direto.\n\n"
@@ -68,23 +70,23 @@ _INTENT_RESPONSES = {
         ),
         "buttons": [
             {"type": "reply", "text": "📊 Status dos Servidores", "query": "/status"},
-            {"type": "call", "text": "📞 Suporte de Emergência", "phoneNumber": "+5511988045139"}
+            {"type": "call", "text": "📞 Suporte de Emergência", "phoneNumber": SUPPORT_PHONE}
         ]
     },
     "services": {
         "text": (
-            "✨ *Autoatendimento Inteligente & Agentes de IA — AXION*\n\n"
+            "✨ *Autoatendimento Inteligente & Agentes de IA*\n\n"
             "Aumente a conversão do seu negócio com agentes autônomos de alta velocidade:\n\n"
             "• ⚡ *Respostas Instantâneas (< 1s):* Atendimento 24/7 humanizado com botões rápidos.\n"
             "• 📱 *Zero Taxa da Meta:* Funciona direto no WhatsApp sem pagar por mensagem.\n"
             "• 🎯 *Integração Pixel & CAPI:* Otimização de tráfego pago com disparo automático de eventos.\n"
-            "• 🔒 *30 Dias Grátis:* Teste completo no seu próprio número ou com chip dedicado (R$ 50/mês).\n\n"
+            "• 🔒 *30 Dias Grátis:* Teste completo no seu próprio número ou com chip dedicado.\n\n"
             "👉 *Como você prefere começar?*"
         ),
         "buttons": [
             {"type": "reply", "text": "💰 Ver Planos & Valores", "query": "lead_pricing"},
             {"type": "reply", "text": "🚀 Ativar 30 Dias Grátis", "query": "Gostaria de ativar os 30 dias grátis do sistema"},
-            {"type": "call", "text": "📞 Falar com Especialista", "phoneNumber": "+5511988045139"}
+            {"type": "call", "text": "📞 Falar com Especialista", "phoneNumber": SUPPORT_PHONE}
         ]
     }
 }

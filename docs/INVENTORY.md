@@ -112,7 +112,7 @@ O mapeamento detalhado e categorizado de todos os **124 registros DNS e subdomí
 | :--- | :--- |
 | **Domínio Conectado** | `example.com` |
 | **Customer ID** | `C03xtme8f` |
-| **Admin Principal** | `iago@example.com` |
+| **Admin Principal** | `Operator@example.com` |
 | **Projeto GCP** | `gam-project-w1te0` |
 | **CLI / Engine** | **GAM 7.48.12** (`C:\GAM7\gam.exe`) |
 | **Service Account** | `gam-project-w1te0@gam-project-w1te0.iam.gserviceaccount.com` |
@@ -135,7 +135,7 @@ A documentação detalhada e matriz completa de ativação de cada skill está r
 ## 7. Rede Mesh Privada (Tailscale / Tailnet)
 
 - **Domínio MagicDNS**: `taildb9106.ts.net`
-- **Administrador**: `iago@example.com`
+- **Administrador**: `Operator@example.com`
 - **Servidor DERP Mais Próximo**: São Paulo (11.9ms)
 - **Status do Túnel WireGuard**: Ativo (UDP direto habilitado)
 

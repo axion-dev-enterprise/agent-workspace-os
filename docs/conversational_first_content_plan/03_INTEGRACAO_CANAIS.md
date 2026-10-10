@@ -53,7 +53,7 @@ No Telegram, a edição dinâmica de mensagens permite transformar o First Conte
 ## 3. Segregação de Persona (Admin vs Lead)
 
 O prompt de streaming respeita quem está chamando:
-1. **Se for Admin (Iago / Equipe):**  
+1. **Se for Admin (Operator / Equipe):**  
    O First Content foca em diagnóstico técnico, arquitetura, automação e comandos operacionais.
 2. **Se for Lead (WhatsApp Comercial):**  
    O First Content foca em acolhimento, entendimento do modelo de negócio do cliente, apresentação das soluções e esclarecimento de dúvidas da oferta (30 dias free, sem taxa da Meta).

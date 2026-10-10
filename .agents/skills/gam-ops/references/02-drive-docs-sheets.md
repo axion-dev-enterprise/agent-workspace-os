@@ -78,7 +78,7 @@ gam print teamdrives
 gam create teamdrive "Projetos_Engenharia"
 
 # Adicionar membro com papel de Administrador (organizer)
-gam add drivefileacl id <TEAMDRIVE_ID> role organizer user iago@example.com
+gam add drivefileacl id <TEAMDRIVE_ID> role organizer user Operator@example.com
 
 # Adicionar membro com papel de Colaborador (fileOrganizer)
 gam add drivefileacl id <TEAMDRIVE_ID> role fileOrganizer user dev@example.com

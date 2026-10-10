@@ -27,7 +27,7 @@ def _ensure_dirs():
 def normalize_chat_id(chat_id: int | str) -> str:
     """
     Normaliza identificadores de chat para unificar histórico entre LIDs e números de telefone reais.
-    Ex: '36735559962762@lid' -> '5511988045139@s.whatsapp.net'
+    Ex: '<admin_lid>@lid' -> '<admin_phone>@s.whatsapp.net'
     """
     cid_str = str(chat_id).strip()
     clean_digits = "".join(c for c in cid_str if c.isdigit())
@@ -43,9 +43,11 @@ def normalize_chat_id(chat_id: int | str) -> str:
         except Exception:
             pass
 
-    # 2. Hardcoded canônico para o LID do Administrador Principal (Iago)
-    if clean_digits == "36735559962762" or clean_digits == "5511988045139":
-        return "5511988045139@s.whatsapp.net"
+    # 2. Resolução do LID do Administrador Principal via variáveis de ambiente
+    admin_phone = os.environ.get("WHATSAPP_ADMIN_NUMBER", "").strip()
+    admin_lid = os.environ.get("WHATSAPP_ADMIN_LID", "").strip()
+    if admin_phone and (clean_digits == admin_lid or clean_digits == admin_phone):
+        return f"{admin_phone}@s.whatsapp.net"
 
     if "@" in cid_str:
         return cid_str

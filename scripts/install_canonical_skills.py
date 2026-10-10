@@ -108,39 +108,38 @@ Skill operacional para APIs GraphQL declarativas, seguras contra problemas de N+
 """
     },
 
-    "stripe-payments-engine": {
+    "axion-payments-engine": {
         "domain": "Backend & APIs",
-        "scope": "Checkout global, verificação de webhooks, assinaturas recorrentes e split de pagamentos com Stripe",
-        "description": "Operational skill for integrating Stripe payments, recurring subscriptions, webhook cryptographic signature verification, customer portal, and idempotency.",
-        "content": """# Stripe Payments & Subscriptions Engine Skill
+        "scope": "Cobranças exclusivamente via AXION Pay: charges Pix, cartão, links, assinaturas recorrentes, chaves de merchant e webhook HMAC-SHA256",
+        "description": "Operational skill for billing exclusively through AXION Pay: charges, subscriptions, merchant API keys, HMAC-SHA256 webhook ingestion over raw body, entitlement state machine and staging verification. Direct gateways (Stripe/Woovi/OpenPix) are prohibited.",
+        "content": """# AXION Payments Engine Skill
 
-Skill operacional para integração de pagamentos, cobrança recorrente e processamento de webhooks com Stripe.
+Skill operacional para cobrança, recorrência e notificação no ecossistema: **todo pagamento entra e sai pela AXION Pay**. Integrar Stripe, Woovi ou OpenPix diretamente é proibido (guarda no CI: `services/axion-flow/tests/no-direct-payment-integrations.test.js`).
 
 ## 1. Regras de Ouro
-1. **Idempotência**: Sempre enviar header `Idempotency-Key` em operações de cobrança para prevenir cobranças duplicadas em caso de retry.
-2. **Verificação de Webhook**: NUNCA confiar no payload do webhook sem validar a assinatura criptográfica com `stripe.webhooks.constructEvent(payload, sig, endpointSecret)`.
-3. **Persistência de Customer ID**: Vincular sempre o `stripeCustomerId` ao registro do usuário no banco local.
+1. **Gateway único**: cobrança via `POST /v1/charges` (Pix, `value` em centavos) ou `POST /v1/subscriptions` (`amountCents`, `interval`, `trialDays`) com `Authorization: Bearer <chave de merchant>` e **`Idempotency-Key`** obrigatório em toda mutação (`409` = deduplicação, não erro a tratar como falha).
+2. **Webhook só com HMAC**: envelope `{id, event, timestamp, data}`, cabeçalho `X-Axion-Signature: t=<unix>,v1=<hex>` onde `hex = HMAC-SHA256(secret, "<unix>." + rawBody)` e `X-Axion-Event-Id` igual ao campo `id`. Validar janela de ±300s e HMAC **sobre o corpo bruto** antes de persistir; assinatura inválida → `401` RFC 7807, replay do mesmo `event_id` → `200`, evento novo → `202`.
+3. **Segredo no vault**: `whsec_...` e chaves (`axp_*`, `AXION_API_KEYS`) vivem em `vault/payments/<plataforma>/.env` — nunca em `.env` solto, log ou commit.
 
 ## 2. Validador de Webhook Canônico (Node.js)
 ```typescript
-import Stripe from "stripe";
+import crypto from "node:crypto";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2024-06-20" });
-
-export async function handleStripeWebhook(rawBody: Buffer, signature: string) {
-  const event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET!);
-  switch (event.type) {
-    case "checkout.session.completed":
-      const session = event.data.object as Stripe.Checkout.Session;
-      await activateSubscription(session.customer as string, session.client_reference_id!);
-      break;
-    case "invoice.payment_failed":
-      await notifyPaymentFailed(event.data.object);
-      break;
+export function verifyAxionPayWebhook(rawBody: Buffer, signatureHeader: string, eventId: string, secret: string) {
+  const match = /t=(\\d+),v1=([0-9a-f]{64})/.exec(signatureHeader ?? "");
+  if (!match || !eventId) throw new Error("assinatura ou event id ausente");
+  const [, ts, received] = match;
+  if (Math.abs(Date.now() / 1000 - Number(ts)) > 300) throw new Error("assinatura fora da janela");
+  const expected = crypto.createHmac("sha256", secret).update(`${ts}.`).update(rawBody).digest("hex");
+  if (!crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(received, "hex"))) {
+    throw new Error("HMAC divergente");
   }
-  return { received: true };
+  return JSON.parse(rawBody.toString("utf8")); // {id, event, timestamp, data}
 }
 ```
+
+## 3. Operação em Staging (staging-ops.yml)
+Sequência canônica: `pay-key` (merchant + chave validada em `/v1/sandbox/validate`) → `flow-webhook` (ingress com `401` negativo) → `worker-enable` → `billing-fixture` (202/200/200 e worker `COMPLETED`, contagens 1/1/1/1/1) → `webhook-teardown` (purge + tenant legado) → `db-audit`.
 """
     },
 

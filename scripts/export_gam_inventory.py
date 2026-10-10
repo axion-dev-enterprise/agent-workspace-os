@@ -42,7 +42,7 @@ def main():
     domain_meta = {
         "domain": "example.com",
         "customer_id": "C03xtme8f",
-        "admin": "iago@example.com",
+        "admin": "Operator@example.com",
         "raw_info": domain_info_raw
     }
 
@@ -57,7 +57,7 @@ def main():
     print("[4/5] Extraindo arquivos e diretórios do Drive...")
     # Extract files for admin user
     drive_files = run_gam_csv([
-        "user", "iago@example.com", "print", "filelist",
+        "user", "Operator@example.com", "print", "filelist",
         "query", "'me' in owners", "id", "title", "mimetype", "modifiedDate", "filesize"
     ])
 
@@ -70,8 +70,8 @@ def main():
             "customer_id": "C03xtme8f",
             "country": "BR",
             "language": "pt-BR",
-            "admin_contact": "Iago Barreto",
-            "admin_email": "iago@example.com",
+            "admin_contact": "Executive Operator",
+            "admin_email": "Operator@example.com",
             "secondary_admin_email": "kurtalexanderwolf@gmail.com"
         },
         "users": [
@@ -132,7 +132,7 @@ def main():
         f"> **Domínio**: `example.com`  ",
         f"> **Customer ID**: `C03xtme8f`  ",
         f"> **Data de Atualização**: {now_iso[:10]}  ",
-        f"> **Administrador**: `iago@example.com`  ",
+        f"> **Administrador**: `Operator@example.com`  ",
         f"> **Total de Usuários**: {len(inventory['users'])} | **Shared Drives**: {len(inventory['shared_drives'])} | **Arquivos no Drive**: {len(inventory['drive_assets'])}",
         "",
         "---",
@@ -172,7 +172,7 @@ def main():
         "",
         "## 3. Categorização de Arquivos e Ativos no Drive",
         "",
-        "Resumo dos **141 ativos** catalogados na conta principal (`iago@example.com`):",
+        "Resumo dos **141 ativos** catalogados na conta principal (`Operator@example.com`):",
         "",
         "| Categoria / Tipo de Ativo | Qtd Estimada | Exemplos Notáveis |",
         "| :--- | :--- | :--- |",

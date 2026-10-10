@@ -42,7 +42,7 @@ DOMAIN_MAP = {
     "fastapi-async-api": ("Backend & APIs", "APIs assíncronas em Python com Pydantic v2, dependency injection, background tasks e OpenAPI"),
     "nestjs-modular-backend": ("Backend & APIs", "Arquitetura modular corporativa em TypeScript com NestJS, Guards, Interceptors e DTOs"),
     "graphql-apollo-federation": ("Backend & APIs", "Design de esquemas GraphQL, resolvers tipados, caching e Apollo Federation em microserviços"),
-    "stripe-payments-engine": ("Backend & APIs", "Checkout global, verificação de webhooks, assinaturas recorrentes e split de pagamentos com Stripe"),
+    "axion-payments-engine": ("Backend & APIs", "Cobranças exclusivamente via AXION Pay: charges Pix, cartão, links, assinaturas recorrentes, chaves de merchant com escopos, webhook HMAC-SHA256 sobre corpo bruto e evidência em staging"),
     "grpc-protobuf-microservices": ("Backend & APIs", "Comunicação inter-serviços de alta taxa de transferência com gRPC e Protocol Buffers"),
 
     # 3. Databases & Caching
@@ -105,6 +105,14 @@ DOMAIN_MAP = {
 
     # 11. Vídeo Programático & React (Remotion Master Skill)
     "remotion-video-studio": ("Vídeo & Remotion", "Produção programática de vídeo em React, Remotion Studio, renderização SSR e animações dinâmicas"),
+
+    # 12. Observabilidade Desktop & Human-in-the-Loop
+    "desktop-agents-watcher": ("Observabilidade & Agentes Desktop", "Supervisão em tempo real de tarefas dos agentes desktop (Antigravity, Codex, OpenCode) e alertas para a liderança executiva"),
+    "desktop-agents-orchestrator": ("Observabilidade & Agentes Desktop", "Orquestração executiva e despacho inteligente de tarefas para os agentes desktop (Codex, Antigravity, OpenCode), modelos e quotas"),
+    "client-otp-approval": ("Segurança & Human-in-the-Loop", "Protocolo de solicitação de aprovação e recursos externos sensíveis (OTP, 2FA, acessos) via WhatsApp"),
+    "executive-notification-governance": ("Comunicação & Mensageria", "Governança executiva de notificações, eliminação de alertas de tarefas efêmeras/scratch, histerese e deadband de telemetria de RAM"),
+    "task-completion-observability": ("Governança & SRE", "Execução autônoma integral, proibição de tarefas incompletas, transparência de passos e conclusão garantida"),
+    "stripe-payments-engine": ("Backend & APIs", "Cobranças e pagamentos com Stripe: Checkout Sessions, Payment Intents, Webhooks com HMAC-SHA256 e Customer Portal"),
 }
 
 def parse_frontmatter(content: str):

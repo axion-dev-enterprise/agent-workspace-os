@@ -20,7 +20,7 @@ Presets de materiais PBR, técnicas de iluminação de estúdio e efeitos de pó
 
 1. **Key Light (Luz Principal)**:
    - Tipo: Direcional potente com projeção ortográfica para o shadow map.
-   - Posição: Superior diagonal $(4.0, 7.0, 5.0)$.
+   - Posição: Superior dOperatornal $(4.0, 7.0, 5.0)$.
    - Cor: Branco frio / neutro `vec3(1.0, 0.98, 0.95)`.
    - Gera sombras nítidas suavizadas por filtro PCF.
 2. **Rim Light (Luz de Contorno)**:

@@ -181,9 +181,9 @@ def register_identity(
             return False
 
 if __name__ == "__main__":
-    test_lid = "36735559962762@lid"
-    test_phone = "5511988045139"
-    test_tg = 8573157037
+    test_lid = os.environ.get("WHATSAPP_ADMIN_LID", "36735559900000") + "@lid"
+    test_phone = os.environ.get("WHATSAPP_ADMIN_NUMBER", "5511999999999")
+    test_tg = int(os.environ.get("TELEGRAM_ADMIN_CHAT_ID", "123456789"))
 
     p1 = resolve_identity(test_lid)
     print("Resolved LID:", p1["name"], "| Role:", p1["role"], "| Admin:", p1["is_admin"], "| Matched:", p1["matched_by"])

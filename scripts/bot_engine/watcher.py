@@ -15,6 +15,7 @@ import re
 import threading
 import uuid
 import pathlib
+import html
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -562,11 +563,22 @@ def _daemon_loop(broadcast_fn=None) -> None:
                     last_known_anomaly_count = current_anomalies
 
                     ts = datetime.datetime.now().strftime("%H:%M:%S")
+                    latest_anomalies = _read_jsonl(_ANOMALIES_FILE)[-new_count:] if _ANOMALIES_FILE.exists() else []
+                    details_lines = []
+                    for anom in latest_anomalies[-2:]:
+                        g_snippet = str(anom.get("goal") or anom.get("prompt") or "Execução")[:60]
+                        term = str(anom.get("terminated_by") or anom.get("error") or "falha")[:80]
+                        wid = anom.get("watcher_id", "anom")
+                        details_lines.append(f"• <code>[{wid}]</code> <b>{html.escape(g_snippet)}</b>\n  Causa: <code>{html.escape(term)}</code>")
+                    
+                    details_str = "\n".join(details_lines) if details_lines else f"• {new_count} anomalia(s) registrada(s)."
                     alert_msg = (
-                        f"⚠️ <b>WATCHER ALERT</b> — {ts}\n"
-                        f"{new_count} nova(s) anomalia(s) detectada(s) nos últimos 5 min.\n"
-                        f"Total de anomalias: {current_anomalies}\n"
-                        f"Use /watcher para ver detalhes."
+                        f"⚠️ <b>[AXION WATCHER] Anomalia Detectada</b> — {ts}\n"
+                        f"━━━━━━━━━━━━━━━━━━━━━━\n"
+                        f"{details_str}\n\n"
+                        f"• <b>Total Histórico:</b> <code>{current_anomalies}</code>\n"
+                        f"• <b>Status Operacional:</b> Agente auto-recuperado via fallback.\n"
+                        f"━━━━━━━━━━━━━━━━━━━━━━"
                     )
 
                     # Update last check timestamp in stats

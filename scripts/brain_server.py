@@ -306,8 +306,52 @@ def tg_html_to_whatsapp(text: str) -> str:
     text = re.sub(r'<[^>]+>', '', text)
     return html.unescape(text).strip()
 
-def _wa_send(to: str, message: str, buttons: list = None, is_admin: bool = False, edit_key: dict | str = None):
-    """Sends message directly back to WhatsApp bridge with optional interactive buttons and in-place editing"""
+def _format_help_html(is_admin=True) -> str:
+    """Renders the executive guide for the AXION autonomous co-pilot."""
+    return (
+        "<b>📖 CO-PILOTO AUTÔNOMO AXION — GUIA EXECUTIVO & OPERACIONAL</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        "⚡ <b>Motor Principal:</b> Xiaomi Mimo 2.6 Pro (Single-Pass & Streaming)\n"
+        "🖥️ <b>Orquestração Desktop:</b> Codex ⚡ | Antigravity 🧠 | OpenCode 🚀\n"
+        "🌐 <b>Canais Conectados:</b> WhatsApp Business + Telegram Bot + Brain API\n"
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        "<b>🖥️ 1. ORQUESTRAÇÃO DE AGENTES DESKTOP</b>\n"
+        "• <code>/desktop</code> ou <code>/agentes</code> — Painel de telemetria dos agentes desktop.\n"
+        "• <code>/quotas</code> — Saldo de cotas, rate-limits (429) e status de cooldowns.\n"
+        "• <code>/varrer</code> — Força varredura imediata de tarefas finalizadas em background.\n"
+        "<i>💬 Despacho em Linguagem Natural:</i>\n"
+        "  ↳ <i>\"Peça ao Codex para corrigir o bug de responsividade no checkout\"</i>\n"
+        "  ↳ <i>\"Peça ao Antigravity para validar as regras do AGENTS.md\"</i>\n"
+        "  ↳ <i>\"Peça ao OpenCode para rodar um teste de carga no endpoint\"</i>\n\n"
+        "<b>⚡ 2. INFRAESTRUTURA & HOST WINDOWS</b>\n"
+        "• <code>/status</code> — Telemetria ao vivo do PC (CPU, RAM, SSD, Tailnet Mesh, Uptime).\n"
+        "• <code>/cmd &lt;comando&gt;</code> — Executa comandos nativos no PowerShell / CMD com retorno imediato.\n"
+        "• <code>/services</code> ou <code>/pm2</code> — Status de saúde dos daemons de produção.\n"
+        "• <code>/brain</code> — Latência, requests ativos e integridade do Brain Server.\n"
+        "• <code>/clear</code> — Reinicia o contexto imediato da conversa mantendo o histórico salvo.\n\n"
+        "<b>📋 3. FILA DE TAREFAS EM BACKGROUND</b>\n"
+        "• <code>/tasks</code> — Lista as tarefas da esteira (pendentes, ativas e concluídas).\n"
+        "• <code>/task add &lt;instrução&gt;</code> — Enfileira nova tarefa com checkpointing e resiliência a falhas.\n\n"
+        "<b>🔒 4. GOVERNANÇA, SENTINEL & SEGURANÇA</b>\n"
+        "• <code>/aprovacoes</code> ou <code>/otp</code> — Central de códigos SMS/2FA e autorizações de clientes aguardando validação.\n"
+        "  ↳ <i>Hook Instantâneo:</i> Quando o cliente responde com código no WhatsApp, o Sentinel captura e notifica o CEO na hora!\n"
+        "• <code>/equipe</code> — Lista membros da equipe corporativa e permissões.\n"
+        "• <code>/leads</code> — Painel de captação, CRM e qualificação de novos leads do WhatsApp.\n"
+        "• <code>/cadastrar &lt;num&gt; &lt;cargo&gt; &lt;nome&gt;</code> — Autoriza operador corporativo.\n"
+        "• <code>/remover &lt;num&gt;</code> — Revoga acesso corporativo.\n\n"
+        "<b>📊 5. OBSERVABILIDADE & QUALIDADE (WATCHER)</b>\n"
+        "• <code>/watcher</code> — Painel executivo com métricas de completude, eficiência e scoring (A/B/C/D/F).\n\n"
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        "<b>💡 COMANDOS LIVRES EM LINGUAGEM NATURAL</b>\n"
+        "Você não precisa se limitar a comandos! Pode me enviar qualquer instrução em texto ou áudio:\n"
+        "• <i>\"Crie uma landing page de alta conversão para o projeto X e publique na Vercel\"</i>\n"
+        "• <i>\"Audite os containers Docker e veja se há algum processo travado\"</i>\n"
+        "• <i>\"Gere um resumo executivo das entregas de hoje\"</i>\n"
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    )
+
+def _wa_send(to: str, message: str, buttons: list = None, is_admin: bool = False, edit_key: dict | str = None, max_retries: int = 3):
+    """Sends message directly back to WhatsApp bridge with automatic retry on transient failure and edit fallback."""
     url = f"{WHATSAPP_BRIDGE_URL}/send-internal"
     payload_dict = {
         "to": to,
@@ -318,29 +362,59 @@ def _wa_send(to: str, message: str, buttons: list = None, is_admin: bool = False
     if edit_key:
         payload_dict["edit_key"] = edit_key
     payload = json.dumps(payload_dict).encode('utf-8')
-    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            return json.loads(resp.read().decode('utf-8'))
-    except Exception as e:
-        print(f"[Brain] Falha ao enviar resposta para WhatsApp ({to}): {e}")
-        return {"error": str(e)}
 
-def _wa_bridge_call(endpoint: str, data: dict = None, method: str = 'GET') -> dict:
-    """Invokes WhatsApp Bridge HTTP API endpoints"""
+    last_res = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                res_data = json.loads(resp.read().decode('utf-8'))
+                if res_data.get("success"):
+                    return res_data
+                last_res = res_data
+        except urllib.error.HTTPError as he:
+            try:
+                err_body = he.read().decode('utf-8')
+                last_res = json.loads(err_body)
+            except Exception:
+                last_res = {"error": f"HTTP {he.code}: {he.reason}"}
+        except Exception as e:
+            last_res = {"error": str(e)}
+
+        if attempt < max_retries:
+            time.sleep(1.5 * attempt)
+
+    # If edit attempt failed across all retries, fall back to sending as fresh new message
+    if edit_key:
+        print(f"[Brain] Edit WhatsApp falhou para {to} após {max_retries} tentativas. Enviando como nova mensagem...")
+        return _wa_send(to, message, buttons=buttons, is_admin=is_admin, edit_key=None, max_retries=2)
+
+    print(f"[Brain] Falha crítica ao enviar resposta para WhatsApp ({to}) após {max_retries} tentativas: {last_res}")
+    return last_res or {"error": "Falha no envio para WhatsApp", "success": False}
+
+def _wa_bridge_call(endpoint: str, data: dict = None, method: str = 'GET', max_retries: int = 3) -> dict:
+    """Invokes WhatsApp Bridge HTTP API endpoints with automatic retries on transient connection issues."""
     url = f"{WHATSAPP_BRIDGE_URL}{endpoint}"
     payload = json.dumps(data).encode('utf-8') if data is not None else None
-    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method=method)
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            return json.loads(resp.read().decode('utf-8'))
-    except urllib.error.HTTPError as he:
+
+    last_res = None
+    for attempt in range(1, max_retries + 1):
         try:
-            return json.loads(he.read().decode('utf-8'))
-        except Exception:
-            return {"error": str(he), "status": he.code}
-    except Exception as e:
-        return {"error": str(e)}
+            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method=method)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return json.loads(resp.read().decode('utf-8'))
+        except urllib.error.HTTPError as he:
+            try:
+                return json.loads(he.read().decode('utf-8'))
+            except Exception:
+                last_res = {"error": str(he), "status": he.code}
+        except Exception as e:
+            last_res = {"error": str(e)}
+
+        if attempt < max_retries:
+            time.sleep(1.0 * attempt)
+
+    return last_res or {"error": "Falha na chamada ao bridge", "success": False}
 
 def _dispatch_reply(chat_id, text_html, source='telegram', reply_markup=None, is_admin=False, edit_key=None):
     """Dispatches reply to the appropriate platform (Telegram or WhatsApp), supporting in-place editing"""
@@ -497,6 +571,8 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 lines.append('━━━━━━━━━━━━━━━━━━━━━━\n<i>Dica: /task add &lt;instrução&gt; para criar nova</i>')
                 msg_out = '\n'.join(lines)
         _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
         _mark_request_done(request_id, msg_out, [])
         return
 
@@ -509,25 +585,160 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
             f"Uptime: <code>{uptime_seconds:.0f}s</code> | Requests ativos: <code>{active_requests}</code>"
         )
         _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
         _mark_request_done(request_id, msg_out, [])
         return
 
-    # Direct command: /help
-    if cmd_token in ['/help', '/ajuda']:
-        msg_out = (
-            "<b>📖 GUIA DO CO-PILOTO AUTÔNOMO — AXION</b>\n"
-            "━━━━━━━━━━━━━━━━━━━━━━\n"
-            "<b>Comandos Rápidos:</b>\n"
-            "• <code>/status</code> — Telemetria do host (RAM, Disco, CPU)\n"
-            "• <code>/cmd &lt;comando&gt;</code> — Executa comando direto no Windows\n"
-            "• <code>/tasks</code> — Lista tarefas pendentes e ativas\n"
-            "• <code>/watcher</code> — Painel de observabilidade\n"
-            "• <code>/clear</code> — Limpa a memória recente da conversa\n"
-            "• <code>/brain</code> — Diagnóstico de saúde do cérebro\n\n"
-            "Envie qualquer instrução em linguagem natural para execução autônoma!"
-        )
-        _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+    # Direct command: /help, /ajuda, /menu
+    if cmd_token in ['/help', '/ajuda', '/menu']:
+        help_buttons = [
+            {"text": "📊 Telemetria", "query": "/status"},
+            {"text": "🖥️ Agentes Desktop", "query": "/desktop"},
+            {"text": "📋 Fila de Tarefas", "query": "/tasks"},
+            {"text": "🎯 Watcher Score", "query": "/watcher"},
+            {"text": "🔒 Aprovações OTP", "query": "/aprovacoes"},
+            {"text": "📈 Cotas e Limites", "query": "/quotas"}
+        ]
+        reply_markup = {
+            "inline_keyboard": [
+                [{"text": "📊 Telemetria", "callback_data": "act:telemetry"}, {"text": "🖥️ Agentes", "callback_data": "desktop:refresh"}],
+                [{"text": "📋 Tarefas", "callback_data": "act:task:list"}, {"text": "🎯 Watcher", "callback_data": "act:watcher"}],
+                [{"text": "🔒 Aprovações", "callback_data": "act:aprovacoes"}, {"text": "📈 Cotas", "callback_data": "act:quotas"}]
+            ],
+            "button_items": help_buttons
+        }
+        msg_out = _format_help_html(is_admin=is_admin)
+        _dispatch_reply(chat_id, msg_out, source=source, reply_markup=reply_markup, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
         _mark_request_done(request_id, msg_out, [])
+        return
+
+    # Direct command: /desktop or /agentes
+    if cmd_token in ['/desktop', '/agentes', '/orchestrator']:
+        lines = [
+            "<b>🖥️ PAINEL DE AGENTES DESKTOP — AXION ORCHESTRATOR</b>",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        ]
+        try:
+            from bot_engine import desktop_orchestrator
+            dash = desktop_orchestrator.get_orchestrator_dashboard()
+            for ag in dash.get("agents", []):
+                st_icon = "🟢" if ag.get("status") == "ready" and ag.get("ready") else ("🟡" if ag.get("status") in ["degraded", "rate_limited"] else "🔴")
+                cd_txt = f" | ⏳ Cooldown: {ag['cooldown_remaining']}s" if ag.get("cooldown_remaining", 0) > 0 else ""
+                lines.append(
+                    f"{st_icon} <b>{ag['name']}</b> ({ag['agent'].upper()})\n"
+                    f"   • Modelo: <code>{ag['model']}</code> | Tier: <code>{ag['tier'].upper()}</code>\n"
+                    f"   • Status: <code>{ag['status'].upper()}</code>{cd_txt}\n"
+                    f"   • Hoje: {ag['successful_today']} ok / {ag['failed_today']} falhas (Total: {ag['invocations_today']})\n"
+                )
+            lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            lines.append("<i>💡 Dica: Peça em texto livre: 'Peça ao Codex para...' ou envie /quotas</i>")
+        except Exception as de:
+            lines.append(f"⚠️ Erro ao consultar agentes desktop: <code>{de}</code>")
+        msg_out = "\n".join(lines)
+        desktop_buttons = [
+            {"text": "🔍 Varrer Tarefas", "query": "/varrer"},
+            {"text": "📈 Ver Cotas", "query": "/quotas"},
+            {"text": "📖 Guia Completo", "query": "/help"}
+        ]
+        _dispatch_reply(chat_id, msg_out, source=source, reply_markup={"button_items": desktop_buttons}, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
+        _mark_request_done(request_id, msg_out, [])
+        return
+
+    # Direct command: /quotas
+    if cmd_token in ['/quotas', '/cota', '/cotas']:
+        lines = [
+            "<b>📈 LEDGER DE COTAS E LIMITES DOS AGENTES DESKTOP</b>",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        ]
+        try:
+            from bot_engine import desktop_orchestrator
+            dash = desktop_orchestrator.get_orchestrator_dashboard()
+            lines.append(f"• <b>Data do Ledger:</b> <code>{dash.get('date')}</code>")
+            lines.append(f"• <b>Total de Invocações Hoje:</b> <code>{dash.get('total_invocations_today', 0)}</code>\n")
+            for ag in dash.get("agents", []):
+                st = ag.get("status", "unknown").upper()
+                lines.append(
+                    f"• <b>{ag['name']}:</b> <code>{st}</code>\n"
+                    f"  Modelo: <code>{ag['model']}</code> | Processos ativos: <code>{ag.get('running_processes', 0)}</code>\n"
+                    f"  Execuções: <b>{ag.get('successful_today', 0)}</b> sucesso | <b>{ag.get('failed_today', 0)}</b> falhas\n"
+                )
+            lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            lines.append("<i>Fallback inteligente ativado automaticamente em caso de 429 ou esgotamento.</i>")
+        except Exception as qe:
+            lines.append(f"⚠️ Erro ao carregar cotas: <code>{qe}</code>")
+        msg_out = "\n".join(lines)
+        _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
+        _mark_request_done(request_id, msg_out, [])
+        return
+
+    # Direct command: /aprovacoes or /otp
+    if cmd_token in ['/aprovacoes', '/aprovacao', '/otp']:
+        lines = [
+            "<b>🔒 CENTRAL DE APROVAÇÕES EXTERNAS & OTPs</b>",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        ]
+        try:
+            approvals_file = WORKSPACE_ROOT / "memory" / "cowork" / "pending_approvals.json"
+            approvals = []
+            if approvals_file.exists():
+                try:
+                    data = json.loads(approvals_file.read_text(encoding="utf-8"))
+                    approvals = data if isinstance(data, list) else data.get("approvals", [])
+                except Exception: pass
+
+            pendings = [a for a in approvals if a.get("status") == "pending"]
+            recent_resolved = [a for a in approvals if a.get("status") == "approved"][-3:]
+
+            lines.append(f"• <b>Pendentes:</b> <code>{len(pendings)}</code> | <b>Total no Histórico:</b> <code>{len(approvals)}</code>\n")
+            if not pendings:
+                lines.append("✅ <i>Nenhuma aprovação externa pendente no momento.</i>\n")
+            else:
+                lines.append("<b>Aprovações Aguardando Cliente:</b>")
+                for p in pendings:
+                    rem_txt = ""
+                    if p.get("expires_at"):
+                        try:
+                            exp_dt = datetime.datetime.fromisoformat(p["expires_at"].replace("Z", "+00:00"))
+                            rem_min = max(0, int((exp_dt - datetime.datetime.now(datetime.timezone.utc)).total_seconds() / 60))
+                            rem_txt = f" | Expira em: <b>{rem_min} min</b>"
+                        except Exception: pass
+                    lines.append(
+                        f"• <b>{p.get('project_name', 'Projeto')}</b> ({p.get('client_name', 'Cliente')} - <code>{p.get('client_phone')}</code>)\n"
+                        f"  Item: <i>{p.get('resource_type', 'Autenticação')}</i>{rem_txt}"
+                    )
+            if recent_resolved:
+                lines.append("\n<b>Últimas Validações Concluídas:</b>")
+                for r in recent_resolved:
+                    lines.append(f"• ✅ <b>{r.get('project_name')}:</b> Código <code>{r.get('received_code')}</code>")
+            lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            lines.append("<i>Quando o cliente responder no WhatsApp, o Sentinel processa instantaneamente.</i>")
+        except Exception as ape:
+            lines.append(f"⚠️ Erro ao consultar aprovações: <code>{ape}</code>")
+        msg_out = "\n".join(lines)
+        _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
+        _mark_request_done(request_id, msg_out, [])
+        return
+
+    # Direct command: /services or /pm2
+    if cmd_token in ['/services', '/pm2', '/processos']:
+        if tool_executor:
+            res = tool_executor.execute_tool('exec_command', {'cmd': 'pm2 status'})
+            msg_out = _format_tool_result_html('exec_command', res)
+        else:
+            msg_out = "⚠️ tool_executor não disponível."
+        _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
+        _mark_request_done(request_id, msg_out, ['exec_command'])
         return
 
     # Direct command: /start
@@ -540,6 +751,8 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
             "Basta me enviar qualquer pedido em texto livre!"
         )
         _dispatch_reply(chat_id, msg_out, source=source, is_admin=is_admin)
+        if message_store:
+            message_store.save_message(chat_id, 'outgoing', msg_out, metadata={'command': cmd_token, 'task_completed': True})
         _mark_request_done(request_id, msg_out, [])
         return
 
@@ -568,6 +781,8 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
         wa_last_sent_text = [""]
         wa_last_edit_time = [0.0]
         step_num = [0]
+        prog_lines_wa = []
+        wa_state_lock = threading.Lock()
 
         def on_step(sn, step_type, description):
             step_num[0] = sn
@@ -582,21 +797,31 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 visible_lines = step_lines[:1] + step_lines[-7:] if len(step_lines) > 8 else step_lines
                 _tg_edit(chat_id, prog_msg_id, '\n'.join(visible_lines))
                 _tg_typing(chat_id)
-            elif is_whatsapp and not is_final_dispatched[0]:
+            elif is_whatsapp:
+                with wa_state_lock:
+                    if is_final_dispatched[0]:
+                        return
+                    current_key = wa_msg_key[0]
+                    last_edit = wa_last_edit_time[0]
+                    last_text = wa_last_sent_text[0]
+
                 now = time.monotonic()
-                if not wa_msg_key[0]:
-                    init_text = f"⚙️ *Executando diagnóstico no ambiente...*\n{icon} *Passo {sn}:* {clean_desc}"
-                    res = _dispatch_reply(chat_id, init_text, source=source, is_admin=is_admin)
+                prog_lines_wa.append(f"{icon} *Passo {sn}:* {clean_desc}")
+                visible_wa = prog_lines_wa[:1] + prog_lines_wa[-5:] if len(prog_lines_wa) > 6 else prog_lines_wa
+                progress_text = "⚙️ *Executando tarefa no ambiente...*\n━━━━━━━━━━━━━━━━━━━━━━\n" + "\n".join(visible_wa)
+                if not current_key:
+                    res = _dispatch_reply(chat_id, progress_text, source=source, is_admin=is_admin)
                     if isinstance(res, dict) and res.get("success"):
-                        wa_msg_key[0] = res.get("key") or res.get("messageId")
-                        wa_last_sent_text[0] = init_text
-                        wa_last_edit_time[0] = now
-                elif now - wa_last_edit_time[0] >= 1.5:
-                    progress_text = f"⚙️ *Executando diagnóstico no ambiente...*\n\n{icon} *Passo {sn}:* {clean_desc}"
-                    if progress_text != wa_last_sent_text[0]:
-                        wa_last_sent_text[0] = progress_text
-                        wa_last_edit_time[0] = now
-                        _dispatch_reply(chat_id, progress_text, source=source, is_admin=is_admin, edit_key=wa_msg_key[0])
+                        with wa_state_lock:
+                            wa_msg_key[0] = res.get("key") or res.get("messageId")
+                            wa_last_sent_text[0] = progress_text
+                            wa_last_edit_time[0] = now
+                elif now - last_edit >= 1.5:
+                    if progress_text != last_text:
+                        with wa_state_lock:
+                            wa_last_sent_text[0] = progress_text
+                            wa_last_edit_time[0] = now
+                        _dispatch_reply(chat_id, progress_text, source=source, is_admin=is_admin, edit_key=current_key)
 
         def on_checkpoint(step_idx, messages, tools_executed, completed_steps):
             """Persists mid-execution state to disk for crash recovery."""
@@ -631,8 +856,10 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
             )
 
         def _handle_first_content(sentence):
-            if is_final_dispatched[0]:
-                return
+            with wa_state_lock:
+                if is_final_dispatched[0]:
+                    return
+                current_key = wa_msg_key[0]
             if not sentence or not sentence.strip():
                 return
             clean_sentence = sentence.strip()
@@ -647,11 +874,18 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 return
             if is_whatsapp:
                 print(f"[Brain] >> First Content despachado para WhatsApp ({chat_id}): \"{clean_sentence[:60]}...\"")
-                res = _dispatch_reply(chat_id, clean_sentence, source=source, is_admin=is_admin)
+                if current_key:
+                    res = _dispatch_reply(chat_id, clean_sentence, source=source, is_admin=is_admin, edit_key=current_key)
+                    if not (isinstance(res, dict) and res.get("success")):
+                        res = _dispatch_reply(chat_id, clean_sentence, source=source, is_admin=is_admin)
+                else:
+                    res = _dispatch_reply(chat_id, clean_sentence, source=source, is_admin=is_admin)
+
                 if isinstance(res, dict) and res.get("success"):
-                    wa_msg_key[0] = res.get("key") or res.get("messageId")
-                    wa_last_sent_text[0] = clean_sentence
-                    wa_last_edit_time[0] = time.monotonic()
+                    with wa_state_lock:
+                        wa_msg_key[0] = res.get("key") or res.get("messageId") or current_key
+                        wa_last_sent_text[0] = clean_sentence
+                        wa_last_edit_time[0] = time.monotonic()
             elif not is_whatsapp and prog_msg_id:
                 print(f"[Brain] >> First Content atualizado no Telegram ({chat_id})")
                 step_lines[0] = f'💬 <i>"{html.escape(clean_sentence)}"</i>\n━━━━━━━━━━━━━━━━━━━━━━'
@@ -659,20 +893,29 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 _tg_edit(chat_id, prog_msg_id, '\n'.join(visible_lines))
 
         def _handle_stream_update(accumulated_text):
-            if is_final_dispatched[0]:
-                return
+            with wa_state_lock:
+                if is_final_dispatched[0]:
+                    return
+                current_key = wa_msg_key[0]
+                last_edit = wa_last_edit_time[0]
+                last_text = wa_last_sent_text[0]
             if not accumulated_text or not accumulated_text.strip():
                 return
             clean_accum = accumulated_text.strip()
-            if is_whatsapp and wa_msg_key[0]:
+            if source == 'test' or str(chat_id).startswith('test'):
+                with _REQUESTS_LOCK:
+                    if request_id in _ACTIVE_REQUESTS:
+                        _ACTIVE_REQUESTS[request_id]['result_html'] = clean_accum
+            if is_whatsapp and current_key:
                 now = time.monotonic()
                 # Throttling de segurança Meta: espaça edições em tempo real em no mínimo 1.2s
-                if now - wa_last_edit_time[0] < 1.2:
+                if now - last_edit < 1.2:
                     return
-                if clean_accum != wa_last_sent_text[0]:
-                    wa_last_sent_text[0] = clean_accum
-                    wa_last_edit_time[0] = now
-                    _dispatch_reply(chat_id, clean_accum, source=source, is_admin=is_admin, edit_key=wa_msg_key[0])
+                if clean_accum != last_text:
+                    with wa_state_lock:
+                        wa_last_sent_text[0] = clean_accum
+                        wa_last_edit_time[0] = now
+                    _dispatch_reply(chat_id, clean_accum, source=source, is_admin=is_admin, edit_key=current_key)
             elif not is_whatsapp and prog_msg_id:
                 step_lines[0] = f'💬 <i>"{html.escape(clean_accum[:180])}..."</i>\n━━━━━━━━━━━━━━━━━━━━━━'
                 visible_lines = step_lines[:1] + step_lines[-7:] if len(step_lines) > 8 else step_lines
@@ -696,10 +939,14 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 is_lead=is_lead,
                 on_first_content=_handle_first_content,
                 on_stream_update=_handle_stream_update,
+                intent="CHAT_ONLY" if is_lead else None,
                 model=target_model
             )
             # Mark final dispatched to prevent late first content race condition
-            is_final_dispatched[0] = True
+            with wa_state_lock:
+                is_final_dispatched[0] = True
+                final_wa_key = wa_msg_key[0]
+
             if len(result) == 4:
                 ans_html, reply_markup, tools_used, execution_record = result
             else:
@@ -711,8 +958,11 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 _tg_delete(chat_id, prog_msg_id)
 
             # Send final response directly to Telegram or WhatsApp (in-place edit if streamed)
-            if is_whatsapp and wa_msg_key[0]:
-                _dispatch_reply(chat_id, ans_html, source=source, reply_markup=reply_markup, is_admin=is_admin, edit_key=wa_msg_key[0])
+            if is_whatsapp and final_wa_key:
+                edit_res = _dispatch_reply(chat_id, ans_html, source=source, reply_markup=reply_markup, is_admin=is_admin, edit_key=final_wa_key)
+                if not (isinstance(edit_res, dict) and edit_res.get("success")):
+                    print(f"[Brain WhatsApp] Edit falhou ({edit_res}), enviando resposta como nova mensagem...")
+                    _dispatch_reply(chat_id, ans_html, source=source, reply_markup=reply_markup, is_admin=is_admin)
             else:
                 _dispatch_reply(chat_id, ans_html, source=source, reply_markup=reply_markup, is_admin=is_admin)
             if message_store:
@@ -740,6 +990,10 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                     print(f'[Watcher] Erro: {we}')
 
         except Exception as e:
+            with wa_state_lock:
+                is_final_dispatched[0] = True
+                final_wa_key = wa_msg_key[0]
+
             import traceback
             err = traceback.format_exc()
             print(f'[Brain] Erro no request {request_id}: {err}')
@@ -754,7 +1008,14 @@ def _process_chat_request(request_id, chat_id, message, username, first_name,
                 )
             if not is_whatsapp and prog_msg_id:
                 _tg_delete(chat_id, prog_msg_id)
-            _dispatch_reply(chat_id, f'❌ <b>Erro interno do agente:</b> <code>{str(e)[:200]}</code>', source=source, is_admin=is_admin)
+
+            err_text = f'❌ <b>Erro interno do agente:</b> <code>{html.escape(str(e)[:200])}</code>' if not is_whatsapp else f'❌ *Erro interno do agente:* {str(e)[:200]}'
+            if is_whatsapp and final_wa_key:
+                edit_res = _dispatch_reply(chat_id, err_text, source=source, is_admin=is_admin, edit_key=final_wa_key)
+                if not (isinstance(edit_res, dict) and edit_res.get("success")):
+                    _dispatch_reply(chat_id, err_text, source=source, is_admin=is_admin)
+            else:
+                _dispatch_reply(chat_id, err_text, source=source, is_admin=is_admin)
             _mark_request_error(request_id, str(e))
     finally:
         chat_lock.release()
@@ -977,6 +1238,49 @@ def _process_callback(chat_id, query_text=None, action=None, username='', action
             formatted_res = _format_tool_result_html(tool_name, res)
             _dispatch_reply(chat_id, formatted_res, source=source, is_admin=is_admin)
 
+    elif action == 'desktop:refresh':
+        try:
+            from bot_engine import desktop_watcher
+            status_data = desktop_watcher.get_desktop_watcher_status()
+            notified = status_data.get("recent_alerts", [])
+            lines = [
+                '🖥️ <b>Painel de Agentes Desktop — AXION Enterprise</b>',
+                '━━━━━━━━━━━━━━━━━━━━━━',
+                '• <b>Antigravity:</b> 🟢 Ativo (Sessões & Background Tasks)',
+                '• <b>Codex:</b> 🟢 Ativo (Workspaces & Active Tasks)',
+                '• <b>OpenCode:</b> 🟢 Ativo (Active Tasks)',
+                f'• <b>Tarefas Notificadas:</b> <code>{status_data.get("total_monitored_finished", 0)}</code>',
+                '━━━━━━━━━━━━━━━━━━━━━━',
+                '<b>Últimas Tarefas Finalizadas:</b>'
+            ]
+            if not notified:
+                lines.append('• <i>Nenhuma tarefa finalizada recentemente.</i>')
+            else:
+                for t in notified[:5]:
+                    icon = '✅' if t.get('status') == 'completed' else '❌'
+                    time_str = (t.get('notified_at') or '')[11:16]
+                    lines.append(f"• {icon} <b>[{t.get('agent', 'Agente')}]</b> <code>{t.get('title', t.get('id', ''))}</code> ({time_str})")
+            lines.append('━━━━━━━━━━━━━━━━━━━━━━\n<i>Notificações proativas enviadas ao CEO Executive Operator.</i>')
+            buttons = [
+                [
+                    {"text": "🔄 Atualizar", "callback_data": "desktop:refresh"},
+                    {"text": "🔍 Varrer Agora", "callback_data": "desktop:scan"}
+                ]
+            ]
+            _dispatch_reply(chat_id, '\n'.join(lines), reply_markup={"inline_keyboard": buttons}, source=source, is_admin=is_admin)
+        except Exception as e:
+            _dispatch_reply(chat_id, f'⚠️ Erro ao atualizar painel desktop: <code>{e}</code>', source=source, is_admin=is_admin)
+
+    elif action == 'desktop:scan':
+        try:
+            from bot_engine import desktop_watcher
+            _dispatch_reply(chat_id, '🔍 <i>Executando varredura imediata de tarefas desktop...</i>', source=source, is_admin=is_admin)
+            res = desktop_watcher.scan_and_notify_finished_tasks(send_fn=_tentacle_send)
+            new_count = res.get('newly_notified_count', 0)
+            _dispatch_reply(chat_id, f'✅ <b>Varredura concluída!</b>\nNovas tarefas finalizadas encontradas: <code>{new_count}</code>', source=source, is_admin=is_admin)
+        except Exception as e:
+            _dispatch_reply(chat_id, f'⚠️ Erro na varredura desktop: <code>{e}</code>', source=source, is_admin=is_admin)
+
     elif query_text:
         # AI follow-up query from button
         if message_store:
@@ -1018,9 +1322,11 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                 source = body.get('source', 'telegram')
                 is_admin = bool(body.get('is_admin', False))
                 is_lead = bool(body.get('is_lead', False))
+                is_test = bool(body.get('test_mode', False))
+                dispatch_source = 'test' if is_test else source
                 request_id = 'req_' + str(uuid.uuid4())[:8]
-                _store_request(request_id, {'status': 'running', 'steps': [], 'chat_id': chat_id, 'started_at': datetime.datetime.now().isoformat(), 'source': source})
-                _EXECUTOR.submit(_process_chat_request, request_id, chat_id, message, username, first_name, source=source, is_admin=is_admin, is_lead=is_lead)
+                _store_request(request_id, {'status': 'running', 'steps': [], 'chat_id': chat_id, 'started_at': datetime.datetime.now().isoformat(), 'source': dispatch_source})
+                _EXECUTOR.submit(_process_chat_request, request_id, chat_id, message, username, first_name, source=dispatch_source, is_admin=is_admin, is_lead=is_lead)
                 self._send_json({'accepted': True, 'request_id': request_id})
             elif path == '/v1/tool':
                 tool_name = body.get('tool_name')
@@ -1129,6 +1435,60 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                 res = _wa_bridge_call('/whatsapp/send', data=body, method='POST')
                 status_code = 200 if res.get('success') else (403 if res.get('blocked_by_anti_ban') else 400)
                 self._send_json(res, status=status_code)
+            elif path == '/v1/desktop/scan':
+                try:
+                    from bot_engine import desktop_watcher
+                    res = desktop_watcher.scan_and_notify_finished_tasks(send_fn=_tentacle_send)
+                    self._send_json({"success": True, "result": res})
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/desktop/cli':
+                agent = body.get('agent', '').lower()
+                prompt = body.get('prompt', '')
+                subcmd = body.get('subcommand', '')
+                extra_args = body.get('extra_args', '')
+                timeout = int(body.get('timeout', 120))
+                try:
+                    from bot_engine import tool_executor
+                    if 'codex' in agent:
+                        res = tool_executor.run_codex_cli(prompt=prompt, subcommand=subcmd or 'exec', extra_args=extra_args, timeout=timeout)
+                    elif 'antigravity' in agent or 'agy' in agent:
+                        res = tool_executor.run_antigravity_cli(prompt=prompt, subcommand=subcmd or 'print', extra_args=extra_args, timeout=timeout)
+                    elif 'opencode' in agent:
+                        res = tool_executor.run_opencode_cli(prompt=prompt, subcommand=subcmd or 'run', extra_args=extra_args, timeout=timeout)
+                    else:
+                        res = {"success": False, "error": f"Agente desconhecido: '{agent}'. Suportados: codex, antigravity, opencode."}
+                    self._send_json(res)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/desktop/dispatch':
+                task_desc = body.get('task_description') or body.get('prompt', '')
+                pref_agent = body.get('preferred_agent')
+                timeout = int(body.get('timeout', 180))
+                try:
+                    from bot_engine import desktop_orchestrator
+                    res = desktop_orchestrator.dispatch_task_to_desktop_agent(
+                        task_description=task_desc,
+                        preferred_agent=pref_agent,
+                        timeout=timeout
+                    )
+                    self._send_json(res)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/approval/resolved':
+                appr_id = body.get('approval_id')
+                proj = body.get('project_name')
+                client_phone = body.get('client_phone')
+                code = body.get('code')
+                print(f"[Brain] POST /v1/approval/resolved: id={appr_id}, projeto={proj}, code={code}")
+                try:
+                    from bot_engine import client_approval
+                    if appr_id and code:
+                        client_approval.submit_approval_code(appr_id, code)
+                    client_approval._log_approval_to_journal("RESOLVIDO_VIA_HOOK", appr_id or "", proj or "", client_phone or "", "OTP/Aprovação", f"Código: {code}")
+                except Exception as je:
+                    print(f"[Brain] Erro ao registrar aprovação no diário: {je}")
+                self._send_json({"success": True})
             else:
                 self._send_json({'error': 'Not found'}, 404)
         except Exception as e:
@@ -1200,6 +1560,58 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
             elif path == '/v1/whatsapp/team':
                 res = _wa_bridge_call('/team', method='GET')
                 self._send_json(res)
+            elif path == '/v1/desktop/status':
+                try:
+                    from bot_engine import desktop_watcher
+                    self._send_json({"status": "ok", "telemetry": desktop_watcher.get_desktop_watcher_status()})
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/desktop/clis':
+                try:
+                    from bot_engine import tool_executor
+                    self._send_json(tool_executor.get_desktop_clis_status())
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path in ['/v1/desktop/quotas', '/v1/desktop/orchestrator']:
+                try:
+                    from bot_engine import desktop_orchestrator
+                    self._send_json(desktop_orchestrator.get_orchestrator_dashboard())
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/approvals':
+                try:
+                    from bot_engine import client_approval
+                    self._send_json({"status": "ok", "approvals": client_approval.load_approvals()})
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/email/latest-otp':
+                try:
+                    import importlib.util
+                    from pathlib import Path
+                    otp_file = Path("c:/workspace/services/agent-email/otp_client.py")
+                    spec = importlib.util.spec_from_file_location("axion_otp_client", otp_file)
+                    otp_mod = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(otp_mod)
+                    query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                    to_filter = query.get('to', ['dev@example.com'])[0]
+                    timeout = int(query.get('timeout', ['3'])[0])
+                    res = otp_mod.get_latest_email_otp(recipient=to_filter, timeout_seconds=timeout)
+                    self._send_json(res)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+            elif path == '/v1/email/inbox':
+                try:
+                    import importlib.util
+                    from pathlib import Path
+                    otp_file = Path("c:/workspace/services/agent-email/otp_client.py")
+                    spec = importlib.util.spec_from_file_location("axion_otp_client", otp_file)
+                    otp_mod = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(otp_mod)
+                    self._send_json(otp_mod.get_recent_emails())
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+
+
             else:
                 self._send_json({'error': 'Not found'}, 404)
         except Exception as e:

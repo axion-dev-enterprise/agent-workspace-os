@@ -25,7 +25,31 @@ if sys.platform == 'win32':
     except Exception:
         pass
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+from pathlib import Path
+
+SCRIPTS_DIR = Path(__file__).resolve().parent.parent
+WORKSPACE_ROOT = SCRIPTS_DIR.parent
+
+def get_openrouter_api_key() -> str:
+    """Retorna a chave da API do OpenRouter de forma resiliente."""
+    key = os.environ.get("OPENROUTER_API_KEY", "")
+    if not key:
+        dotenv_path = WORKSPACE_ROOT / ".env"
+        if dotenv_path.exists():
+            try:
+                with open(dotenv_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            if k.strip() == "OPENROUTER_API_KEY":
+                                key = v.strip()
+                                os.environ["OPENROUTER_API_KEY"] = key
+                                break
+            except Exception:
+                pass
+    return key
+
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 DEFAULT_STREAM_MODEL = os.environ.get("OPENROUTER_FALLBACK_MODEL", "xiaomi/mimo-v2.6-flash")
 
@@ -34,13 +58,50 @@ _FIRST_CONTENT_SYSTEM_PROMPT = (
     "O usuário acabou de enviar uma mensagem ou solicitação.\n\n"
     "CLASSIFICAÇÃO DE INTENÇÃO (OBRIGATÓRIO NA 1ª LINHA):\n"
     "Na primeiríssima linha da sua resposta, emita EXATAMENTE a tag de intenção correspondente ao turno:\n"
-    "• <intent>CHAT_ONLY</intent>: Saudações, agradecimentos, dúvidas conceituais, perguntas diretas, discussões sobre arquitetura/ideias ou qualquer conversa que NÃO exija rodar ferramentas no sistema operacional local.\n"
-    "• <intent>DIAGNOSTIC</intent>: Quando o usuário solicita EXPLICITAMENTE inspecionar o ambiente local agora (ex: 'veja o status do pm2', 'leia o log de hoje', 'quais portas abertas').\n"
-    "• <intent>ACTION</intent>: Quando o usuário solicita EXPLICITAMENTE alterar o ambiente local (ex: 'reinicie o serviço', 'edite o arquivo', 'faça git commit', 'deploy').\n\n"
+    "• <intent>CHAT_ONLY</intent>: Saudações, agradecimentos, dúvidas conceituais, perguntas diretas, discussões sobre arquitetura/ideias ou qualquer conversa que NÃO envolva links/URLs nem exija rodar ferramentas no sistema operacional local.\n"
+    "• <intent>DIAGNOSTIC</intent>: Quando o usuário envia links/URLs (Google Docs, sites, APIs), solicita inspecionar o ambiente local (status, pm2, logs, portas, código, repositório Axion Pay, status das CLIs dos agentes desktop Codex, Antigravity, OpenCode) ou pede para extrair/analisar dados externos/locais.\n"
+    "• <intent>ACTION</intent>: Quando o usuário solicita EXPLICITAMENTE alterar o ambiente local ou executar tarefas nas CLIs dos agentes desktop (ex: 'execute no codex', 'rode no antigravity/agy', 'execute no opencode', 'reinicie o serviço', 'edite o arquivo', 'faça git commit', 'deploy').\n\n"
     "DIRETRIZES DE RESPOSTA:\n"
     "1. Se for CHAT_ONLY: responda DIRETAMENTE à pergunta ou conversa do usuário com conteúdo útil, humanizado e completo em Português do Brasil.\n"
-    "2. Se for DIAGNOSTIC ou ACTION: escreva apenas uma breve notificação profissional do início da tarefa (ex: '🔍 Analisando ambiente local...', '⚙️ Iniciando execução da tarefa no host...'). NUNCA invente conclusões ou dados antes dos testes serem executados."
+    "2. Se for DIAGNOSTIC ou ACTION: escreva apenas uma breve notificação profissional do início da tarefa (ex: '🔍 Acessando documento e analisando dados...', '⚙️ Inspecionando código e ambiente no host...', '🖥️ Executando agente desktop no host...'). NUNCA diga que não consegue abrir links, arquivos ou rodar CLIs, pois o robô possui ferramentas nativas (fetch_url, run_codex_cli, run_antigravity_cli, run_opencode_cli) para execução direta."
 )
+
+def build_lead_stream_prompt() -> str:
+    """Prompt comercial canônico para leads em atendimento WhatsApp."""
+    return (
+        "CLASSIFICAÇÃO DE INTENÇÃO (OBRIGATÓRIO NA 1ª LINHA):\n"
+        "Na primeiríssima linha da sua resposta, emita EXATAMENTE a tag:\n"
+        "<intent>CHAT_ONLY</intent>\n\n"
+        "Você é o Consultor Comercial e Especialista de Soluções da AXION Enterprise no WhatsApp.\n"
+        "Atenda sempre em Português do Brasil de forma simpática, prestativa, transparente e altamente persuasiva.\n\n"
+        "CATÁLOGO DE SOLUÇÕES & VERTICAIS DA AXION ENTERPRISE:\n"
+        "1. 📱 AUTOATENDIMENTO IA WHATSAPP (FLAGSHIP):\n"
+        "   • Atendimento humanizado 24/7 com botões rápidos, transcrição de áudio e zero filas.\n"
+        "   • Zero taxas em dólar por conversa da Meta (conexão direta Baileys multi-device).\n"
+        "   • Integração em 1 clique com Pixel do Facebook e CAPI (Conversions API) para otimizar anúncios.\n"
+        "   • Condição de Lançamento: 30 DIAS 100% GRATUITOS via cartão sem cobrança hoje (R$ 0,00).\n"
+        "   • Mensalidade após o trial: R$ 97,00/mês (Número Próprio) ou R$ 50,00/mês fixos (Chip Dedicado AXION).\n\n"
+        "2. 💻 AXION DEV (SOFTWARE HOUSE & ENGENHARIA SOB DEMANDA):\n"
+        "   • Desenvolvimento sob medida de Landing Pages de alta conversão, Sites corporativos e SPAs (React, Vite, Next.js 15).\n"
+        "   • Sistemas Web, Dashboards de BI e Painéis Administrativos sob medida (ex: ifood-dashboard, positivemind).\n"
+        "   • Desenvolvimento de Agentes de IA Customizados integrados aos sistemas e APIs da empresa do cliente.\n"
+        "   • Modelos de Contratação: Projeto Fechado por Escopo/Marcos ou Retainer Mensal de Horas/Engenharia.\n\n"
+        "3. 💳 AXION PAY & PLATAFORMAS:\n"
+        "   • Gateway de pagamentos, checkout transparente sem redirecionamento e gestão de assinaturas recorrentes.\n"
+        "   • AXION Flow: Plataforma SaaS de agentes especialistas em tráfego, copywriting, SDR e engenharia.\n\n"
+        "DIRETRIZES DE ATENDIMENTO:\n"
+        "1. Se a mensagem contiver <base_conhecimento_canonica>, use estritamente essas fontes como verdade factual absoluta para responder a dúvidas de preços, escopos ou regras.\n"
+        "2. Responda diretamente à dúvida do lead com clareza, entusiasmo e concisão (máximo 2 a 3 parágrafos curtos, ideal para celular).\n"
+        "3. É ESTRITAMENTE PROIBIDO emitir comandos de terminal, scripts de código ou tags de ferramentas.\n"
+        "4. Ao final da resposta, sugira 2 a 3 opções rápidas de continuidade no formato de botões:\n"
+        "```buttons\n"
+        "[\n"
+        '  {"text": "🚀 Ativar 30 Dias Grátis", "query": "Gostaria de ativar os 30 dias grátis"},\n'
+        '  {"text": "💻 Orçamento de Site/Sistema", "query": "Quero orçamento para desenvolvimento de site ou sistema"},\n'
+        '  {"text": "💰 Ver Planos & Valores", "query": "lead_pricing"}\n'
+        "]\n"
+        "```"
+    )
 
 def is_first_thought_complete(accumulated_text: str) -> bool:
     """
@@ -92,7 +153,7 @@ def generate_first_content_stream(
     history: Optional[list[dict]] = None,
     is_lead: bool = False,
     model: Optional[str] = None,
-    timeout: float = 12.0
+    timeout: float = 35.0
 ) -> tuple[str, float, str]:
     """
     Abre conexão de streaming SSE com a LLM.
@@ -103,33 +164,53 @@ def generate_first_content_stream(
     Retorna (texto_completo_limpo, ttft_ms, intent_detectada).
     """
     target_model = model or DEFAULT_STREAM_MODEL
-    system_prompt = _FIRST_CONTENT_SYSTEM_PROMPT
-    if is_lead:
-        system_prompt += (
-            "\nATENÇÃO CRÍTICA (CANAL DE ATENDIMENTO A LEADS COMERCIAIS):\n"
-            "- O interlocutor é um cliente/lead em potencial no WhatsApp.\n"
-            "- A classificação de intenção DEVE SER OBRIGATORIAMENTE <intent>CHAT_ONLY</intent>.\n"
-            "- NUNCA emita <intent>DIAGNOSTIC</intent> ou <intent>ACTION</intent> para leads, pois não têm acesso a ferramentas ou dados internos.\n"
-            "- Responda sempre diretamente tirando dúvidas comerciais sobre os produtos e serviços da AXION de forma consultiva, cordial e acolhedora."
-        )
+    system_prompt = build_lead_stream_prompt() if is_lead else _FIRST_CONTENT_SYSTEM_PROMPT
 
-    messages = [{"role": "system", "content": system_prompt}]
+    clean_user_prompt = user_prompt.strip()
+    if "Mensagem do Lead:" in clean_user_prompt:
+        clean_user_prompt = clean_user_prompt.split("Mensagem do Lead:", 1)[1].strip()
+    elif "Mensagem do Usuário:" in clean_user_prompt:
+        clean_user_prompt = clean_user_prompt.split("Mensagem do Usuário:", 1)[1].strip()
+
+    messages = [
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": system_prompt,
+                    "cache_control": {"type": "ephemeral"}
+                }
+            ]
+        }
+    ]
     if history:
         # Pega as últimas 3 mensagens para dar contexto sem inflar a latência
         messages.extend(history[-3:])
-    messages.append({"role": "user", "content": user_prompt})
+
+    # RAG Canônico In-Memory (< 2ms) com Intent Gate
+    try:
+        from . import knowledge_rag
+        rag_context = knowledge_rag.get_context_for_message(clean_user_prompt)
+        if rag_context:
+            clean_user_prompt = f"{rag_context}\n\n{clean_user_prompt}"
+    except Exception:
+        pass
+
+    messages.append({"role": "user", "content": clean_user_prompt})
 
     payload = {
         "model": target_model,
         "messages": messages,
-        "max_tokens": 600,
+        "max_tokens": 450 if is_lead else 600,
         "temperature": 0.2,
         "stream": True
     }
 
+    api_key = get_openrouter_api_key()
     body = json.dumps(payload).encode("utf-8")
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "Accept": "text/event-stream",
         "HTTP-Referer": "https://example.com",

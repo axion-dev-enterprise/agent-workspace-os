@@ -17,7 +17,7 @@ Uso em código:
   load_vault()  # Carrega todas as variáveis para os.environ
 
 CLI:
-  python scripts/vault_loader.py audit  # Audita o status de todas as credenciais (valores mascarados)
+  python scripts/vault_loader.py audit  # Audita presença de credenciais sem exibir fragmentos
   python scripts/vault_loader.py sync   # Valida integridade do vault
 """
 
@@ -67,12 +67,10 @@ def load_vault(vault_dir: Path = VAULT_ROOT, override: bool = False) -> dict[str
 
 
 def mask_secret(value: str) -> str:
-    """Mascara credencial para exibição segura em auditorias."""
+    """Return presence-only output; even prefixes and suffixes are sensitive."""
     if not value:
         return "<VAZIO>"
-    if len(value) <= 8:
-        return "****"
-    return f"{value[:4]}...{value[-4:]}"
+    return "<REDACTED>"
 
 
 def audit_vault():
@@ -113,7 +111,9 @@ def audit_vault():
             print(f"   Caminho: {mod_index.parent.relative_to(VAULT_ROOT.parent)}")
 
             for var_name, var_info in vars_spec.items():
-                val = os.environ.get(var_name, "")
+                # Audit only categorized Vault files; inherited process variables
+                # are not proof that the credential is stored in the Vault.
+                val = loaded.get(var_name, "")
                 status = "[OK] CONFIGURADO" if val else "[ ] PENDENTE   "
                 masked = mask_secret(val)
                 req = "(Obrigatorio)" if var_info.get("required", False) else "(Opcional)   "

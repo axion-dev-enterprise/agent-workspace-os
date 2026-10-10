@@ -239,7 +239,7 @@ Quando o Circuit Breaker desarma:
 Em `message_store.py`, cada entrada passa a carregar sua taxonomia:
 ```json
 {
-  "chat_id": 8573157037,
+  "chat_id": 1234567890,
   "direction": "outgoing",
   "message_type": "system_broadcast",
   "text": "⚠️ Tentáculo de Backup: Sincronização Corporativa Pendente...",

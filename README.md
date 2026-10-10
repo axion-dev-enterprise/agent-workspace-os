@@ -16,26 +16,40 @@
 
 ---
 
-## Quick start
+## ⚡ Quick Start (Cold Start em 3 Passos)
 
-Copy the distribution, read the pre-flight, then customize the local manifest before enabling any connector:
-
+### 1. Clonar o Repositório
 ```bash
-git clone <your-fork-or-distribution-url> my-project
-cd my-project
-copy templates\workspace-manifest.template.json workspace\workspace-manifest.json
-copy templates\capability-policy.template.json workspace\capability-policy.json
+git clone https://github.com/axion-dev-enterprise/agent-workspace-os.git
+cd agent-workspace-os
 ```
 
-Before enabling a connector or entering credentials, read [Security](SECURITY.md), [the setup protocol](SETUP_PROTOCOL.md), and [the documentation index](docs/README.md). A setup request does not authorize messages, deployments, account changes, or other external mutations.
-
-### Run the Dashboard:
-
-| Platform | 1-Click Command | What Happens |
+### 2. Executar o Setup Automatizado (1-Click)
+| Plataforma | Comando 1-Click | O que o script faz |
 |---|---|---|
-| **Windows** | Double-click **`start.bat`** (or `npm start`) | Automatically starts server and opens **`http://127.0.0.1:8765`** in your default browser. |
-| **macOS / Linux** | Run **`./start.sh`** (or `npm start`) | Starts server and opens dashboard in your browser. |
-| **Any System (Python)** | Run **`python scripts/setup_server.py`** | Starts the zero-dependency threaded HTTP dashboard. |
+| **Windows** | Clique duplo em **`setup.bat`** (ou `.\setup.ps1`) | Valida Node.js e Python, instala módulos npm do WhatsApp Bridge, cria diretórios de logs/memória e gera seu `.env` a partir do template. |
+| **Linux / macOS** | Execute **`./setup.sh`** | Valida dependências, prepara diretórios e gera arquivo `.env`. |
+
+### 3. Configurar e Iniciar
+1. Abra o arquivo **`.env`** e configure suas chaves essenciais (`OPENROUTER_API_KEY`, `TELEGRAM_BOT_TOKEN`, etc.).
+2. Inicie todos os serviços com **`start.bat`** (Windows) ou **`./start.sh`** (Linux/macOS).
+3. **Brain API Server** estará ativo em: **`http://127.0.0.1:8765`**.
+4. WhatsApp Bridge escutando na porta **`4114`** (com pareamento via QR Code ou Pairing Code).
+
+---
+
+## 🏛️ Arquitetura e Principais Capacidades
+
+- 🧠 **Brain Server (`scripts/brain_server.py`)**: API HTTP central rodando na porta `:8765`, executando o loop autônomo ReAct com verificação de metas, fila de tarefas assíncronas persistentes e telemetria.
+- 📱 **Multi-Channel Bridges**:
+  - **WhatsApp Baileys Bridge (`scripts/whatsapp_bridge/server.js`)**: Buffer de reconexão de 12s, messageMemoryStore, menu de botões nativos interativos e proteção anti-ban.
+  - **Telegram Bot (`scripts/telegram_assistant_bot.py`)**: Thin client ultraleve desacoplado com long polling resiliente.
+- 💻 **Desktop Agents Orchestrator (`scripts/bot_engine/desktop_orchestrator.py`)**:
+  - Roteamento inteligente por especialização: **OpenAI Codex** (código e testes), **Google Antigravity** (arquitetura e governança) e **OpenCode** (scripts ágeis e fallback econômico).
+  - Controle de quotas, tolerância a rate limits (429) e failover automático em cascata.
+- 📊 **Watcher & Observabilidade (`scripts/bot_engine/watcher.py` e `desktop_watcher.py`)**:
+  - Avaliação de execuções com notas de A a F, detecção de anomalias, filtro anti-ruído (*anti-scratch shield*) e histerese de memória RAM.
+- 🧰 **Catálogo de 70 Skills Canônicas**: Infraestrutura, DevOps, Fullstack, IA, Segurança e Automação.
 
 ---
 

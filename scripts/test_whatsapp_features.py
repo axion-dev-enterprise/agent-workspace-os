@@ -18,7 +18,7 @@ except Exception:
     pass
 
 BRIDGE_URL = "http://127.0.0.1:4114/send-internal"
-TARGET_NUMBER = sys.argv[1].replace("+", "").replace("-", "").replace(" ", "") if len(sys.argv) > 1 else "5511988045139"
+TARGET_NUMBER = sys.argv[1].replace("+", "").replace("-", "").replace(" ", "") if len(sys.argv) > 1 else os.environ.get("WHATSAPP_ADMIN_NUMBER", "5511999999999")
 TARGET_JID = TARGET_NUMBER if "@" in TARGET_NUMBER else f"{TARGET_NUMBER}@s.whatsapp.net"
 
 def send_payload(payload_dict, description):
@@ -58,7 +58,7 @@ def main():
             {"type": "reply", "text": "⚡ Ativar Co-piloto", "query": "/status"},
             {"type": "url", "text": "🌐 Visitar Portal", "url": "https://axionenterprise.com"},
             {"type": "copy", "text": "📋 Copiar Chave PIX", "copyCode": "00020126580014br.gov.bcb.pix0136axion-hub-enterprise-pix-key5204000053039865802BR5925AXION ENTERPRISE TECH6009SAO PAULO62070503***6304E2CA"},
-            {"type": "call", "text": "📞 Ligar Suporte", "phoneNumber": "+5511988045139"}
+            {"type": "call", "text": "📞 Ligar Suporte", "phoneNumber": f"+{TARGET_NUMBER}"}
         ]
     }
     r1 = send_payload(p1, "1. Botões Interativos (Quick Reply + URL + CTA Copy + Call)")

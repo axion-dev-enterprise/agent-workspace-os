@@ -23,6 +23,13 @@ import argparse
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Set
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 IGNORE_DIRS = {
     ".git", "node_modules", ".next", "dist", "build", "out",
     ".cache", ".venv", "venv", "__pycache__", "temp", ".idea", ".vscode"

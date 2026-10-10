@@ -647,6 +647,95 @@ def handle_message(msg: dict):
         send_message(chat_id, _format_validate_run())
         return
 
+    # /desktop or /agentes — desktop agents monitoring panel
+    if first_token in ['/desktop', '/agentes', '/desktop_status']:
+        tg_api('sendChatAction', {'chat_id': chat_id, 'action': 'typing'})
+        res = _brain_get('/v1/desktop/status')
+        telem = res.get('telemetry', {})
+        if res.get('error') or not telem:
+            send_message(chat_id, f"⚠️ Erro ao obter status desktop: <code>{res.get('error', 'Sem resposta')}</code>")
+        else:
+            notified = telem.get('recent_alerts', [])
+            total = telem.get('total_monitored_finished', 0)
+            lines = [
+                '🖥️ <b>Painel de Agentes Desktop — AXION Enterprise</b>\n━━━━━━━━━━━━━━━━━━━━━━',
+                '• <b>Antigravity:</b> 🟢 Ativo (Sessões & Background Tasks)',
+                '• <b>Codex:</b> 🟢 Ativo (Workspaces & Active Tasks)',
+                '• <b>OpenCode:</b> 🟢 Ativo (Active Tasks)',
+                f'• <b>Tarefas Notificadas:</b> <code>{total}</code>',
+                '━━━━━━━━━━━━━━━━━━━━━━',
+                '<b>Últimas Tarefas Finalizadas:</b>'
+            ]
+            if not notified:
+                lines.append('• <i>Nenhuma tarefa finalizada recentemente.</i>')
+            else:
+                for t in notified[:5]:
+                    icon = '✅' if t.get('status') == 'completed' else '❌'
+                    time_str = (t.get('notified_at') or '')[11:16]
+                    lines.append(f"• {icon} <b>[{t.get('agent', 'Agente')}]</b> <code>{html.escape(t.get('title', t.get('id', '')))}</code> ({time_str})")
+            lines.append('━━━━━━━━━━━━━━━━━━━━━━\n<i>Notificações proativas enviadas ao CEO Executive Operator.</i>')
+            buttons = [
+                [
+                    {"text": "🔄 Atualizar", "callback_data": "desktop:refresh"},
+                    {"text": "🔍 Varrer Agora", "callback_data": "desktop:scan"}
+                ]
+            ]
+            send_message(chat_id, '\n'.join(lines), reply_markup={"inline_keyboard": buttons})
+        return
+
+    # /varrer — manual desktop scan trigger
+    if first_token in ['/varrer', '/scan_desktop']:
+        tg_api('sendChatAction', {'chat_id': chat_id, 'action': 'typing'})
+        send_message(chat_id, "🔍 <i>Executando varredura imediata de tarefas desktop...</i>")
+        res = call_brain('/v1/desktop/scan', {})
+        if res.get('error'):
+            send_message(chat_id, f"⚠️ Falha na varredura: <code>{res.get('error')}</code>")
+        else:
+            new_count = res.get('result', {}).get('newly_notified_count', 0)
+            send_message(chat_id, f"✅ <b>Varredura Desktop Concluída!</b>\nNovas tarefas finalizadas encontradas: <code>{new_count}</code>\nStatus: <b>Operacional</b>")
+        return
+
+    # /aprovacoes or /otp — client external approvals tracker
+    if first_token in ['/aprovacoes', '/aprovacao', '/otp']:
+        tg_api('sendChatAction', {'chat_id': chat_id, 'action': 'typing'})
+        res = _brain_get('/v1/approvals')
+        approvals = res.get('approvals', [])
+        pendings = [a for a in approvals if a.get('status') == 'pending']
+        recent_resolved = [a for a in approvals if a.get('status') == 'approved'][-3:]
+
+        lines = [
+            '🔒 <b>Central de Aprovações & OTPs — AXION</b>\n━━━━━━━━━━━━━━━━━━━━━━',
+            f'• <b>Aprovações Pendentes:</b> <code>{len(pendings)}</code>',
+            f'• <b>Total Registrado:</b> <code>{len(approvals)}</code>',
+            '━━━━━━━━━━━━━━━━━━━━━━'
+        ]
+
+        if not pendings:
+            lines.append('✅ <b>Nenhuma aprovação externa pendente no momento.</b>\nTodas as esteiras de projetos operam nominalmente.')
+        else:
+            lines.append('<b>Aprovações Aguardando Cliente:</b>')
+            now_dt = datetime.datetime.now()
+            for p in pendings:
+                try:
+                    exp_dt = datetime.datetime.fromisoformat(p.get('expires_at', ''))
+                    rem_min = max(0, int((exp_dt - now_dt).total_seconds() // 60))
+                except Exception:
+                    rem_min = '?'
+                lines.append(
+                    f"• <b>{html.escape(p.get('project_name', 'Projeto'))}</b> ({html.escape(p.get('client_name', 'Cliente'))} - <code>{p.get('client_phone')}</code>)\n"
+                    f"  Item: <i>{html.escape(p.get('resource_type', ''))}</i>\n"
+                    f"  Expira em: <b>{rem_min} min</b>"
+                )
+
+        if recent_resolved:
+            lines.append('\n<b>Últimas Resolvidas:</b>')
+            for r in recent_resolved:
+                lines.append(f"• ✅ <b>{html.escape(r.get('project_name', 'Projeto'))}:</b> Código <code>{html.escape(str(r.get('received_code', '')))}</code>")
+
+        lines.append('━━━━━━━━━━━━━━━━━━━━━━')
+        send_message(chat_id, '\n'.join(lines))
+        return
+
     # /help — help guide
     if first_token in ['/help', '/ajuda']:
         help_text = (
@@ -657,6 +746,10 @@ def handle_message(msg: dict):
             "• <code>/discover [handle]</code> — Descobre e pontua novos perfis de IA\n"
             "• <code>/validate</code> — Valida tecnicamente os insights mais recentes\n"
             "• <code>/vault</code> — Auditoria segura de credenciais do Vault\n\n"
+            "<b>Agentes Desktop & Aprovações:</b>\n"
+            "• <code>/desktop</code> ou <code>/agentes</code> — Monitor de tarefas desktop (Antigravity, Codex, OpenCode)\n"
+            "• <code>/varrer</code> — Varredura manual imediata de tarefas finalizadas\n"
+            "• <code>/aprovacoes</code> ou <code>/otp</code> — Monitor de aprovações externas & OTPs de clientes\n\n"
             "<b>Redes Sociais & Inteligência:</b>\n"
             "• <code>/social</code> — Presença digital do agente nas redes\n"
             "• <code>/twitter &lt;termo&gt;</code> ou <code>/x</code> — Tweets recentes (Syndication)\n"

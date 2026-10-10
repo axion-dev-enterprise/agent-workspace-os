@@ -14,7 +14,7 @@ Skill operacional para gerenciamento de rede mesh privada, nós computacionais r
 
 ## 1. Topologia da Tailnet (`taildb9106.ts.net`)
 
-- **Conta / Administrador**: `iago@example.com`
+- **Conta / Administrador**: `Operator@example.com`
 - **Domínio MagicDNS**: `taildb9106.ts.net`
 - **Nó Local**: `desktop-1t1e46h` (`100.64.188.73` - Windows 10)
 - **DERP Primário**: São Paulo (11.9ms latency)
@@ -22,7 +22,9 @@ Skill operacional para gerenciamento de rede mesh privada, nós computacionais r
 ### 1.1 Tabela de Nós Conectados
 | Hostname | IP Tailscale | IP Público / Origem | OS | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **`desktop-1t1e46h`** | `100.64.188.73` | Localhost | Windows | 🟢 Online (Self) |
+| **`poseidon`** (`desktop-1t1e46h`) | `100.64.188.73` | Localhost | Windows | 🟢 Online (Self) |
+| **`vps-node-01-core`** | `100.83.25.74` | `209.74.71.36` | Linux (Debian 13) | 🟢 Online (166ms direct) |
+| **`vps-node-01-clients`** | `100.93.18.70` | `209.74.86.49` | Linux (Debian 13) | 🟢 Online (167ms direct) |
 | **`vps-node-01-104-207-90-167`** | `100.64.0.1` | `104.207.90.167` | Linux | 🟢 Online (212ms) |
 | **`debian-2vcpu-amd-4gb-us-6tb9d`** | `100.64.0.2` | `104.207.81.120` | Linux | 🟢 Online (171ms) |
 | **`juliana-vps`** | `100.81.231.111` | `179.197.237.20` | Linux | 🟢 Online (7ms) |

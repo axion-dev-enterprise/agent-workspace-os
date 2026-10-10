@@ -34,7 +34,7 @@ Esta skill cobre três subsistemas integrados de comunicação e inteligência p
 |-------|----------|-----------|--------|
 | `developer@example.com` | Gmail | Git identity, GitHub, ops | ATIVO |
 | `agent@example.com` | Proton Bridge | Comunicações criptografadas | PENDING_SETUP |
-| `iago@example.com` | Google Workspace | Admin formal | ATIVO (GAM) |
+| `Operator@example.com` | Google Workspace | Admin formal | ATIVO (GAM) |
 
 ### Configuração via Env Vars
 
@@ -78,7 +78,7 @@ mgr = AgentEmailManager()
 # Enviar alerta
 mgr.send_agent_email(
     agent="axion-security",
-    to="iago@example.com",
+    to="Operator@example.com",
     subject="[ALERTA] SSL expirando em 7 dias",
     body="api.example.com expira em 2026-10-03",
 )

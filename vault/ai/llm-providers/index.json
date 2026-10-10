@@ -3,7 +3,7 @@
   "platform": "llm-providers",
   "name": "LLM Inference & AI API Keys",
   "description": "Chaves de API para modelos de linguagem e inferência em nuvem (OpenRouter, HuggingFace, OpenAI, Gemini).",
-  "updated_at": "2026-09-26T10:50:00Z",
+  "updated_at": "2026-10-07",
   "variables": {
     "OPENROUTER_API_KEY": {
       "type": "string",
@@ -46,6 +46,13 @@
       "required": false,
       "description": "Chave da API Anthropic Claude",
       "scope": "inference"
+    },
+    "OPENROUTER_API_KEY_FLOW": {
+      "type": "string",
+      "required": true,
+      "description": "OpenRouter exclusivo para a plataforma AXION Flow e tentáculos de agentes Flow ($50/mês)",
+      "scope": "flow-inference",
+      "monthly_limit_usd": 50
     }
   }
 }

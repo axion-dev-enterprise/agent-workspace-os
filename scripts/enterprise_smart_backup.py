@@ -81,7 +81,7 @@ def backup_google_drive(dest_dir):
             if not target_path.exists():
                 try:
                     subprocess.run(
-                        [str(GAM_BIN), "user", "iago@example.com", "get", "drivefile", "id", fid, "targetfolder", str(drive_dir)],
+                        [str(GAM_BIN), "user", "Operator@example.com", "get", "drivefile", "id", fid, "targetfolder", str(drive_dir)],
                         capture_output=True, timeout=15
                     )
                     downloaded += 1

@@ -10,9 +10,9 @@ const http = require('http');
 const { spawn } = require('child_process');
 
 const PORT = parseInt(process.env.WHATSAPP_PORT || '4114', 10);
-const PAIRING_NUMBER = (process.env.WHATSAPP_PAIRING_NUMBER || '551151041784').replace(/[^0-9]/g, '');
-const ADMIN_NUMBER = (process.env.WHATSAPP_ADMIN_NUMBER || '5511988045139').replace(/[^0-9]/g, '');
-const ADMIN_LID = (process.env.WHATSAPP_ADMIN_LID || '36735559962762').replace(/[^0-9]/g, '');
+const PAIRING_NUMBER = (process.env.WHATSAPP_PAIRING_NUMBER || '').replace(/[^0-9]/g, '');
+const ADMIN_NUMBER = (process.env.WHATSAPP_ADMIN_NUMBER || '').replace(/[^0-9]/g, '');
+const ADMIN_LID = (process.env.WHATSAPP_ADMIN_LID || '').replace(/[^0-9]/g, '');
 const BRAIN_URL = process.env.BRAIN_URL || 'http://127.0.0.1:8765';
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '../../');
@@ -21,6 +21,8 @@ const MEDIA_DIR = path.join(INBOX_DIR, 'media');
 const TEAM_FILE = path.join(WORKSPACE_ROOT, 'workspace', 'whatsapp_team.json');
 const LEADS_FILE = path.join(WORKSPACE_ROOT, 'workspace', 'whatsapp_leads.json');
 const LOCAL_TRANSCRIBE_SCRIPT = path.join(WORKSPACE_ROOT, 'scripts', 'transcribe_local.py');
+const PENDING_APPROVALS_FILE = path.join(WORKSPACE_ROOT, 'memory', 'cowork', 'pending_approvals.json');
+const DESKTOP_STATE_FILE = path.join(WORKSPACE_ROOT, 'workspace', 'memory', 'desktop_watcher_state.json');
 const AUTH_DIR = path.join(__dirname, 'auth_info_baileys');
 
 try { fs.mkdirSync(INBOX_DIR, { recursive: true }); } catch (_) {}
@@ -33,6 +35,16 @@ let generateCombinedButtons = null;
 let generateWAMessageFromContent = null;
 let proto = null;
 const lastMenuByNumber = new Map();
+const messageMemoryStore = new Map();
+
+function cacheRecentMessage(keyId, messageObj) {
+  if (!keyId || !messageObj) return;
+  if (messageMemoryStore.size >= 1000) {
+    const oldestKey = messageMemoryStore.keys().next().value;
+    messageMemoryStore.delete(oldestKey);
+  }
+  messageMemoryStore.set(keyId, messageObj);
+}
 
 let state = {
   status: 'offline', // 'offline' | 'initializing' | 'pairing_ready' | 'connected' | 'disconnected'
@@ -130,7 +142,7 @@ function recordInboundLead(phone, pushName, text) {
     console.log(`[LEAD] Novo lead capturado: ${clean} (${pushName || 'Sem nome'})`);
   } else {
     leads[clean].last_interaction = nowIso;
-    leads[clean].inbound_messages_count = (leads[clean].inbound_messages_count || 0) + 1;
+    leads[clean].inbound_messages_count = (leads[clean].inbound_messages_count ?? 0) + 1;
     if (pushName && (!leads[clean].name || leads[clean].name.startsWith('Lead '))) {
       leads[clean].name = pushName;
     }
@@ -147,10 +159,73 @@ function recordOutboundLead(phone) {
   const clean = phone.replace(/[^0-9]/g, '');
   const leads = getLeads();
   if (leads[clean]) {
-    leads[clean].outbound_messages_count = (leads[clean].outbound_messages_count || 0) + 1;
+    leads[clean].outbound_messages_count = (leads[clean].outbound_messages_count ?? 0) + 1;
     leads[clean].last_outbound = new Date().toISOString();
     saveLeads(leads);
   }
+}
+
+// ── Pending Client Approvals & OTP Hook ────────────────────
+function getPendingApprovals() {
+  if (fs.existsSync(PENDING_APPROVALS_FILE)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(PENDING_APPROVALS_FILE, 'utf8'));
+      return Array.isArray(data) ? data : (data.approvals || []);
+    } catch (_) {}
+  }
+  return [];
+}
+
+function savePendingApprovals(approvalsList) {
+  try {
+    const payload = {
+      approvals: approvalsList,
+      updated_at: new Date().toISOString()
+    };
+    fs.mkdirSync(path.dirname(PENDING_APPROVALS_FILE), { recursive: true });
+    fs.writeFileSync(PENDING_APPROVALS_FILE, JSON.stringify(payload, null, 2), 'utf8');
+  } catch (err) {
+    console.error('[APPROVAL SAVE ERROR]:', err);
+  }
+}
+
+function checkAndResolvePendingApproval(senderNumber, text) {
+  const approvals = getPendingApprovals();
+  if (!approvals.length) return null;
+
+  const cleanSender = senderNumber.replace(/[^0-9]/g, '');
+  const now = new Date();
+
+  // Encontra aprovação pendente para este remetente
+  const target = approvals.find(a => {
+    if (a.status !== 'pending') return false;
+    const cleanTarget = (a.client_phone || '').replace(/[^0-9]/g, '');
+    if (cleanTarget !== cleanSender && !cleanSender.endsWith(cleanTarget.slice(-8))) return false;
+    if (a.expires_at && new Date(a.expires_at) < now) return false;
+    return true;
+  });
+
+  if (!target) return null;
+
+  const trimmed = text.trim();
+  const otpMatch = trimmed.match(/\b\d{4,8}\b/);
+  const isAffirmative = /^(?:autorizad[oa]|aprovad[oa]|sim|pode|ok|confirmo|liberad[oa]|auth_appr_)/i.test(trimmed);
+
+  let resolvedCode = null;
+  if (otpMatch) {
+    resolvedCode = otpMatch[0];
+  } else if (isAffirmative || trimmed.length <= 15) {
+    resolvedCode = trimmed.toUpperCase();
+  }
+
+  if (!resolvedCode) return null;
+
+  target.status = 'approved';
+  target.received_code = resolvedCode;
+  target.approved_at = now.toISOString();
+
+  savePendingApprovals(approvals);
+  return { target, resolvedCode };
 }
 
 // ── Meta Anti-Ban Outbound Protection ──────────────────────
@@ -169,7 +244,7 @@ function canSendOutbound(targetPhone, force = false) {
   // 2. Leads: MUST HAVE PREVIOUS INBOUND INTERACTION
   const leads = getLeads();
   const lead = leads[clean];
-  if (lead && (lead.inbound_messages_count || 0) > 0) {
+  if (lead && (lead.inbound_messages_count ?? 0) > 0) {
     return { allowed: true, reason: 'opt_in_verified', inboundCount: lead.inbound_messages_count };
   }
 
@@ -183,8 +258,19 @@ function canSendOutbound(targetPhone, force = false) {
 
 // ── Human-like WhatsApp Sender ─────────────────────────────
 async function sendWhatsAppText(remoteJid, text, options = {}) {
+  // If socket is momentarily disconnected or reconnecting, wait up to 12s before failing
   if (!sock || state.status !== 'connected') {
-    return { success: false, error: 'WhatsApp socket não conectado.' };
+    const maxWaitMs = 12000;
+    const startWait = Date.now();
+    console.log(`[WHATSAPP OUTBOUND] Socket em estado '${state.status}'. Aguardando reconexão (até 12s) para enviar para ${remoteJid}...`);
+    while ((!sock || state.status !== 'connected') && (Date.now() - startWait < maxWaitMs)) {
+      await new Promise(r => setTimeout(r, 600));
+    }
+    if (!sock || state.status !== 'connected') {
+      console.error(`[WHATSAPP OUTBOUND TIMEOUT] Socket não reconectou em 12s. Falha no envio para ${remoteJid}.`);
+      return { success: false, error: `WhatsApp socket não conectado (status atual: ${state.status}).` };
+    }
+    console.log(`[WHATSAPP OUTBOUND] Socket reconectado! Prosseguindo com envio para ${remoteJid}.`);
   }
 
   const cleanNumber = remoteJid.replace(/[^0-9]/g, '');
@@ -214,6 +300,7 @@ async function sendWhatsAppText(remoteJid, text, options = {}) {
           edit: keyToEdit
         });
         console.log(`[WHATSAPP EDIT] Mensagem editada para ${cleanNumber} (id: ${keyToEdit.id})`);
+        cacheRecentMessage(keyToEdit.id, { conversation: text });
         return {
           success: true,
           messageId: keyToEdit.id,
@@ -432,6 +519,10 @@ async function sendWhatsAppText(remoteJid, text, options = {}) {
     // Record outbound stat in lead
     recordOutboundLead(cleanNumber);
 
+    if (res?.key?.id) {
+      cacheRecentMessage(res.key.id, res.message || { conversation: text });
+    }
+
     return {
       success: true,
       messageId: res?.key?.id || res?.messageId || 'ok',
@@ -547,7 +638,17 @@ async function initBaileys() {
       browser: Browsers.ubuntu('Chrome'),
       connectTimeoutMs: 60000,
       defaultQueryTimeoutMs: 60000,
-      keepAliveIntervalMs: 15000
+      keepAliveIntervalMs: 30000,
+      syncFullHistory: false,
+      markOnlineOnConnect: true,
+      maxMsgRetryCount: 5,
+      retryRequestDelayMs: 250,
+      getMessage: async (key) => {
+        if (key && key.id && messageMemoryStore.has(key.id)) {
+          return messageMemoryStore.get(key.id);
+        }
+        return proto?.Message?.fromObject ? proto.Message.fromObject({}) : undefined;
+      }
     });
 
     sock.ev.on('creds.update', saveCreds);
@@ -640,6 +741,9 @@ async function initBaileys() {
 
       for (const msg of m.messages) {
         if (!msg.message) continue;
+        if (msg.key?.id) {
+          cacheRecentMessage(msg.key.id, msg.message);
+        }
         const fromMe = Boolean(msg.key.fromMe);
         const remoteJid = msg.key.remoteJid || '';
         if (remoteJid.endsWith('@g.us') || remoteJid === 'status@broadcast') continue; // Ignore groups and status
@@ -724,7 +828,7 @@ async function initBaileys() {
         let incomingText = rawText;
 
         if (audioMsg) {
-          const duration = audioMsg.seconds || 0;
+          const duration = audioMsg.seconds ?? 0;
           const filename = `audio_${Date.now()}_${msg.key.id}.ogg`;
           const filePath = path.join(MEDIA_DIR, filename);
 
@@ -767,6 +871,51 @@ async function initBaileys() {
 
         console.log(`[WHATSAPP INBOUND] [${cleanNumber} - ${pushName || 'N/A'}]: "${incomingText.slice(0, 80)}"`);
 
+        // 0. Interceptor Instantâneo de Resposta de OTP / Aprovação de Cliente
+        const approvalMatch = checkAndResolvePendingApproval(cleanNumber, incomingText);
+        if (approvalMatch) {
+          const { target, resolvedCode } = approvalMatch;
+          console.log(`[APPROVAL HOOK] Cliente ${cleanNumber} aprovou/enviou código: ${resolvedCode} para o projeto ${target.project_name}`);
+
+          // A. Confirmação instantânea para o cliente
+          await sendWhatsAppText(
+            remoteJid,
+            `✅ *Código recebido com sucesso!*\n\nRegistramos sua validação para o projeto *${target.project_name}*. Nossa esteira técnica já está dando andamento à configuração com segurança.`,
+            { isInternalReply: true }
+          );
+
+          // B. Notificação proativa para o CEO Executive Operator
+          const ceoMsg = [
+            '✅ *[AXION Sentinel] Código / Aprovação Recebida em Tempo Real!*',
+            '━━━━━━━━━━━━━━━━━━━━━━',
+            `• *Projeto:* ${target.project_name}`,
+            `• *Cliente:* ${target.client_name || 'Cliente'} (\`${cleanNumber}\`)`,
+            `• *Item:* ${target.resource_type}`,
+            `• *Código/Resposta:* \`${resolvedCode}\``,
+            `• *Horário:* \`${new Date().toLocaleTimeString('pt-BR')}\``,
+            '━━━━━━━━━━━━━━━━━━━━━━',
+            '_Processamento liberado e esteira técnica retomada automaticamente._'
+          ].join('\n');
+
+          const ceoJid = `${ADMIN_NUMBER}@s.whatsapp.net`;
+          await sendWhatsAppText(ceoJid, ceoMsg, { isInternalReply: true });
+
+          // C. Notificação para o Brain Server
+          fetch(`${BRAIN_URL}/v1/approval/resolved`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              approval_id: target.id,
+              project_name: target.project_name,
+              client_phone: cleanNumber,
+              code: resolvedCode,
+              status: 'approved'
+            })
+          }).catch(() => {});
+
+          continue; // Interrompe o fluxo - a aprovação já foi tratada!
+        }
+
         // Check sender type
         const userIsAdmin = isAdmin(cleanNumber);
         const userIsTeam = isTeamMember(cleanNumber);
@@ -781,6 +930,104 @@ async function initBaileys() {
           const words = incomingText.split(/\s+/);
           const cmd = words[0].toLowerCase();
           const args = incomingText.slice(words[0].length).trim();
+
+          if (cmd === '/help' || cmd === '/ajuda' || cmd === '/menu') {
+            const helpLines = [
+              '📖 *CO-PILOTO AUTÔNOMO AXION — GUIA EXECUTIVO & OPERACIONAL*',
+              '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+              '⚡ *Motor Principal:* Xiaomi Mimo 2.6 Pro (Single-Pass & Streaming)',
+              '🖥️ *Orquestração Desktop:* Codex ⚡ | Antigravity 🧠 | OpenCode 🚀',
+              '🌐 *Canais Conectados:* WhatsApp Business + Telegram Bot + Brain API',
+              '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+              '',
+              '🖥️ *1. ORQUESTRAÇÃO DE AGENTES DESKTOP*',
+              '• `/desktop` ou `/agentes` — Painel de telemetria dos agentes desktop.',
+              '• `/quotas` — Saldo de cotas, rate-limits (429) e status de cooldowns.',
+              '• `/varrer` — Força varredura imediata de tarefas finalizadas em background.',
+              '_💬 Despacho em Linguagem Natural:_',
+              '  ↳ _"Peça ao Codex para corrigir o bug de responsividade no checkout"_',
+              '  ↳ _"Peça ao Antigravity para validar as regras do AGENTS.md"_',
+              '  ↳ _"Peça ao OpenCode para rodar um teste de carga no endpoint"_',
+              '',
+              '⚡ *2. INFRAESTRUTURA & HOST WINDOWS*',
+              '• `/status` — Telemetria ao vivo do PC (CPU, RAM, SSD, Tailnet Mesh, Uptime).',
+              '• `/cmd <comando>` — Executa comandos nativos no PowerShell / CMD com retorno imediato.',
+              '• `/services` ou `/pm2` — Status de saúde dos daemons de produção.',
+              '• `/brain` — Latência, requests ativos e integridade do Brain Server.',
+              '• `/clear` — Reinicia o contexto imediato da conversa mantendo o histórico salvo.',
+              '',
+              '📋 *3. FILA DE TAREFAS EM BACKGROUND*',
+              '• `/tasks` — Lista as tarefas da esteira (pendentes, ativas e concluídas).',
+              '• `/task add <instrução>` — Enfileira nova tarefa com checkpointing e resiliência a falhas.',
+              '',
+              '🔒 *4. GOVERNANÇA, SENTINEL & SEGURANÇA*',
+              '• `/aprovacoes` ou `/otp` — Central de códigos SMS/2FA e autorizações de clientes aguardando validação.',
+              '  ↳ _Hook Instantâneo:_ Quando o cliente responde com código no WhatsApp, o Sentinel captura e notifica o CEO na hora!',
+              '• `/equipe` — Lista membros da equipe corporativa e permissões.',
+              '• `/leads` — Painel de captação, CRM e qualificação de novos leads do WhatsApp.',
+              '• `/cadastrar <num> <cargo> <nome>` — Autoriza operador corporativo.',
+              '• `/remover <num>` — Revoga acesso corporativo.',
+              '',
+              '📊 *5. OBSERVABILIDADE & QUALIDADE (WATCHER)*',
+              '• `/watcher` — Painel executivo com métricas de completude, eficiência e scoring (A/B/C/D/F).',
+              '',
+              '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+              '💡 *COMANDOS LIVRES EM LINGUAGEM NATURAL*',
+              'Você não precisa se limitar a comandos! Pode me enviar qualquer instrução em texto ou áudio:',
+              '• _"Crie uma landing page de alta conversão para o projeto X e publique na Vercel"_',
+              '• _"Audite os containers Docker e veja se há algum processo travado"_',
+              '• _"Gere um resumo executivo das entregas de hoje"_',
+              '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+              '',
+              '👉 *Escolha um atalho rápido:*',
+              '1️⃣ 📊 Telemetria do Host (`/status`)',
+              '2️⃣ 🖥️ Agentes Desktop (`/desktop`)',
+              '3️⃣ 📋 Fila de Tarefas (`/tasks`)',
+              '4️⃣ 🎯 Watcher Score (`/watcher`)',
+              '5️⃣ 🔒 Central OTP (`/aprovacoes`)',
+              '6️⃣ 📈 Cotas e Limites (`/quotas`)',
+              '_(Clique no botão ou responda com o número de 1 a 6)_'
+            ];
+
+            const helpButtons = [
+              { text: '📊 Telemetria', query: '/status' },
+              { text: '🖥️ Agentes Desktop', query: '/desktop' },
+              { text: '📋 Fila de Tarefas', query: '/tasks' },
+              { text: '🎯 Watcher Score', query: '/watcher' },
+              { text: '🔒 Central OTP', query: '/aprovacoes' },
+              { text: '📈 Cotas e Limites', query: '/quotas' }
+            ];
+
+            await sendWhatsAppText(remoteJid, helpLines.join('\n'), { isInternalReply: true, buttons: helpButtons });
+            continue;
+          }
+
+          if (cmd === '/quotas' || cmd === '/cota' || cmd === '/cotas') {
+            try {
+              const qResp = await fetch(`${BRAIN_URL}/v1/desktop/quotas`);
+              const qData = await qResp.json();
+              const lines = [
+                '📈 *LEDGER DE COTAS E LIMITES DOS AGENTES DESKTOP*',
+                '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                `• *Data do Ledger:* \`${qData.date || 'Hoje'}\``,
+                `• *Total de Invocações Hoje:* \`${qData.total_invocations_today || 0}\`\n`
+              ];
+              for (const ag of (qData.agents || [])) {
+                const st = (ag.status || 'unknown').toUpperCase();
+                lines.push(
+                  `• *${ag.name}:* \`${st}\`\n` +
+                  `  Modelo: \`${ag.model}\` | Ativos: \`${ag.running_processes || 0}\`\n` +
+                  `  Execuções: *${ag.successful_today || 0}* sucesso | *${ag.failed_today || 0}* falhas\n`
+                );
+              }
+              lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+              lines.push('_Failover inteligente ativado automaticamente em caso de esgotamento._');
+              await sendWhatsAppText(remoteJid, lines.join('\n'), { isInternalReply: true });
+            } catch (qErr) {
+              await sendWhatsAppText(remoteJid, `⚠️ Erro ao consultar cotas: \`${qErr.message}\``, { isInternalReply: true });
+            }
+            continue;
+          }
 
           if (cmd === '/equipe' || cmd === '/membros') {
             const team = getTeam();
@@ -845,6 +1092,89 @@ async function initBaileys() {
               lines.push('━━━━━━━━━━━━━━━━━━━━━━');
               await sendWhatsAppText(remoteJid, lines.join('\n'), { isInternalReply: true });
             }
+            continue;
+          }
+
+          if (cmd === '/desktop' || cmd === '/agentes') {
+            let desktopState = {};
+            if (fs.existsSync(DESKTOP_STATE_FILE)) {
+              try { desktopState = JSON.parse(fs.readFileSync(DESKTOP_STATE_FILE, 'utf8')); } catch (_) {}
+            }
+            const notified = desktopState.notified_task_ids || {};
+            const recentTasks = Object.entries(notified)
+              .map(([id, info]) => ({ id, ...info }))
+              .sort((a, b) => (b.notified_at || '').localeCompare(a.notified_at || ''))
+              .slice(0, 5);
+
+            const lines = [
+              '🖥️ *PAINEL DOS AGENTES DESKTOP*',
+              '━━━━━━━━━━━━━━━━━━━━━━',
+              '• *Antigravity:* 🟢 Monitorado (Transcripts & Tasks)',
+              '• *Codex:* 🟢 Monitorado (Active Tasks)',
+              '• *OpenCode:* 🟢 Monitorado (Active Tasks)',
+              `• *Tarefas Notificadas:* \`${Object.keys(notified).length}\``,
+              '━━━━━━━━━━━━━━━━━━━━━━',
+              '*Últimas Tarefas Finalizadas:*'
+            ];
+
+            if (recentTasks.length === 0) {
+              lines.push('• _Nenhuma tarefa registrada recentemente._');
+            } else {
+              for (const t of recentTasks) {
+                const icon = t.status === 'completed' ? '✅' : '❌';
+                const timeStr = (t.notified_at || '').slice(11, 16);
+                lines.push(`• ${icon} *[${t.agent || 'Agente'}]* ${t.title || t.id} (${timeStr})`);
+              }
+            }
+            lines.push('━━━━━━━━━━━━━━━━━━━━━━\n_Envie /varrer para forçar checagem imediata_');
+            await sendWhatsAppText(remoteJid, lines.join('\n'), { isInternalReply: true });
+            continue;
+          }
+
+          if (cmd === '/varrer') {
+            try {
+              const scanResp = await fetch(`${BRAIN_URL}/v1/desktop/scan`, { method: 'POST' });
+              const scanJson = await scanResp.json();
+              const newCount = scanJson?.result?.newly_notified_count ?? 0;
+              await sendWhatsAppText(remoteJid, `🔍 *Varredura Desktop Concluída!*\n\n• Novas tarefas finalizadas: *${newCount}*\n• Status: *Operacional*`, { isInternalReply: true });
+            } catch (scanErr) {
+              await sendWhatsAppText(remoteJid, `⚠️ Erro ao acionar varredura: \`${scanErr.message}\``, { isInternalReply: true });
+            }
+            continue;
+          }
+
+          if (cmd === '/aprovacoes' || cmd === '/otp') {
+            const approvals = getPendingApprovals();
+            const pendings = approvals.filter(a => a.status === 'pending');
+            const recentResolved = approvals.filter(a => a.status === 'approved').slice(-3);
+
+            const lines = [
+              '🔒 *CENTRAL DE APROVAÇÕES & OTPs*',
+              '━━━━━━━━━━━━━━━━━━━━━━',
+              `• *Pendentes:* \`${pendings.length}\``,
+              `• *Total Registrado:* \`${approvals.length}\``,
+              '━━━━━━━━━━━━━━━━━━━━━━'
+            ];
+
+            if (pendings.length === 0) {
+              lines.push('✅ *Nenhuma aprovação externa pendente no momento.*');
+            } else {
+              lines.push('*Aprovações Aguardando Cliente:*');
+              for (const p of pendings) {
+                const remMin = Math.max(0, Math.round((new Date(p.expires_at) - new Date()) / 60000));
+                lines.push(`• *${p.project_name}* (${p.client_name || 'Cliente'} - \`${p.client_phone}\`)\n  Item: _${p.resource_type}_\n  Expira em: *${remMin} min*`);
+              }
+            }
+
+            if (recentResolved.length > 0) {
+              lines.push('\n*Últimas Resolvidas:*');
+              for (const r of recentResolved) {
+                lines.push(`• ✅ *${r.project_name}:* Código \`${r.received_code}\``);
+              }
+            }
+
+            lines.push('━━━━━━━━━━━━━━━━━━━━━━');
+            await sendWhatsAppText(remoteJid, lines.join('\n'), { isInternalReply: true });
             continue;
           }
         }

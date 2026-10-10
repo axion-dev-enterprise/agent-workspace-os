@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "AXION Enterprise Secrets Vault",
   "description": "Repositório centralizado, categorizado e seguro de credenciais, chaves de API e tokens de autenticação para o ecossistema de agentes AXION.",
-  "updated_at": "2026-09-29T18:20:00Z",
+  "updated_at": "2026-10-10T20:00:00Z",
   "governance": {
     "policy": "Zero Credential Logging & Strict Isolation",
     "git_status": "All .env files under vault/ are strictly ignored by .gitignore",
@@ -26,6 +26,7 @@
       "path": "vault/ai",
       "platforms": [
         "llm-providers",
+        "isabela-clients",
         "elevenlabs"
       ]
     },
@@ -36,7 +37,9 @@
       "platforms": [
         "cloudflare",
         "vercel",
-        "shopify"
+        "shopify",
+        "spaceship-vps",
+        "isabela-clients"
       ]
     },
     {
@@ -53,7 +56,9 @@
       "path": "vault/security",
       "platforms": [
         "proton",
-        "tailscale"
+        "tailscale",
+        "auth-center-core",
+        "juliana-legacy-vps"
       ]
     },
     {
@@ -61,7 +66,8 @@
       "name": "Pagamentos & Credenciais de Teste",
       "path": "vault/payments",
       "platforms": [
-        "axion-staging"
+        "axion-staging",
+        "isabela-staging"
       ]
     }
   ]

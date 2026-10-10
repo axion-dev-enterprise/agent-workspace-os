@@ -1,6 +1,6 @@
 # Shopify — SPA Pharma Brasil
 
-Credencial temporária recebida em 2026-09-29 para mapear a loja e configurar o pixel Meta 1220130745803712.
+Credencial temporária atualizada em 2026-10-02 pelo operador para autenticação da conta Shopify. O login anterior foi substituído; os valores vigentes ficam exclusivamente no arquivo .env ignorado pelo Git.
 Valores exclusivamente no arquivo .env ignorado pelo Git. Nunca incluir senha em relatórios.
 Consumo programático: scripts.vault_loader.load_vault(). Não há serviço automático configurado.
 O titular pode rotacionar a senha nas configurações de segurança da conta Shopify ou usar a recuperação oficial; alterações de senha devem ser realizadas pelo titular.

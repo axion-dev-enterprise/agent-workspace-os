@@ -403,7 +403,7 @@
   "google_workspace": {
     "domain": "example.com",
     "customer_id": "C03xtme8f",
-    "admin_email": "iago@example.com",
+    "admin_email": "Operator@example.com",
     "gcp_project_id": "gam-project-w1te0",
     "service_account": "gam-project-w1te0@gam-project-w1te0.iam.gserviceaccount.com",
     "service_account_client_id": "101149439906308817169",
@@ -414,8 +414,8 @@
     "authorized_scopes_count": 42
   },
   "skills": {
-    "total_active": 63,
-    "synced_at": "2026-10-02T12:59:42.857896+00:00",
+    "total_active": 70,
+    "synced_at": "2026-10-10T20:50:38.673726+00:00",
     "skills_list": [
       "agent-email-social-intelligence",
       "agentic-engineering-suite",
@@ -423,11 +423,16 @@
       "anti-slop-ui-craft",
       "antigravity-cli",
       "claude-nine-loops-reasoning",
+      "client-otp-approval",
       "cloudflare-edge-ops",
       "cloudflare-zero-trust-tunnels",
       "content-3d-social-studio",
       "cron-scheduled-tasks",
+      "desktop-agents-cli",
+      "desktop-agents-orchestrator",
+      "desktop-agents-watcher",
       "deterministic-3d-motion-pipeline",
+      "executive-notification-governance",
       "fastapi-async-api",
       "gam-ops",
       "gcp-cloud-ops",
@@ -469,6 +474,7 @@
       "stripe-payments-engine",
       "tailscale-mesh-vpn",
       "tailwind-shadcn-ux",
+      "task-completion-observability",
       "telegram-bot-ops",
       "terraform-iac-automation",
       "threejs-gsap-animation",
@@ -479,12 +485,13 @@
       "web-security-pentest",
       "web-vitals-performance",
       "whatsapp-baileys-bot-ops",
-      "windows-hardware-performance-tuning"
+      "windows-hardware-performance-tuning",
+      "zero-bypass-auth-governance"
     ]
   },
   "tailnet": {
     "domain": "taildb9106.ts.net",
-    "admin": "iago@example.com",
+    "admin": "Operator@example.com",
     "nearest_derp": "São Paulo (11.9ms)",
     "local_node": {
       "hostname": "desktop-1t1e46h",

@@ -361,7 +361,7 @@ def scan_google_and_local():
                 data["google_workspace"] = {
                     "domain": d_info.get("primary_domain", "example.com"),
                     "customer_id": d_info.get("customer_id", "C03xtme8f"),
-                    "admin": d_info.get("admin_email", "iago@example.com"),
+                    "admin": d_info.get("admin_email", "Operator@example.com"),
                     "delegation_status": "FULLY_AUTHORIZED",
                     "drive_assets_count": len(gw_raw.get("drive_assets", [])),
                     "shared_drives_count": len(gw_raw.get("shared_drives", [])),

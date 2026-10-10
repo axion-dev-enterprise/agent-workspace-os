@@ -31,7 +31,7 @@ gcloud projects list
 gcloud config set project gam-project-w1te0
 
 # Autenticar nova sessão admin
-gcloud auth login iago@example.com
+gcloud auth login Operator@example.com
 ```
 
 ### 2.2 Secret Manager (Armazenamento Seguro de Tokens)
