@@ -148,42 +148,59 @@ def scan_repository(repo_root: Path) -> list:
     # 2. Check file contents for forbidden string patterns
     compiled_patterns = [(pat, re.compile(pat, re.IGNORECASE)) for pat in FORBIDDEN_PATTERNS]
     
-    for root, dirs, files in os.walk(repo_root):
-        # Prune excluded directories in-place
-        dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS]
+    # Prefer Git-tracked files to prevent false positives from untracked/ignored workspace directories
+    tracked_files = []
+    try:
+        git_res = subprocess.run(["git", "ls-files"], cwd=str(repo_root), capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if git_res.returncode == 0:
+            tracked_files = [f.strip() for f in git_res.stdout.splitlines() if f.strip()]
+    except Exception:
+        pass
+
+    if tracked_files:
+        candidate_paths = [repo_root / f for f in tracked_files]
+    else:
+        candidate_paths = []
+        for root, dirs, files in os.walk(repo_root):
+            dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS]
+            for file in files:
+                candidate_paths.append(Path(root) / file)
+
+    for full_path in candidate_paths:
+        if not full_path.is_file():
+            continue
+        rel_str = str(full_path.relative_to(repo_root)).replace("\\", "/")
+        if any(part in EXCLUDED_DIRS for part in rel_str.split("/")):
+            continue
+        if full_path.name in EXCLUDED_FILES or rel_str in EXCLUDED_FILES or any(rel_str.endswith(f"/{ef}") for ef in EXCLUDED_FILES):
+            continue
+        ext = os.path.splitext(full_path.name)[1].lower()
+        if ext in BINARY_EXTENSIONS:
+            continue
         
-        for file in files:
-            full_path = Path(root) / file
-            rel_str = str(full_path.relative_to(repo_root)).replace("\\", "/")
-            if file in EXCLUDED_FILES or rel_str in EXCLUDED_FILES or any(rel_str.endswith(f"/{ef}") for ef in EXCLUDED_FILES):
-                continue
-            ext = os.path.splitext(file)[1].lower()
-            if ext in BINARY_EXTENSIONS:
-                continue
+        try:
+            content = full_path.read_text(encoding="utf-8", errors="ignore")
+            for raw_pat, comp_pat in compiled_patterns:
+                matches = list(comp_pat.finditer(content))
+                if matches:
+                    lines = content.splitlines()
+                    for m in matches:
+                        line_no = content[:m.start()].count("\n") + 1
+                        line_text = lines[line_no - 1].strip() if line_no <= len(lines) else ""
+                        violations.append({
+                            "type": "FORBIDDEN_STRING",
+                            "file": rel_str,
+                            "line": line_no,
+                            "pattern": raw_pat,
+                            "snippet": line_text[:100]
+                        })
+        except Exception as e:
+            violations.append({
+                "type": "READ_ERROR",
+                "file": rel_str,
+                "message": str(e)
+            })
             
-            try:
-                content = full_path.read_text(encoding="utf-8", errors="ignore")
-                for raw_pat, comp_pat in compiled_patterns:
-                    matches = list(comp_pat.finditer(content))
-                    if matches:
-                        lines = content.splitlines()
-                        for m in matches:
-                            line_no = content[:m.start()].count("\n") + 1
-                            line_text = lines[line_no - 1].strip() if line_no <= len(lines) else ""
-                            violations.append({
-                                "type": "FORBIDDEN_STRING",
-                                "file": rel_str,
-                                "line": line_no,
-                                "pattern": raw_pat,
-                                "snippet": line_text[:100]
-                            })
-            except Exception as e:
-                violations.append({
-                    "type": "READ_ERROR",
-                    "file": rel_str,
-                    "message": str(e)
-                })
-                
     return violations
 
 def main():
