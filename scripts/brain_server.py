@@ -22,7 +22,7 @@ if sys.platform == 'win32':
         pass
 
 # Setup paths
-WORKSPACE_ROOT = Path('C:/workspace')
+WORKSPACE_ROOT = Path(os.environ.get('WORKSPACE_ROOT', Path(__file__).resolve().parent.parent))
 sys.path.append(str(WORKSPACE_ROOT / 'scripts'))
 
 # Load environment secrets (.env / vault)
@@ -1714,7 +1714,7 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                 try:
                     import importlib.util
                     from pathlib import Path
-                    otp_file = Path("c:/workspace/services/agent-email/otp_client.py")
+                    otp_file = WORKSPACE_ROOT / "services" / "agent-email" / "otp_client.py"
                     spec = importlib.util.spec_from_file_location("axion_otp_client", otp_file)
                     otp_mod = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(otp_mod)
@@ -1729,7 +1729,7 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                 try:
                     import importlib.util
                     from pathlib import Path
-                    otp_file = Path("c:/workspace/services/agent-email/otp_client.py")
+                    otp_file = WORKSPACE_ROOT / "services" / "agent-email" / "otp_client.py"
                     spec = importlib.util.spec_from_file_location("axion_otp_client", otp_file)
                     otp_mod = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(otp_mod)
