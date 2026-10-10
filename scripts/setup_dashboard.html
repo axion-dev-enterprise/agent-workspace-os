@@ -344,8 +344,14 @@
       <circle cx="12" cy="12" r="4"/>
     </svg>
     <span>Agent Workspace OS</span>
+    <span class="header-badge" style="margin-left:8px;">Control &amp; Setup Center</span>
   </div>
-  <span class="header-badge">Setup &amp; Control Center</span>
+  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <span id="hdr-brain-pill" class="pill pill-success">🧠 Brain :8765</span>
+    <span id="hdr-wa-pill" class="pill pill-warning">📱 WhatsApp :4114</span>
+    <span id="hdr-tg-pill" class="pill pill-muted">✈️ Telegram</span>
+    <span id="hdr-desktop-pill" class="pill pill-info">🖥️ Desktop Agents</span>
+  </div>
 </header>
 
 <main>
@@ -561,22 +567,59 @@
           <span class="pill pill-muted" id="wa-status-pill">Verificando...</span>
         </div>
 
-        <!-- 1-Click Launch Button (shown when offline) -->
-        <div id="wa-start-wrap" style="margin-bottom: 16px;">
-          <button class="btn" id="btn-start-wa" style="width:100%; justify-content:center; padding:12px; font-size:0.9rem; font-weight:600;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Iniciar Bridge &amp; Gerar QR Code
+        <!-- Pairing Method Switcher (Pairing Code vs QR Code) -->
+        <div style="display:flex; gap:8px; margin-bottom:14px; background:rgba(255,255,255,0.03); padding:4px; border-radius:8px; border:1px solid var(--card-border);">
+          <button class="btn btn-sm" id="btn-toggle-pair-code" style="flex:1; justify-content:center; background:var(--accent);">
+            🔑 Código de Pareamento (Fácil)
           </button>
-          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:6px; text-align:center;">
-            Inicia o serviço local na porta 4114 e prepara o pareamento instantâneo.
-          </p>
+          <button class="btn btn-sm btn-secondary" id="btn-toggle-pair-qr" style="flex:1; justify-content:center;">
+            📷 QR Code
+          </button>
         </div>
 
-        <!-- QR Code Visual Display -->
-        <div class="qr-container" id="wa-qr-container">
+        <!-- 1. Pairing Code Container (DEFAULT & RECOMMENDED) -->
+        <div id="wa-pairing-box" style="padding: 16px; background: rgba(59,130,246,0.06); border: 2px dashed rgba(59,130,246,0.3); border-radius: 12px; margin-bottom: 16px; text-align: center;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#93c5fd; font-weight:600; margin-bottom:6px;">
+            Código de Pareamento de 8 Dígitos
+          </div>
+          <div id="wa-pairing-code-display" style="font-family:var(--font-mono); font-size:2.2rem; font-weight:800; letter-spacing:6px; color:#60a5fa; margin: 10px 0; user-select:all;">
+            Aguardando...
+          </div>
+          <div style="display:flex; justify-content:center; gap:8px; margin-bottom:12px;">
+            <button class="btn btn-sm btn-success" id="btn-copy-pairing-code">
+              📋 Copiar Código
+            </button>
+            <button class="btn btn-sm btn-secondary" id="btn-refresh-pairing-code" title="Atualizar">
+              🔄 Atualizar
+            </button>
+          </div>
+          
+          <div style="text-align:left; background:#18181f; padding:12px; border-radius:8px; font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
+            <div style="font-weight:600; color:var(--text); margin-bottom:4px;">Como conectar no WhatsApp do celular:</div>
+            <ol style="margin-left:16px;">
+              <li>Abra o <strong>WhatsApp</strong> &gt; Menu (3 pontos ou Ajustes) &gt; <strong>Aparelhos Conectados</strong>.</li>
+              <li>Toque em <strong>Conectar um aparelho</strong>.</li>
+              <li>Toque na opção inferior: <strong>"Conectar com número de telefone"</strong>.</li>
+              <li>Digite o código de 8 dígitos mostrado acima.</li>
+            </ol>
+          </div>
+
+          <div style="margin-top:14px; text-align:left; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px;">
+            <div style="font-size:0.75rem; font-weight:500; color:var(--text-muted); margin-bottom:6px;">Gerar novo código para outro número:</div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="input-pairing-phone" class="form-input" placeholder="Número com DDD (ex: 5511999999999)" style="font-size:0.8rem;">
+              <button class="btn btn-secondary btn-sm" id="btn-request-pairing-code" style="white-space:nowrap;">
+                Gerar Código
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. QR Code Container (Alternative) -->
+        <div class="qr-container" id="wa-qr-container" style="display:none;">
           <img id="wa-qr-img" class="qr-image" src="" alt="WhatsApp QR Code" style="display:none;">
           <span id="wa-qr-placeholder" style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding: 20px;">
-            Bridge offline. Clique no botão acima para iniciar e gerar o QR Code.
+            Aguardando geração do QR Code...
           </span>
           <div id="wa-connected-box" style="display:none; text-align:center;">
             <div style="font-size:0.95rem; font-weight:600; color:var(--success); margin-bottom:4px;">Dispositivo Conectado com Sucesso!</div>
@@ -585,12 +628,12 @@
         </div>
 
         <!-- QR Instructions -->
-        <div class="qr-steps" id="wa-steps-card">
-          <div style="font-weight:600; color:var(--text); margin-bottom:4px;">Como parear:</div>
+        <div class="qr-steps" id="wa-steps-card" style="display:none;">
+          <div style="font-weight:600; color:var(--text); margin-bottom:4px;">Como parear por QR Code:</div>
           <ol>
-            <li>Abra o <strong>WhatsApp</strong> no seu smartphone.</li>
+            <li>Abra o <strong>WhatsApp</strong> no smartphone.</li>
             <li>Toque em <strong>Aparelhos conectados</strong> &gt; <strong>Conectar um aparelho</strong>.</li>
-            <li>Aponte a c&#226;mera para o QR Code acima.</li>
+            <li>Aponte a câmera para o QR Code acima.</li>
           </ol>
         </div>
 
@@ -1401,12 +1444,22 @@ response = client.chat.completions.create(
         if (connBox) connBox.style.display = 'block';
         if (numEl) numEl.textContent = 'Número Ativo: ' + (data.connectedNumber || 'Sessão Ativa');
         if (stepsCard) stepsCard.style.display = 'none';
+        var pb = document.getElementById('wa-pairing-box');
+        if (pb) pb.style.display = 'none';
       } else {
-        // qr_ready or starting
-        if (pill) { pill.textContent = 'Aguardando Leitura'; pill.className = 'pill pill-warning'; }
+        // qr_ready or pairing_ready or disconnected
+        var pCode = data.pairingCode || data.pairing_code;
+        if (pill) {
+          pill.textContent = pCode ? ('Código: ' + pCode) : 'Aguardando Pareamento';
+          pill.className = 'pill pill-warning';
+        }
         if (startWrap) startWrap.style.display = 'none';
         if (connBox) connBox.style.display = 'none';
-        if (stepsCard) stepsCard.style.display = 'block';
+
+        var pairDisplay = document.getElementById('wa-pairing-code-display');
+        if (pCode && pairDisplay) {
+          pairDisplay.textContent = pCode;
+        }
 
         if (data.lastQrImage && qrImg) {
           qrImg.src = data.lastQrImage;
@@ -1419,6 +1472,9 @@ response = client.chat.completions.create(
               qrImg.src = qrd.qr_image;
               qrImg.style.display = 'block';
               if (placeholder) placeholder.style.display = 'none';
+            }
+            if (qrd.pairing_code && pairDisplay) {
+              pairDisplay.textContent = qrd.pairing_code;
             }
           }).catch(function() {});
         }
@@ -1492,6 +1548,95 @@ response = client.chat.completions.create(
         showToast('Bridge reiniciada.', 'info');
         return loadWhatsApp();
       }).finally(function() { setLoading(self, false); });
+    });
+  }
+
+  // Pairing Code Mode vs QR Code Mode Toggles
+  var btnTogglePairCode = document.getElementById('btn-toggle-pair-code');
+  var btnTogglePairQr = document.getElementById('btn-toggle-pair-qr');
+  var waPairingBox = document.getElementById('wa-pairing-box');
+  var waQrContainer = document.getElementById('wa-qr-container');
+  var waStepsCard = document.getElementById('wa-steps-card');
+
+  if (btnTogglePairCode && btnTogglePairQr) {
+    btnTogglePairCode.addEventListener('click', function() {
+      btnTogglePairCode.style.background = 'var(--accent)';
+      btnTogglePairCode.className = 'btn btn-sm';
+      btnTogglePairQr.style.background = 'none';
+      btnTogglePairQr.className = 'btn btn-sm btn-secondary';
+      if (waPairingBox) waPairingBox.style.display = 'block';
+      if (waQrContainer) waQrContainer.style.display = 'none';
+      if (waStepsCard) waStepsCard.style.display = 'none';
+    });
+
+    btnTogglePairQr.addEventListener('click', function() {
+      btnTogglePairQr.style.background = 'var(--accent)';
+      btnTogglePairQr.className = 'btn btn-sm';
+      btnTogglePairCode.style.background = 'none';
+      btnTogglePairCode.className = 'btn btn-sm btn-secondary';
+      if (waPairingBox) waPairingBox.style.display = 'none';
+      if (waQrContainer) waQrContainer.style.display = 'flex';
+      if (waStepsCard) waStepsCard.style.display = 'block';
+    });
+  }
+
+  // Copy Pairing Code
+  var btnCopyPairCode = document.getElementById('btn-copy-pairing-code');
+  if (btnCopyPairCode) {
+    btnCopyPairCode.addEventListener('click', function() {
+      var display = document.getElementById('wa-pairing-code-display');
+      var code = display ? display.textContent.trim() : '';
+      if (code && code !== 'Aguardando...' && code !== '--------') {
+        navigator.clipboard.writeText(code).then(function() {
+          showToast('Código copiado: ' + code, 'success');
+        }).catch(function() {
+          showToast('Código: ' + code, 'info');
+        });
+      } else {
+        showToast('Nenhum código ativo no momento.', 'warning');
+      }
+    });
+  }
+
+  // Refresh Pairing Code
+  var btnRefreshPairCode = document.getElementById('btn-refresh-pairing-code');
+  if (btnRefreshPairCode) {
+    btnRefreshPairCode.addEventListener('click', function() {
+      loadWhatsApp().then(function() {
+        showToast('Status do WhatsApp atualizado!', 'info');
+      });
+    });
+  }
+
+  // Request new Pairing Code for Phone Number
+  var btnReqPairCode = document.getElementById('btn-request-pairing-code');
+  if (btnReqPairCode) {
+    btnReqPairCode.addEventListener('click', function() {
+      var phoneInput = document.getElementById('input-pairing-phone');
+      var phone = phoneInput ? phoneInput.value.replace(/[^0-9]/g, '') : '';
+      if (!phone || phone.length < 10) {
+        showToast('Digite um número válido com DDI e DDD (ex: 5511999999999)', 'warning');
+        return;
+      }
+      var self = this;
+      setLoading(self, true, 'Gerando...');
+      fetch('/api/whatsapp/pair', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ number: phone })
+      }).then(function(r) { return r.json(); }).then(function(res) {
+        setLoading(self, false);
+        if (res.success && res.pairing_code) {
+          var display = document.getElementById('wa-pairing-code-display');
+          if (display) display.textContent = res.pairing_code;
+          showToast('Novo código gerado: ' + res.pairing_code, 'success');
+        } else {
+          showToast('Erro ao gerar código: ' + (res.error || 'Verifique o número'), 'danger');
+        }
+      }).catch(function(err) {
+        setLoading(self, false);
+        showToast('Erro de conexão: ' + err.message, 'danger');
+      });
     });
   }
 
@@ -1662,12 +1807,66 @@ response = client.chat.completions.create(
     });
   }
 
+  // ── Header Status Pills ───────────────────────────────────
+  function updateHeaderPills() {
+    fetch('/api/status/summary').then(function(r) { return r.json(); }).then(function(data) {
+      // 1. Brain Pill
+      var brainPill = document.getElementById('hdr-brain-pill');
+      if (brainPill && data.brain) {
+        var bPort = data.brain.port || 8765;
+        brainPill.className = 'pill pill-success';
+        brainPill.textContent = '🧠 Brain :' + bPort;
+      }
+      // 2. WhatsApp Pill
+      var waPill = document.getElementById('hdr-wa-pill');
+      if (waPill && data.whatsapp) {
+        var waSt = data.whatsapp.status || 'offline';
+        if (waSt === 'connected') {
+          waPill.className = 'pill pill-success';
+          waPill.textContent = '📱 WhatsApp Conectado';
+        } else if (waSt === 'qr_ready' || waSt === 'pairing_ready' || data.whatsapp.pairingCode) {
+          waPill.className = 'pill pill-warning';
+          waPill.textContent = '📱 WhatsApp :4114 (Parear)';
+        } else {
+          waPill.className = 'pill pill-muted';
+          waPill.textContent = '📱 WhatsApp :4114';
+        }
+      }
+      // 3. Telegram Pill
+      var tgPill = document.getElementById('hdr-tg-pill');
+      if (tgPill && data.telegram) {
+        if (data.telegram.configured) {
+          tgPill.className = 'pill pill-success';
+          tgPill.textContent = '✈️ Telegram Online';
+        } else {
+          tgPill.className = 'pill pill-muted';
+          tgPill.textContent = '✈️ Telegram';
+        }
+      }
+      // 4. Desktop Agents Pill
+      var desktopPill = document.getElementById('hdr-desktop-pill');
+      if (desktopPill && data.desktop) {
+        var count = data.desktop.monitored_tasks || 0;
+        desktopPill.className = 'pill pill-info';
+        desktopPill.textContent = '🖥️ Desktop Agents' + (count > 0 ? ' (' + count + ')' : '');
+      }
+    }).catch(function() {
+      var brainPill = document.getElementById('hdr-brain-pill');
+      if (brainPill) {
+        brainPill.className = 'pill pill-danger';
+        brainPill.textContent = '🧠 Brain Offline';
+      }
+    });
+  }
+
   // ── Init ──────────────────────────────────────────────────
   loadPreflight();
   loadDriveStatus();
   loadConfig();
   loadWhatsApp();
+  updateHeaderPills();
   setInterval(loadWhatsApp, 3500);
+  setInterval(updateHeaderPills, 4000);
 
 })();
 </script>

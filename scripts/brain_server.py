@@ -1298,6 +1298,16 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):  # suppress default logging
         pass
     
+    def _cors(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self._cors()
+        self.end_headers()
+
     def _read_body(self):
         length = int(self.headers.get('Content-Length', 0))
         return json.loads(self.rfile.read(length).decode('utf-8')) if length else {}
@@ -1305,8 +1315,9 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
     def _send_json(self, data, status=200):
         body = json.dumps(data, ensure_ascii=False, default=str).encode('utf-8')
         self.send_response(status)
-        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Content-Length', len(body))
+        self._cors()
         self.end_headers()
         self.wfile.write(body)
     
@@ -1489,6 +1500,41 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                 except Exception as je:
                     print(f"[Brain] Erro ao registrar aprovação no diário: {je}")
                 self._send_json({"success": True})
+            elif path == '/api/whatsapp/pair':
+                phone = body.get('number', '')
+                res = _wa_bridge_call('/pair', data={'number': phone}, method='POST')
+                self._send_json(res)
+            elif path in ('/api/whatsapp/start', '/api/whatsapp/restart'):
+                try:
+                    subprocess.run(['pm2', 'restart', 'axion-whatsapp-bridge'], capture_output=True, timeout=5)
+                    self._send_json({'ok': True, 'message': 'WhatsApp Bridge reiniciado via PM2.'})
+                except Exception as e:
+                    self._send_json({'ok': False, 'error': str(e)})
+            elif path in ('/api/config', '/api/config/env'):
+                env_file = WORKSPACE_ROOT / '.env'
+                existing = {}
+                if env_file.exists():
+                    for line in env_file.read_text(encoding='utf-8', errors='ignore').splitlines():
+                        line = line.strip()
+                        if line and not line.startswith('#') and '=' in line:
+                            k, v = line.split('=', 1)
+                            existing[k.strip()] = v.strip().strip("'\"")
+                updates = body.get('env', body)
+                for k, v in updates.items():
+                    val = str(v).strip()
+                    if val and not val.startswith('***') and '...' not in val:
+                        existing[k] = val
+                out_lines = [f"{k}={v}" for k, v in existing.items()]
+                env_file.write_text('\n'.join(out_lines) + '\n', encoding='utf-8')
+                self._send_json({'ok': True, 'message': 'Configurações .env salvas com sucesso!'})
+            elif path == '/api/services/restart':
+                svc = body.get('service', 'all')
+                try:
+                    target = 'all' if svc == 'all' else svc
+                    subprocess.run(['pm2', 'restart', target], capture_output=True, timeout=5)
+                    self._send_json({'ok': True, 'message': f'Serviço ({svc}) reiniciado com sucesso!'})
+                except Exception as e:
+                    self._send_json({'ok': False, 'error': str(e)})
             else:
                 self._send_json({'error': 'Not found'}, 404)
         except Exception as e:
@@ -1497,7 +1543,87 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             path = self.path.split('?')[0].rstrip('/')
-            if path == '/v1/health':
+            if path in ('', '/', '/dashboard', '/setup', '/index.html', '/dashboard.html', '/setup.html'):
+                dash_file = WORKSPACE_ROOT / 'scripts' / 'setup_dashboard.html'
+                if dash_file.exists():
+                    body = dash_file.read_bytes()
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/html; charset=utf-8')
+                    self.send_header('Content-Length', str(len(body)))
+                    self._cors()
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                else:
+                    self._send_json({'error': 'setup_dashboard.html not found'}, 404)
+                    return
+            elif path == '/api/whatsapp/status':
+                res = _wa_bridge_call('/status', method='GET')
+                self._send_json(res)
+                return
+            elif path in ('/api/whatsapp/qr', '/api/whatsapp/pairing-code'):
+                res = _wa_bridge_call('/status', method='GET')
+                self._send_json({
+                    'qr_image': res.get('lastQrImage'),
+                    'qr_raw': res.get('lastQrRaw'),
+                    'pairing_code': res.get('pairingCode'),
+                    'pairing_number': res.get('pairingNumber'),
+                    'connected_number': res.get('connectedNumber'),
+                    'status': res.get('status', 'offline'),
+                    'message': res.get('message', '')
+                })
+                return
+            elif path == '/api/config':
+                env_file = WORKSPACE_ROOT / '.env'
+                env_data = {}
+                if env_file.exists():
+                    for line in env_file.read_text(encoding='utf-8', errors='ignore').splitlines():
+                        line = line.strip()
+                        if line and not line.startswith('#') and '=' in line:
+                            k, v = line.split('=', 1)
+                            val = v.strip().strip("'\"")
+                            if any(s in k.lower() for s in ('key', 'secret', 'password')):
+                                masked = val[:6] + '...' + val[-4:] if len(val) > 12 else ('******' if val else '')
+                                env_data[k.strip()] = masked
+                            else:
+                                env_data[k.strip()] = val
+                self._send_json({'env': env_data})
+                return
+            elif path == '/api/preflight':
+                import shutil
+                self._send_json({
+                    'node': bool(shutil.which('node')),
+                    'python': sys.version.split()[0],
+                    'git': bool(shutil.which('git')),
+                    'pm2': bool(shutil.which('pm2')),
+                    'desktop_clis': {
+                        'codex': bool(shutil.which('codex')),
+                        'agy': bool(shutil.which('agy')),
+                        'opencode': bool(shutil.which('opencode'))
+                    },
+                    'status': 'ok'
+                })
+                return
+            elif path == '/api/status/summary':
+                uptime_seconds = time.time() - STARTUP_TIME
+                wa_st = _wa_bridge_call('/status', method='GET')
+                dt_count = 0
+                try:
+                    from bot_engine import desktop_watcher
+                    dt_st = desktop_watcher.get_desktop_watcher_status()
+                    dt_count = dt_st.get("total_monitored_finished", 0)
+                except Exception:
+                    pass
+                self._send_json({
+                    'brain': {'status': 'online', 'uptime': round(uptime_seconds), 'port': int(os.environ.get('BRAIN_PORT', 8765))},
+                    'whatsapp': wa_st,
+                    'telegram': {'configured': bool(BOT_TOKEN), 'status': 'online' if bool(BOT_TOKEN) else 'not_configured'},
+                    'desktop': {'status': 'active', 'monitored_tasks': dt_count},
+                    'watcher': bool(watcher),
+                    'tentacles': bool(tentacles)
+                })
+                return
+            elif path == '/v1/health':
                 uptime_seconds = time.time() - STARTUP_TIME
                 active_requests = sum(1 for req in _ACTIVE_REQUESTS.values() if req.get('status') == 'running')
                 self._send_json({
@@ -1663,10 +1789,11 @@ def main():
     threading.Thread(target=_recover_interrupted_tasks, daemon=True).start()
 
     # Start HTTP server
+    brain_host = os.environ.get('BRAIN_HOST', '0.0.0.0')
     brain_port = int(os.environ.get('BRAIN_PORT', '8765'))
     axion_env = os.environ.get('AXION_ENV', 'prod')
-    server = ThreadingHTTPServer(('127.0.0.1', brain_port), BrainHandler)
-    print(f'[Brain] AXION Brain API [{axion_env.upper()}] em http://127.0.0.1:{brain_port}')
+    server = ThreadingHTTPServer((brain_host, brain_port), BrainHandler)
+    print(f'[Brain] AXION Brain API & Web Setup [{axion_env.upper()}] em http://{brain_host}:{brain_port}')
     server.serve_forever()
 
 if __name__ == '__main__':

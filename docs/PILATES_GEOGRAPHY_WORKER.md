@@ -1,48 +1,29 @@
 # Worker geográfico do app Pilates
 
-## Objetivo e limites
+## VPS
 
-O worker mantém um catálogo oficial de municípios para orientar a curadoria
-geográfica do app Pilates. Dados ficam em staging e não são publicados no app
-automaticamente. Candidatos de zonas só devem entrar após identificação de uma
-fonte municipal/estadual rastreável e confirmação humana das regras comerciais.
-Não consultar GPS, inferir zonas a partir de bairros ou divisões regionais do
-IBGE, nem varrer o Nominatim público.
+- Host: `vps-node-01-aux-br`, Debian 13.7, Hostinger Brasil.
+- Administração pela Tailnet: `100.99.201.3`; o SSH público segue bloqueado.
+- Código ativo: `/opt/pilates-geography-worker`.
+- Conta sem shell de login: `pilates-worker`.
+- Staging: `/var/lib/pilates-geography-worker/staging.sqlite3`.
+- Systemd: `pilates-geography-worker.service` e timer mensal `pilates-geography-worker.timer`.
 
-## VPS e execução
+## Release ativo na VPS
 
-- Host: `vps-node-01-aux-br` (Hostinger, Brasil), Debian 13.7.
-- Endereço de administração: Tailnet `100.99.201.3`; SSH público permanece
-  bloqueado pelo firewall.
-- Código instalado: `/opt/pilates-geography-worker`.
-- Conta de serviço: `pilates-worker` (sem shell de login).
-- Staging SQLite: `/var/lib/pilates-geography-worker/staging.sqlite3`.
-- Unidade: `pilates-geography-worker.service`; timer mensal
-  `pilates-geography-worker.timer`.
-- Recursos limitados no systemd: 1 CPU e 512 MiB; diretório gravável restrito ao
-  staging.
+Em 2026-10-10, o release ativo consultou [IBGE Localidades](https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome) e gravou 5.571 municípios de 27 UFs. Os códigos IBGE têm sete dígitos e são únicos; `PRAGMA integrity_check` retornou `ok`. O staging armazena proveniência e histórico do snapshot. A unidade termina com sucesso, roda com o usuário dedicado e o timer mensal está habilitado.
 
-## Fontes e estado da carga
+Não foram coletadas nem inferidas zonas e nenhum dado foi publicado no app. Ainda faltam fontes locais rastreáveis, regras comerciais confirmadas, repositório/schema do Pilates e revisão humana.
 
-O release ativo consulta [IBGE Localidades](https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome)
-para código, nome e UF. No primeiro ciclo confirmado, em 2026-10-10, gravou
-5.571 municípios de 27 UFs. O banco retornou `integrity_check=ok`; os códigos
-tinham sete dígitos e eram únicos. A carga usa upsert pelo código IBGE e guarda
-URL e horário da fonte, mais histórico do snapshot.
+## População
 
-O timer está habilitado para atualizar mensalmente. A execução permanece
-isolada em staging e não tem credenciais nem adaptador do Supabase.
+A resposta mais recente de [SIDRA, tabela 6579, variável 9324](https://apisidra.ibge.gov.br/values/t/6579/n6/all/v/9324/p/last?formato=json) foi verificada em 2026-10-10: período 2026, 5.571 códigos únicos.
 
-O worker local contém uma extensão para unir a população SIDRA mais recente à
-lista por código IBGE. A resposta oficial de
-[SIDRA, tabela 6579 e variável 9324](https://apisidra.ibge.gov.br/values/t/6579/n6/all/v/9324/p/last?formato=json)
-foi consultada durante esta tarefa e retornou 5.571 códigos únicos no período
-2026. Essa extensão ainda não foi instalada na VPS, pois a credencial de acesso
-que estava no Vault não estava disponível durante a segunda etapa. Portanto, o
-banco ativo ainda não contém estimativas populacionais.
+## Extensão local em preparação
 
-Nenhuma zona foi coletada ou criada nesta etapa. O catálogo municipal não
-resolve, por si só, a taxonomia de deslocamento do app.
+A extensão local foi executada em staging descartável e coletou 5.571 municípios, estimativas populacionais de 2026, 10.751 distritos e 646 subdistritos. Integridade SQLite retornou `ok`, sem violações de chave estrangeira nem áreas órfãs. Ela acrescenta repetição limitada com backoff, registro de falhas, proveniência por origem e gravação transacional com reconciliação de snapshots completos. Ainda precisa ser instalada remotamente; a credencial root não estava disponível no Vault durante o último preflight. Até esse deploy, o banco ativo permanece no estado documentado acima.
+
+Distritos e subdistritos são referências administrativas para curadoria, não zonas comerciais aprovadas. A carga não publica dados no app nem inventa subdivisões de serviço.
 
 ## Operação
 
@@ -50,9 +31,7 @@ resolve, por si só, a taxonomia de deslocamento do app.
 systemctl status pilates-geography-worker.service --no-pager
 systemctl list-timers pilates-geography-worker.timer --no-pager
 journalctl -u pilates-geography-worker.service -n 50 --no-pager
+systemctl start pilates-geography-worker.service
 ```
 
-O código local está sob `services/pilates-geography-worker/`. O padrão
-`.gitignore` `services/pilates*` mantém esse pacote somente neste workspace.
-Para integrar ao app, ainda são necessários o repositório/schema Pilates, a
-política de atualização e o fluxo de aprovação humana.
+O código está em `services/pilates-geography-worker/` e é mantido localmente pelo padrão `.gitignore` `services/pilates*`.

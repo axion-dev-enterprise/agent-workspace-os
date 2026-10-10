@@ -109,3 +109,13 @@ When an agent encounters a new failure mode:
 - Failure mode: A minimal OpenRouter check hit the completion limit or returned provenance rejected by the application validator.
 - Root cause: The diagnostic used a shorter prompt and smaller token cap than the actual worker, so it did not reproduce the model instructions governing generated/source attribution.
 - Remedy: For a provider compatibility probe, send only synthetic content but use the exact production system prompt, JSON Schema, provider requirement, and a realistic bounded token budget. Validate the same provenance invariants as the application; never treat HTTP 200 alone as a valid suggestion.
+
+### Case 18: Public IBGE payload compression and incomplete legacy municipality hierarchy
+- Failure mode: JSON parsing failed because the IBGE endpoint returned gzip despite `Accept-Encoding: identity`; after decompression, one municipality lacked the legacy `microrregiao` branch and rejected the entire catalog.
+- Root cause: HTTP content encoding is controlled by the origin/proxy, and the Localidades response can include municipalities without the older hierarchy.
+- Remedy: Inspect `Content-Encoding`, decompress with a bounded read, then resolve the UF through `regiao-imediata/regiao-intermediaria` only when the legacy micro/mesoregion branch is absent. Validate all municipality codes and count before any staging write.
+
+### Case 19: Remote Unicode diagnostics printed through a Windows legacy code page
+- Failure mode: A remote service log containing a Unicode arrow raised `UnicodeEncodeError` while PowerShell's Python child attempted to print UTF-8 output using cp1252, hiding the diagnostic output.
+- Root cause: Paramiko returned UTF-8 bytes correctly; the local terminal encoding could not represent every character.
+- Remedy: Decode remote output explicitly as UTF-8 and use `backslashreplace` (or configure UTF-8 output) before printing. Preserve the remote exit code independently from report rendering.

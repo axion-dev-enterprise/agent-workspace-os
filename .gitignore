@@ -63,6 +63,8 @@ services/axion-auth-center-core/
 services/spapharma-oauth-bridge/
 services/agent-email/otp_client.py
 services/pilates*
+!services/pilates-geography-worker/
+!services/pilates-geography-worker/**
 docs/ISABELA_*
 docs/PARANOID_BUG_AUDIT.md
 references/

@@ -1,0 +1,11 @@
+[Unit]
+Description=Atualização mensal do staging geográfico do IBGE
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+RandomizedDelaySec=20m
+Unit=pilates-geography-worker.service
+
+[Install]
+WantedBy=timers.target

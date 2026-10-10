@@ -19,6 +19,7 @@ module.exports = {
       env: {
         PYTHONUNBUFFERED: '1',
         PYTHONIOENCODING: 'utf-8',
+        BRAIN_HOST: '0.0.0.0',
         PATH: extraPath
       },
       error_file: 'memory/brain/pm2_logs/error.log',

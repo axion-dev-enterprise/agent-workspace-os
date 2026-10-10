@@ -1,0 +1,25 @@
+[Unit]
+Description=Atualiza staging geográfico do Pilates com catálogos oficiais do IBGE
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=pilates-worker
+Group=pilates-worker
+Environment=PYTHONPATH=/opt/pilates-geography-worker/src
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 -m pilates_geography_worker refresh-catalog --database /var/lib/pilates-geography-worker/staging.sqlite3
+WorkingDirectory=/opt/pilates-geography-worker
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/pilates-geography-worker
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=512M
+CPUQuota=100%
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

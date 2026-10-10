@@ -100,6 +100,7 @@ INTERNAL_FILES = [
     "workspace/whatsapp_leads.json",
     "scripts/whatsapp_bridge/auth_info_baileys",
     "auth_info_baileys",
+    "scripts/vps_aux_exec.py",
 ]
 
 def run_git(args: list) -> str:
