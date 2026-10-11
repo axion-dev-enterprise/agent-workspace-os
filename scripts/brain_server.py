@@ -1,4 +1,6 @@
 import os
+import subprocess
+import re
 import sys
 import json
 import time
@@ -1294,6 +1296,106 @@ def _process_callback(chat_id, query_text=None, action=None, username='', action
         _dispatch_reply(chat_id, f'⚠️ Ação não reconhecida: <code>{action}</code>', source=source, is_admin=is_admin)
 
 
+_PREFLIGHT_CACHE = None
+_PREFLIGHT_CACHE_TIME = 0.0
+
+def _get_preflight_data(force_refresh=False):
+    global _PREFLIGHT_CACHE, _PREFLIGHT_CACHE_TIME
+    now = time.time()
+    if not force_refresh and _PREFLIGHT_CACHE is not None and (now - _PREFLIGHT_CACHE_TIME < 60.0):
+        return _PREFLIGHT_CACHE
+    try:
+        import preflight_check
+        data = preflight_check.run_preflight()
+        import shutil
+        data.setdefault('desktop_clis', {
+            'codex': bool(shutil.which('codex')),
+            'agy': bool(shutil.which('agy')),
+            'opencode': bool(shutil.which('opencode'))
+        })
+        _PREFLIGHT_CACHE = data
+        _PREFLIGHT_CACHE_TIME = now
+        return data
+    except Exception as e:
+        if _PREFLIGHT_CACHE is not None:
+            return _PREFLIGHT_CACHE
+        return {"error": str(e), "tools": {}, "auth": {}, "all_required_met": False}
+
+def _get_drive_status():
+    sa_file = WORKSPACE_ROOT / "credentials" / "google_service_account.json"
+    if sa_file.exists():
+        try:
+            data = json.loads(sa_file.read_text(encoding='utf-8'))
+            email = data.get('client_email', '')
+            proj = data.get('project_id', '')
+            return {
+                "authenticated": True,
+                "type": "service_account",
+                "client_email": email,
+                "project_id": proj,
+                "details": f"Conta de Serviço ativa: {email}"
+            }
+        except Exception as e:
+            return {"authenticated": False, "type": "corrupted", "details": f"Arquivo JSON inválido: {e}"}
+    return {"authenticated": False, "type": "none", "details": "Nenhum arquivo em credentials/google_service_account.json"}
+
+def _save_drive_credentials(payload):
+    cred_dir = WORKSPACE_ROOT / "credentials"
+    cred_dir.mkdir(parents=True, exist_ok=True)
+    dest = cred_dir / "google_service_account.json"
+    
+    data = None
+    if isinstance(payload, dict):
+        if 'credentials_json' in payload:
+            try:
+                data = json.loads(payload['credentials_json'])
+            except Exception:
+                pass
+        elif 'client_email' in payload:
+            data = payload
+        elif 'service_account' in payload and isinstance(payload['service_account'], dict):
+            data = payload['service_account']
+    elif isinstance(payload, str):
+        try:
+            data = json.loads(payload)
+        except Exception:
+            pass
+    
+    if not data or not isinstance(data, dict):
+        return {"ok": False, "error": "Conteúdo JSON inválido."}
+    
+    if not data.get("client_email"):
+        return {"ok": False, "error": "JSON não contém 'client_email' de uma Conta de Serviço válida."}
+    
+    dest.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding='utf-8')
+    return {
+        "ok": True,
+        "message": f"Credenciais salvas com sucesso! ({data.get('client_email')})",
+        "client_email": data.get("client_email"),
+        "project_id": data.get("project_id", "")
+    }
+
+def _update_env_var(key, val):
+    val = str(val).strip()
+    os.environ[key] = val
+    env_file = WORKSPACE_ROOT / '.env'
+    lines = []
+    found = False
+    if env_file.exists():
+        for line in env_file.read_text(encoding='utf-8', errors='ignore').splitlines():
+            line_s = line.strip()
+            if line_s and not line_s.startswith('#') and '=' in line_s:
+                k, _ = line_s.split('=', 1)
+                if k.strip() == key:
+                    lines.append(f"{key}={val}")
+                    found = True
+                    continue
+            lines.append(line)
+    if not found:
+        lines.append(f"{key}={val}")
+    env_file.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+
+
 class BrainHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):  # suppress default logging
         pass
@@ -1510,23 +1612,110 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                     self._send_json({'ok': True, 'message': 'WhatsApp Bridge reiniciado via PM2.'})
                 except Exception as e:
                     self._send_json({'ok': False, 'error': str(e)})
+            elif path == '/api/whatsapp/mode':
+                mode = body.get('mode', 'monitor')
+                _update_env_var('WHATSAPP_OPERATIONAL_MODE', mode)
+                _wa_bridge_call('/mode', data={'mode': mode}, method='POST')
+                self._send_json({'ok': True, 'mode': mode, 'message': f'Modo WhatsApp alterado para {mode.upper()}'})
+            elif path == '/api/oauth/github':
+                token = body.get('token', '').strip()
+                if token:
+                    _update_env_var('GITHUB_TOKEN', token)
+                    global _PREFLIGHT_CACHE
+                    _PREFLIGHT_CACHE = None
+                    self._send_json({'ok': True, 'authenticated': True, 'message': 'Token GitHub salvo com sucesso!'})
+                else:
+                    import shutil
+                    gh_bin = shutil.which('gh')
+                    if gh_bin:
+                        try:
+                            import queue
+                            p = subprocess.Popen([gh_bin, 'auth', 'login', '--web'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
+                            q = queue.Queue()
+                            threading.Thread(target=lambda: [q.put(l) for l in iter(p.stderr.readline, '')], daemon=True).start()
+                            code = None
+                            t0 = time.time()
+                            while time.time() - t0 < 3.5:
+                                try:
+                                    line = q.get(timeout=0.3)
+                                    m = re.search(r'([A-Z0-9]{4}-[A-Z0-9]{4})', line)
+                                    if m:
+                                        code = m.group(1)
+                                        break
+                                except Exception:
+                                    pass
+                            self._send_json({'ok': True, 'url': 'https://github.com/login/device', 'code': code})
+                        except Exception as ge:
+                            self._send_json({'ok': False, 'error': str(ge), 'url': 'https://github.com/settings/tokens/new?scopes=repo,read:org&description=AgentWorkspaceOS'})
+                    else:
+                        self._send_json({
+                            'ok': False,
+                            'error': 'gh CLI não instalado no servidor. Utilize a opção de Token Pessoal (PAT) abaixo.',
+                            'url': 'https://github.com/settings/tokens/new?scopes=repo,read:org&description=AgentWorkspaceOS',
+                            'action': 'use_token'
+                        })
+            elif path == '/api/oauth/vercel':
+                token = body.get('token', '').strip()
+                if token:
+                    _update_env_var('VERCEL_TOKEN', token)
+                    _PREFLIGHT_CACHE = None
+                    self._send_json({'ok': True, 'authenticated': True, 'message': 'Token Vercel salvo com sucesso!'})
+                else:
+                    import shutil
+                    vercel_bin = shutil.which('vercel')
+                    if vercel_bin:
+                        self._send_json({'ok': True, 'url': 'https://vercel.com/login'})
+                    else:
+                        self._send_json({
+                            'ok': False,
+                            'error': 'Vercel CLI não instalada no servidor. Insira seu VERCEL_TOKEN diretamente abaixo.',
+                            'url': 'https://vercel.com/account/tokens',
+                            'action': 'use_token'
+                        })
+            elif path == '/api/drive/credentials':
+                res = _save_drive_credentials(body)
+                status_code = 200 if res.get('ok') else 400
+                self._send_json(res, status=status_code)
+            elif path == '/api/drive/sync':
+                drive_script = WORKSPACE_ROOT / 'scripts' / 'google_drive_sync.py'
+                try:
+                    proc = subprocess.run([sys.executable, str(drive_script), '--sync'], capture_output=True, text=True, timeout=60)
+                    try:
+                        res = json.loads(proc.stdout)
+                    except Exception:
+                        res = {'ok': True, 'output': proc.stdout.strip() or proc.stderr.strip()}
+                    self._send_json(res)
+                except Exception as e:
+                    self._send_json({'ok': False, 'error': str(e)})
             elif path in ('/api/config', '/api/config/env'):
-                env_file = WORKSPACE_ROOT / '.env'
-                existing = {}
-                if env_file.exists():
-                    for line in env_file.read_text(encoding='utf-8', errors='ignore').splitlines():
-                        line = line.strip()
-                        if line and not line.startswith('#') and '=' in line:
-                            k, v = line.split('=', 1)
-                            existing[k.strip()] = v.strip().strip("'\"")
+                KEY_NORM = {
+                    'github_token': 'GITHUB_TOKEN',
+                    'vercel_token': 'VERCEL_TOKEN',
+                    'cloudflare_token': 'CLOUDFLARE_API_TOKEN',
+                    'cloudflare_api_token': 'CLOUDFLARE_API_TOKEN',
+                    'groq_api_key': 'GROQ_API_KEY',
+                    'whatsapp_pairing_number': 'WHATSAPP_PAIRING_NUMBER',
+                    'whatsapp_admin_number': 'WHATSAPP_ADMIN_NUMBER',
+                }
                 updates = body.get('env', body)
+                cfg_updates = {}
                 for k, v in updates.items():
                     val = str(v).strip()
                     if val and not val.startswith('***') and '...' not in val:
-                        existing[k] = val
-                out_lines = [f"{k}={v}" for k, v in existing.items()]
-                env_file.write_text('\n'.join(out_lines) + '\n', encoding='utf-8')
-                self._send_json({'ok': True, 'message': 'Configurações .env salvas com sucesso!'})
+                        norm_k = KEY_NORM.get(k.lower(), k)
+                        _update_env_var(norm_k, val)
+                        if k in ('organization', 'git', 'deployment', 'google_drive'):
+                            cfg_updates[k] = v
+                if cfg_updates:
+                    cfg_file = WORKSPACE_ROOT / 'workspace.config.json'
+                    try:
+                        existing_cfg = json.loads(cfg_file.read_text(encoding='utf-8')) if cfg_file.exists() else {}
+                        existing_cfg.update(cfg_updates)
+                        cfg_file.write_text(json.dumps(existing_cfg, indent=2, ensure_ascii=False), encoding='utf-8')
+                    except Exception as ce:
+                        print(f"[Brain] Erro ao salvar workspace.config.json: {ce}")
+                _PREFLIGHT_CACHE = None
+                self._send_json({'ok': True, 'message': 'Configurações salvas com sucesso!'})
             elif path == '/api/services/restart':
                 svc = body.get('service', 'all')
                 try:
@@ -1573,7 +1762,17 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                     'message': res.get('message', '')
                 })
                 return
+            elif path == '/api/drive/status':
+                self._send_json(_get_drive_status())
+                return
             elif path == '/api/config':
+                cfg = {}
+                cfg_file = WORKSPACE_ROOT / 'workspace.config.json'
+                if cfg_file.exists():
+                    try:
+                        cfg = json.loads(cfg_file.read_text(encoding='utf-8'))
+                    except Exception:
+                        pass
                 env_file = WORKSPACE_ROOT / '.env'
                 env_data = {}
                 if env_file.exists():
@@ -1582,27 +1781,17 @@ class BrainHandler(http.server.BaseHTTPRequestHandler):
                         if line and not line.startswith('#') and '=' in line:
                             k, v = line.split('=', 1)
                             val = v.strip().strip("'\"")
-                            if any(s in k.lower() for s in ('key', 'secret', 'password')):
+                            if any(s in k.lower() for s in ('key', 'secret', 'password', 'token')):
                                 masked = val[:6] + '...' + val[-4:] if len(val) > 12 else ('******' if val else '')
                                 env_data[k.strip()] = masked
                             else:
                                 env_data[k.strip()] = val
-                self._send_json({'env': env_data})
+                cfg['env'] = env_data
+                self._send_json(cfg)
                 return
             elif path == '/api/preflight':
-                import shutil
-                self._send_json({
-                    'node': bool(shutil.which('node')),
-                    'python': sys.version.split()[0],
-                    'git': bool(shutil.which('git')),
-                    'pm2': bool(shutil.which('pm2')),
-                    'desktop_clis': {
-                        'codex': bool(shutil.which('codex')),
-                        'agy': bool(shutil.which('agy')),
-                        'opencode': bool(shutil.which('opencode'))
-                    },
-                    'status': 'ok'
-                })
+                force = 'refresh=1' in self.path
+                self._send_json(_get_preflight_data(force_refresh=force))
                 return
             elif path == '/api/status/summary':
                 uptime_seconds = time.time() - STARTUP_TIME

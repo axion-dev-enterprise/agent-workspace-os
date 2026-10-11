@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AXION Mail | Edge Inbox & OTP Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090D14;
+      --card: #0F172A;
+      --card-hover: #162036;
+      --border: #1E293B;
+      --border-focus: #38BDF8;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --accent: #0284C7;
+      --accent-light: #38BDF8;
+      --emerald: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.15);
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0284C7, #38BDF8);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: white;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+    }
+    .brand-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: #1E293B;
+      color: var(--accent-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      text-transform: uppercase;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn:hover {
+      background: var(--card-hover);
+      border-color: var(--muted);
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent-light);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0369A1;
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #F87171;
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+    .main-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex: 1;
+    }
+    .hero {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .hero h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 600px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text);
+    }
+    .stat-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .filter-input {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 260px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filter-input:focus {
+      border-color: var(--accent-light);
+    }
+    .email-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+    .email-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .email-item:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: var(--card-hover);
+      transform: translateY(-1px);
+    }
+    .email-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .email-to {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: #1E293B;
+      color: var(--accent-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .email-time {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .email-subject {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .email-from {
+      font-size: 0.82rem;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .otp-banner {
+      background: var(--emerald-glow);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+    }
+    .otp-code {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: #34D399;
+    }
+    .btn-copy {
+      background: #064E3B;
+      border: 1px solid #059669;
+      color: #A7F3D0;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-copy:hover {
+      background: #047857;
+    }
+    .email-preview {
+      font-size: 0.875rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+      background: #090D14;
+      padding: 0.875rem;
+      border-radius: 8px;
+      border: 1px solid #1E293B;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .links-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      background: #090D14;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #1E293B;
+    }
+    .links-title {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--accent-light);
+      text-transform: uppercase;
+    }
+    .links-box a {
+      color: #38BDF8;
+      text-decoration: underline;
+      font-size: 0.8rem;
+      word-break: break-all;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+    /* Auth Modal / Login Screen */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 20, 0.95);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .login-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 400px;
+      border-radius: 16px;
+      padding: 2.25rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .login-card h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .login-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group input {
+      background: #090D14;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--accent-light);
+    }
+    .login-err {
+      color: #F87171;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+        <div class="brand-logo">AX</div>
+        <span style="font-weight:700; font-size:1.1rem;">AXION Mail Edge</span>
+      </div>
+      <h2>Painel de Acesso Seguro</h2>
+      <p>Catch-All, monitoramento de OTPs e caixas de agentes em example.com.</p>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="usernameInput">Usuário</label>
+          <input type="text" id="usernameInput" required value="admin" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">Senha de Acesso</label>
+          <input type="password" id="passwordInput" required placeholder="Digite a senha corporativa" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+          Autenticar no Edge
+        </button>
+        <div id="loginErr" class="login-err">Senha ou usuário incorreto. Tente novamente.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">AX</div>
+      <div class="brand-title">AXION Mail</div>
+      <span class="brand-badge">Catch-All Edge</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="fetchEmails()" title="Recarregar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        Atualizar
+      </button>
+      <button class="btn btn-danger" onclick="logout()" title="Sair">
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <div class="hero">
+      <h1>Caixa de Entrada & Extrator de OTP</h1>
+      <p>Monitoramento centralizado de e-mails corporativos, códigos de ativação e tokens para agentes autônomos e equipe.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Domínio Oficial</span>
+        <span class="stat-value" style="font-size:1.2rem;">@example.com</span>
+        <span class="stat-meta">Catch-All ativo no Cloudflare MX</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Mensagens Armazenadas</span>
+        <span class="stat-value" id="statCount">0</span>
+        <span class="stat-meta">Retenção de 24h em Cloudflare KV</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Último OTP Capturado</span>
+        <span class="stat-value" id="statLatestOtp" style="color:#34D399;">--</span>
+        <span class="stat-meta" id="statLatestTo">Aguardando...</span>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar">
+      <input type="text" id="searchInput" class="filter-input" placeholder="Filtrar por destinatário (ex: dev@, Operator@, luis@), remetente ou assunto..." oninput="filterEmails()">
+    </div>
+
+    <!-- Email List -->
+    <div id="emailList" class="email-list">
+      <div class="empty-state">
+        <p>Carregando mensagens do Edge...</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    AXION Enterprise Cloud Edge Infrastructure &bull; inbox.example.com
+  </footer>
+
+  <script>
+    var rawEmails = [];
+
+    function checkAuth() {
+      fetch('/api/check-auth').then(function(res) {
+        if (res.ok) {
+          document.getElementById('loginOverlay').style.display = 'none';
+          fetchEmails();
+        } else {
+          document.getElementById('loginOverlay').style.display = 'flex';
+        }
+      }).catch(function() {
+        document.getElementById('loginOverlay').style.display = 'flex';
+      });
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      var u = document.getElementById('usernameInput').value;
+      var p = document.getElementById('passwordInput').value;
+      var errBox = document.getElementById('loginErr');
+      errBox.style.display = 'none';
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p })
+      }).then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        if (data.status === 'ok') {
+          document.getElementById('loginOverlay').style.display = 'none';
+          fetchEmails();
+        } else {
+          errBox.textContent = data.message || 'Senha incorreta.';
+          errBox.style.display = 'block';
+        }
+      }).catch(function() {
+        errBox.textContent = 'Erro ao conectar ao servidor.';
+        errBox.style.display = 'block';
+      });
+    }
+
+    function logout() {
+      fetch('/api/logout', { method: 'POST' }).then(function() {
+        location.reload();
+      });
+    }
+
+    function fetchEmails() {
+      var container = document.getElementById('emailList');
+      fetch('/api/inbox').then(function(res) {
+        if (!res.ok) {
+          if (res.status === 401) {
+            document.getElementById('loginOverlay').style.display = 'flex';
+            return;
+          }
+          throw new Error('Falha ao obter mensagens');
+        }
+        return res.json();
+      }).then(function(data) {
+        rawEmails = data.messages || [];
+        updateStats();
+        renderEmails(rawEmails);
+      }).catch(function() {
+        container.innerHTML = '<div class="empty-state"><p>Erro ao carregar mensagens. Tente atualizar.</p></div>';
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('statCount').textContent = rawEmails.length;
+      var withOtp = rawEmails.find(function(m) { return m.otp_code; });
+      if (withOtp) {
+        document.getElementById('statLatestOtp').textContent = withOtp.otp_code;
+        document.getElementById('statLatestTo').textContent = 'Para: ' + withOtp.to;
+      } else {
+        document.getElementById('statLatestOtp').textContent = 'Nenhum';
+        document.getElementById('statLatestTo').textContent = 'Nenhum OTP ativo';
+      }
+    }
+
+    function renderEmails(list) {
+      var container = document.getElementById('emailList');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>Nenhuma mensagem recebida nas últimas 24 horas.</p></div>';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < list.length; i++) {
+        var msg = list[i];
+        var dateStr = msg.received_at ? new Date(msg.received_at).toLocaleString('pt-BR') : 'Recent';
+        
+        var otpHtml = '';
+        if (msg.otp_code) {
+          otpHtml = '<div class="otp-banner">' +
+            '<div>' +
+              '<div style="font-size:0.75rem; text-transform:uppercase; font-family:var(--font-mono); color:#10B981; font-weight:700;">Código OTP Detectado</div>' +
+              '<div class="otp-code">' + escapeHtml(msg.otp_code) + '</div>' +
+            '</div>' +
+            '<button class="btn-copy" onclick="copyText(\'' + escapeHtml(msg.otp_code) + '\')">Copiar Código</button>' +
+          '</div>';
+        }
+
+        var linksHtml = '';
+        if (msg.verification_links && msg.verification_links.length > 0) {
+          linksHtml = '<div class="links-box"><span class="links-title">Links de Verificação Detectados:</span>';
+          for (var j = 0; j < msg.verification_links.length; j++) {
+            var l = msg.verification_links[j];
+            linksHtml += '<a href="' + escapeHtml(l) + '" target="_blank" rel="noopener">' + escapeHtml(l) + '</a>';
+          }
+          linksHtml += '</div>';
+        }
+
+        var previewText = msg.body_clean || msg.body_preview || '';
+
+        html += '<div class="email-item">' +
+          '<div class="email-header">' +
+            '<span class="email-to">Destinatário: ' + escapeHtml(msg.to || '') + '</span>' +
+            '<span class="email-time">' + dateStr + '</span>' +
+          '</div>' +
+          '<div class="email-subject">' + escapeHtml(decodeMimeSubject(msg.subject) || '(Sem Assunto)') + '</div>' +
+          '<div class="email-from">De: ' + escapeHtml(msg.from || '') + '</div>' +
+          otpHtml +
+          linksHtml +
+          '<div class="email-preview">' + escapeHtml(previewText) + '</div>' +
+        '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    function decodeMimeSubject(str) {
+      if (!str) return '';
+      try {
+        return str.replace(/=\?UTF-8\?B\?([^\?]+)\?=/gi, function(_, b64) {
+          return decodeURIComponent(escape(atob(b64)));
+        });
+      } catch (e) {
+        return str;
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function copyText(str) {
+      navigator.clipboard.writeText(str).then(function() {
+        alert('Código ' + str + ' copiado com sucesso!');
+      });
+    }
+
+    function filterEmails() {
+      var q = document.getElementById('searchInput').value.toLowerCase();
+      var filtered = rawEmails.filter(function(m) {
+        return (m.to && m.to.toLowerCase().indexOf(q) !== -1) ||
+               (m.from && m.from.toLowerCase().indexOf(q) !== -1) ||
+               (m.subject && m.subject.toLowerCase().indexOf(q) !== -1) ||
+               (m.otp_code && m.otp_code.indexOf(q) !== -1);
+      });
+      renderEmails(filtered);
+    }
+
+    setInterval(function() {
+      if (document.getElementById('loginOverlay').style.display === 'none') {
+        fetchEmails();
+      }
+    }, 15000);
+
+    checkAuth();
+  </script>
+</body>
+</html>

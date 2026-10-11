@@ -80,6 +80,12 @@ Todo e qualquer commit, deploy ou operação Git DEVE utilizar obrigatoriamente 
 - **Proibição Estrita de Falsos Afirmativos**: É terminantemente PROIBIDO declarar que uma tarefa, teste ou deploy foi concluído com sucesso sem verificação empírica e factual do resultado.
 - **Validação de Endpoints e URLs**: Sempre inspecionar a resposta HTTP real, o corpo retornado (`curl -s -L`) e verificar se os elementos esperados foram de fato renderizados.
 
+### Regra #2A: Investigação Além da Primeira Hipótese
+- Em caça a bugs, não conclua pela primeira tentativa ou pelo caminho mais óbvio. Mapeie a entrada, rede, autenticação, handler, efeitos e resposta; diferencie evidência de runtime, constatação estática e inferência.
+- Se uma tentativa falhar, diagnostique a camada e varie um fator por vez em canais e alvos autorizados. Não repita comandos cegamente nem contorne controles de acesso.
+- Verifique fronteiras e estados de erro aplicáveis. Página carregada, porta aberta ou health check válido não provam que o fluxo da aplicação funciona.
+- Relate reprodução mínima, resultado esperado e observado, impacto demonstrado e limitações. Prefira testes sem efeitos colaterais; mutações seguem a Regra #5A. A metodologia detalhada está em [paranoid-bug-hunter](.agents/skills/paranoid-bug-hunter/SKILL.md).
+
 ### Regra #3: Purga Obrigatória de Dados de Teste (Zero Test Pollution)
 - Sempre após executar testes funcionais, de integração ou simulações, o agente DEVE excluir imediatamente todos os registros de teste criados.
 - Bancos de dados, tabelas e dashboards devem retornar ao estado limpo (teardown obrigatório em blocos `finally`).

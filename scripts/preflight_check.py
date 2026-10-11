@@ -119,24 +119,41 @@ def check_auth_statuses():
         os.path.expandvars(r'%APPDATA%\GitHub CLI\hosts.yml'),
         os.path.expanduser("~/.config/gh/hosts.yml"),
     ]
-    gh_logged = False
-    gh_detail = "Não autenticado"
-    for gp in gh_paths:
-        if os.path.exists(gp):
+    gh_token = os.environ.get("GITHUB_TOKEN", "") or os.environ.get("GH_TOKEN", "")
+    if not gh_token:
+        env_file = os.path.join(os.path.dirname(__file__), "..", ".env")
+        if os.path.exists(env_file):
             try:
-                with open(gp, "r", encoding="utf-8") as f:
-                    content = f.read()
-                    for line in content.splitlines():
-                        if line.strip().startswith("user:"):
-                            active_user = line.strip().split(":", 1)[1].strip()
-                            if active_user:
-                                gh_logged = True
-                                gh_detail = f"Conectado ({active_user})"
+                with open(env_file, "r", encoding="utf-8", errors="ignore") as f:
+                    for line in f:
+                        line_s = line.strip()
+                        if line_s.startswith("GITHUB_TOKEN=") or line_s.startswith("GH_TOKEN="):
+                            val = line_s.split("=", 1)[1].strip().strip("'\"")
+                            if val and not val.startswith("***"):
+                                gh_token = val
                                 break
-                    if gh_logged:
-                        break
             except Exception:
                 pass
+
+    gh_logged = bool(gh_token)
+    gh_detail = "Token ativo (GITHUB_TOKEN)" if gh_token else "Não autenticado"
+    if not gh_logged:
+        for gp in gh_paths:
+            if os.path.exists(gp):
+                try:
+                    with open(gp, "r", encoding="utf-8") as f:
+                        content = f.read()
+                        for line in content.splitlines():
+                            if line.strip().startswith("user:"):
+                                active_user = line.strip().split(":", 1)[1].strip()
+                                if active_user:
+                                    gh_logged = True
+                                    gh_detail = f"Conectado ({active_user})"
+                                    break
+                        if gh_logged:
+                            break
+                except Exception:
+                    pass
     
     if not gh_logged and shutil.which("gh"):
         gh_detail = "Não autenticado (execute 'gh auth login --web')"

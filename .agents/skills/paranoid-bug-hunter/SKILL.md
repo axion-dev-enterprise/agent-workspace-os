@@ -192,3 +192,54 @@ Antes de finalizar qualquer investigacao ou fix, o agente deve responder "SIM" c
 ## 6. Documentos de Referência
 - [references/bug_taxonomy_and_patterns.md](references/bug_taxonomy_and_patterns.md) -- Catalogo aprofundado de 20 anti-padroes comuns e resolucoes.
 - [references/reproduction_test_recipes.md](references/reproduction_test_recipes.md) -- Receitas de testes de reproducao de concorrencia e falhas de contrato.
+
+## 7. Investigação Além do Caminho Óbvio
+
+Use esta seção quando uma primeira tentativa de acesso, um teste convencional ou uma leitura rápida do código não explicar o comportamento. O objetivo é ampliar a investigação com hipóteses verificáveis, não repetir tentativas às cegas nem presumir que o primeiro caminho representa o sistema inteiro.
+
+### 7.1 Construa um mapa de evidências
+
+Antes de concluir, conecte as camadas que participam do fluxo:
+
+1. **Entrada observável:** URL/rota, método HTTP, interface, CLI, job ou protocolo usado pelo usuário.
+2. **Caminho de rede:** resolução do host, endereço alcançado, porta, proxy, TLS e origem efetiva da chamada. Diferencie indisponibilidade de rede, bloqueio de transporte e resposta da aplicação.
+3. **Contrato e identidade:** autenticação, autorização, middleware, validação do payload e identidade/tenant efetivamente selecionados.
+4. **Execução:** handler, serviço chamado, persistência, integração externa e efeitos colaterais.
+5. **Saída:** status HTTP, corpo real, headers relevantes, logs redigidos e estado visível na interface.
+
+Registre cada observação como **confirmada em runtime**, **confirmada apenas no código**, **inferida** ou **não verificada**. Não promova uma hipótese de código a vulnerabilidade reproduzida sem evidência de execução; também não trate uma página carregada ou um serviço ativo como prova de que os fluxos internos funcionam corretamente.
+
+### 7.2 Quando a primeira tentativa falhar
+
+- Preserve o erro exato e identifique em qual camada ocorreu. Um timeout, `connection refused`, `401`, resposta `404` e erro de aplicação pedem hipóteses diferentes.
+- Confira primeiro os fatos locais e passivos disponíveis: configuração efetiva, bind address, portas, rotas anunciadas pela UI, código do cliente, reverse proxy e logs já existentes.
+- Escolha uma variação que discrimine hipóteses: cliente diferente (`curl.exe` vs navegador), rota documentada, método suportado, endereço autorizado alternativo (por exemplo, hostname vs IP ou rede privada vs pública) ou payload mínimo válido. Mude uma variável por tentativa e anote o resultado.
+- Use apenas canais e alvos autorizados pela solicitação. Não contorne autenticação, controles de rede ou limites de acesso; uma mudança de canal serve para diagnosticar conectividade, não para obter acesso não autorizado.
+- Depois de duas tentativas fundamentadas sem avanço, pare e reporte a camada bloqueadora, o resultado observado e a próxima informação necessária. Não faça retries idênticos nem amplie o escopo por conta própria.
+
+### 7.3 Gere testes a partir das fronteiras
+
+Leia o fluxo completo nos dois sentidos: da interface/cliente até o handler e da rota/handler de volta até quem consome a resposta. Em seguida, escolha casos capazes de refutar a hipótese, conforme aplicável:
+
+- sem autenticação, com sessão válida e com papel/tenant diferente;
+- campo ausente, `null`, vazio, zero, `false`, tipo inesperado e valor nos limites;
+- estado inicial vazio, recurso inexistente, duplicidade, retry e timeout;
+- chamadas concorrentes quando há estado compartilhado;
+- resposta `4xx`/`5xx`, corpo inválido e falha de integração, observando se a UI comunica erro ou falso sucesso;
+- comportamento pela origem/interface realmente usada, não apenas por um teste unitário isolado.
+
+Prefira sondas de leitura e reproduções mínimas sem efeitos colaterais. Testes que gravam, apagam, enviam mensagens, executam comandos, cobram ou alteram contas exigem autorização explícita para aquele efeito, além de escopo e limpeza definidos. Use dados sintéticos; não exponha segredos, tokens de sessão, QR codes de pareamento nem dados pessoais no relatório.
+
+### 7.4 Critério para declarar um bug
+
+Para cada achado, entregue evidência que permita outra pessoa reproduzir e avaliar:
+
+- **Título e severidade**, sem inflar impacto;
+- **Pré-condições e alcance** (incluindo se foi testado localmente, em staging ou no alvo remoto autorizado);
+- **Passos mínimos de reprodução**, com valores sensíveis redigidos;
+- **Resultado esperado e resultado observado**, incluindo status e formato da resposta quando aplicável;
+- **Evidência independente** (runtime, teste, logs redigidos e/ou referência ao trecho de código);
+- **Impacto demonstrado**, distinguindo-o de impacto apenas possível;
+- **Limitações e itens não verificados**.
+
+Não conclua que “não há bugs” porque a página abriu, o health check passou ou um scanner não encontrou padrões. Se não houver reprodução, reporte a observação como hipótese ou risco estático e diga o que falta para confirmá-la. Se o usuário pediu apenas encontrar bugs, reporte os achados sem alterar o alvo; correções e mutações externas são tarefas separadas.

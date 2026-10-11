@@ -478,18 +478,29 @@
               <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
               <path d="M9 18c-4.51 2-5-2-7-2"/>
             </svg>
-            <span class="card-title">GitHub CLI</span>
+            <span class="card-title">GitHub (Token / CLI)</span>
           </div>
           <span class="pill pill-muted" id="github-pill">&#8212;</span>
         </div>
-        <p class="card-desc">Autentica&#231;&#227;o para push de branches, Pull Requests e gest&#227;o de releases.</p>
-        <button class="btn" id="btn-github-login" style="width:100%; justify-content:center;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-            <polyline points="10 17 15 12 10 7"/>
-            <line x1="15" y1="12" x2="3" y2="12"/>
-          </svg>
-          Conectar GitHub
+        <p class="card-desc">Token ou CLI para push de branches, PRs e gest&#227;o de releases.</p>
+        
+        <div class="form-group" style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label class="form-label" for="github-token-input" style="margin:0;">Personal Access Token (PAT)</label>
+            <a href="https://github.com/settings/tokens/new?scopes=repo,read:org&description=AgentWorkspaceOS" target="_blank" style="font-size:0.72rem; color:var(--accent); text-decoration:none;">Criar Token &#8599;</a>
+          </div>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="github-token-input" placeholder="ghp_xxxx..." autocomplete="off">
+            <button class="eye-btn" id="github-eye-btn" type="button" aria-label="Mostrar/ocultar token">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="btn-github-token-save" style="width:100%; justify-content:center; margin-bottom:10px;">
+          Salvar Token GitHub
+        </button>
+        <button class="btn btn-sm" id="btn-github-login" style="width:100%; justify-content:center; background:none; border:1px solid rgba(255,255,255,0.08); color:var(--text-muted); font-size:0.76rem;">
+          Conectar via GitHub CLI (Device Code)
         </button>
       </div>
 
@@ -500,18 +511,29 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
-            <span class="card-title">Vercel CLI</span>
+            <span class="card-title">Vercel (Token / CLI)</span>
           </div>
           <span class="pill pill-muted" id="vercel-pill">&#8212;</span>
         </div>
-        <p class="card-desc">Login para deployments de frontends e serverless functions.</p>
-        <button class="btn" id="btn-vercel-login" style="width:100%; justify-content:center;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-            <polyline points="10 17 15 12 10 7"/>
-            <line x1="15" y1="12" x2="3" y2="12"/>
-          </svg>
-          Conectar Vercel
+        <p class="card-desc">Token ou CLI para deploy de frontends e serverless functions.</p>
+        
+        <div class="form-group" style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label class="form-label" for="vercel-token-input" style="margin:0;">Vercel API Token</label>
+            <a href="https://vercel.com/account/tokens" target="_blank" style="font-size:0.72rem; color:var(--accent); text-decoration:none;">Criar Token &#8599;</a>
+          </div>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="vercel-token-input" placeholder="vercel_xxxx..." autocomplete="off">
+            <button class="eye-btn" id="vercel-eye-btn" type="button" aria-label="Mostrar/ocultar token">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="btn-vercel-token-save" style="width:100%; justify-content:center; margin-bottom:10px;">
+          Salvar Token Vercel
+        </button>
+        <button class="btn btn-sm" id="btn-vercel-login" style="width:100%; justify-content:center; background:none; border:1px solid rgba(255,255,255,0.08); color:var(--text-muted); font-size:0.76rem;">
+          Conectar via Vercel CLI
         </button>
       </div>
 
@@ -528,10 +550,13 @@
         </div>
         <p class="card-desc">Token de API para deploy de Workers e gest&#227;o de DNS no Cloudflare.</p>
         <div class="form-group" style="margin-bottom:10px;">
-          <label class="form-label" for="cf-token-input">API Token</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label class="form-label" for="cf-token-input" style="margin:0;">API Token</label>
+            <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" style="font-size:0.72rem; color:var(--accent); text-decoration:none;">Criar Token &#8599;</a>
+          </div>
           <div class="input-wrap">
             <input class="form-input" type="password" id="cf-token-input" placeholder="cf_xxxx..." autocomplete="off">
-            <button class="eye-btn" id="cf-eye-btn" aria-label="Mostrar/ocultar token">
+            <button class="eye-btn" id="cf-eye-btn" type="button" aria-label="Mostrar/ocultar token">
               <svg id="cf-eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                 <circle cx="12" cy="12" r="3"/>
@@ -545,7 +570,7 @@
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          Salvar Token
+          Salvar Token Cloudflare
         </button>
       </div>
     </div>
@@ -577,20 +602,40 @@
           </button>
         </div>
 
-        <!-- 1. Pairing Code Container (DEFAULT & RECOMMENDED) -->
+        <!-- Connected State Banner -->
+        <div id="wa-connected-box" style="display:none; padding:18px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.3); border-radius:12px; text-align:center; margin-bottom:16px;">
+          <div style="font-size:1.05rem; font-weight:700; color:var(--success); margin-bottom:6px;">&#9989; Dispositivo WhatsApp Conectado com Sucesso!</div>
+          <div id="wa-number" style="font-family:var(--font-mono); font-size:0.9rem; color:var(--text); margin-bottom:10px;"></div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">A bridge est&#225; monitorando mensagens em tempo real no workspace.</div>
+        </div>
+
+        <!-- 1. Pairing Code Container -->
         <div id="wa-pairing-box" style="padding: 16px; background: rgba(59,130,246,0.06); border: 2px dashed rgba(59,130,246,0.3); border-radius: 12px; margin-bottom: 16px; text-align: center;">
-          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#93c5fd; font-weight:600; margin-bottom:6px;">
-            Código de Pareamento de 8 Dígitos
+          <div style="margin-bottom:12px; text-align:left;">
+            <div style="font-size:0.8rem; font-weight:600; color:var(--text); margin-bottom:4px;">Digite o n&#250;mero de telefone para conectar:</div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="input-pairing-phone" class="form-input" placeholder="Ex: 5511999999999 (com DDI e DDD)" style="font-size:0.82rem; font-family:var(--font-mono);">
+              <button class="btn btn-primary btn-sm" id="btn-request-pairing-code" style="white-space:nowrap;">
+                &#9889; Gerar C&#243;digo de 8 D&#237;gitos
+              </button>
+            </div>
           </div>
-          <div id="wa-pairing-code-display" style="font-family:var(--font-mono); font-size:2.2rem; font-weight:800; letter-spacing:6px; color:#60a5fa; margin: 10px 0; user-select:all;">
-            Aguardando...
+
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#93c5fd; font-weight:600; margin-top:10px;">
+            C&#243;digo de Pareamento
+          </div>
+          <div id="wa-pairing-code-display" style="font-family:var(--font-mono); font-size:2.2rem; font-weight:800; letter-spacing:6px; color:#60a5fa; margin: 8px 0; user-select:all;">
+            --------
+          </div>
+          <div id="wa-pairing-code-hint" style="font-size:0.76rem; color:var(--text-muted); margin-bottom:10px;">
+            Digite seu n&#250;mero acima e clique em &ldquo;Gerar C&#243;digo&rdquo; para parear sem precisar ler QR Code.
           </div>
           <div style="display:flex; justify-content:center; gap:8px; margin-bottom:12px;">
             <button class="btn btn-sm btn-success" id="btn-copy-pairing-code">
-              📋 Copiar Código
+              &#128203; Copiar C&#243;digo
             </button>
             <button class="btn btn-sm btn-secondary" id="btn-refresh-pairing-code" title="Atualizar">
-              🔄 Atualizar
+              &#128260; Atualizar Status
             </button>
           </div>
           
@@ -599,43 +644,25 @@
             <ol style="margin-left:16px;">
               <li>Abra o <strong>WhatsApp</strong> &gt; Menu (3 pontos ou Ajustes) &gt; <strong>Aparelhos Conectados</strong>.</li>
               <li>Toque em <strong>Conectar um aparelho</strong>.</li>
-              <li>Toque na opção inferior: <strong>"Conectar com número de telefone"</strong>.</li>
-              <li>Digite o código de 8 dígitos mostrado acima.</li>
+              <li>Toque na op&#231;&#227;o: <strong>&ldquo;Conectar com n&#250;mero de telefone&rdquo;</strong> (na parte inferior).</li>
+              <li>Digite o c&#243;digo de 8 d&#237;gitos exibido acima.</li>
             </ol>
-          </div>
-
-          <div style="margin-top:14px; text-align:left; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px;">
-            <div style="font-size:0.75rem; font-weight:500; color:var(--text-muted); margin-bottom:6px;">Gerar novo código para outro número:</div>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="input-pairing-phone" class="form-input" placeholder="Número com DDD (ex: 5511999999999)" style="font-size:0.8rem;">
-              <button class="btn btn-secondary btn-sm" id="btn-request-pairing-code" style="white-space:nowrap;">
-                Gerar Código
-              </button>
-            </div>
           </div>
         </div>
 
-        <!-- 2. QR Code Container (Alternative) -->
-        <div class="qr-container" id="wa-qr-container" style="display:none;">
-          <img id="wa-qr-img" class="qr-image" src="" alt="WhatsApp QR Code" style="display:none;">
+        <!-- 2. QR Code Container -->
+        <div class="qr-container" id="wa-qr-container" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:260px; padding:16px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid var(--card-border); margin-bottom:16px;">
+          <img id="wa-qr-img" class="qr-image" src="" alt="WhatsApp QR Code" style="display:none; max-width:240px; border-radius:8px; background:#fff; padding:6px;">
           <span id="wa-qr-placeholder" style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding: 20px;">
-            Aguardando geração do QR Code...
+            Aguardando gera&#231;&#227;o do QR Code...
           </span>
-          <div id="wa-connected-box" style="display:none; text-align:center;">
-            <div style="font-size:0.95rem; font-weight:600; color:var(--success); margin-bottom:4px;">Dispositivo Conectado com Sucesso!</div>
-            <div id="wa-number" style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-muted);"></div>
+          <div style="margin-top:12px; font-size:0.78rem; color:var(--text-muted); text-align:center;">
+            Abra o WhatsApp &gt; Aparelhos Conectados &gt; Conectar um Aparelho &gt; Aponte a c&#226;mera.
           </div>
         </div>
 
         <!-- QR Instructions -->
-        <div class="qr-steps" id="wa-steps-card" style="display:none;">
-          <div style="font-weight:600; color:var(--text); margin-bottom:4px;">Como parear por QR Code:</div>
-          <ol>
-            <li>Abra o <strong>WhatsApp</strong> no smartphone.</li>
-            <li>Toque em <strong>Aparelhos conectados</strong> &gt; <strong>Conectar um aparelho</strong>.</li>
-            <li>Aponte a câmera para o QR Code acima.</li>
-          </ol>
-        </div>
+        <div class="qr-steps" id="wa-steps-card" style="display:none;"></div>
 
         <div class="divider"></div>
 
@@ -719,7 +746,7 @@
           <span class="pill pill-muted" id="drive-auth-pill">Verificando...</span>
         </div>
         <p class="card-desc">Sincroniza automaticamente atas, grava&#231;&#245;es e relat&#243;rios com o workspace.</p>
-        <div id="drive-status-detail" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;"></div>
+        <div id="drive-status-detail" style="font-size:0.82rem; color:var(--text-muted); background:rgba(255,255,255,0.03); padding:10px; border-radius:8px; border:1px solid var(--card-border); margin-bottom:14px; word-break:break-all;"></div>
         <button class="btn" id="btn-drive-sync" style="width:100%; justify-content:center;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
@@ -729,26 +756,31 @@
           </svg>
           Sincronizar Arquivos Agora
         </button>
-        <div class="result-box" id="drive-result" style="display:none;"></div>
+        <div class="result-box" id="drive-result" style="display:none; margin-top:12px;"></div>
       </div>
 
       <div class="card">
-        <div class="card-title" style="margin-bottom:8px;">Como configurar credenciais</div>
-        <p class="card-desc">Passos para habilitar a Google Drive API:</p>
-        <ol style="padding-left:18px; font-size:0.82rem; color:var(--text-muted); line-height:1.8;">
-          <li>Acesse <strong>console.cloud.google.com</strong> e crie um projeto.</li>
-          <li>Ative a <strong>Google Drive API</strong> na biblioteca.</li>
-          <li>Crie uma <strong>Conta de Servi&#231;o</strong> e baixe o arquivo de chave JSON.</li>
-          <li>Salve o arquivo no caminho abaixo:</li>
-        </ol>
-        <div class="cmd-row" style="margin-top:8px;">
-          <span class="cmd-text">credentials/google_service_account.json</span>
-          <button class="btn-icon" data-copy="credentials/google_service_account.json" aria-label="Copiar caminho">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
-            </svg>
-          </button>
+        <div class="card-title" style="margin-bottom:8px;">Configurar Conta de Servi&#231;o (1-Clique)</div>
+        <p class="card-desc">Envie o arquivo <code>.json</code> baixado no Google Cloud Console ou cole o conteúdo diretamente:</p>
+        
+        <input type="file" id="drive-json-file" accept=".json" style="display:none;">
+        <button class="btn btn-primary" id="btn-upload-drive-json" style="width:100%; justify-content:center; margin-bottom:12px; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Carregar Arquivo google_service_account.json
+        </button>
+        
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Ou cole o conteúdo JSON da Conta de Serviço:</div>
+        <textarea id="drive-json-text" class="form-input" rows="3" placeholder='{"type": "service_account", "project_id": "...", "client_email": "...", ...}' style="font-family:var(--font-mono); font-size:0.74rem; margin-bottom:8px; resize:vertical;"></textarea>
+        <button class="btn btn-secondary btn-sm" id="btn-save-drive-json" style="width:100%; justify-content:center; margin-bottom:14px;">
+          Salvar e Validar Credenciais JSON
+        </button>
+
+        <div class="divider"></div>
+        <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">
+          <strong>Passo a passo no Google Cloud:</strong><br>
+          1. Acesse <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent);">console.cloud.google.com</a> &gt; crie um projeto.<br>
+          2. Ative a <strong>Google Drive API</strong> na biblioteca.<br>
+          3. Em <strong>IAM &amp; Admin &gt; Contas de Serviço</strong>, crie uma chave JSON e faça upload acima.
         </div>
       </div>
     </div>
@@ -1306,24 +1338,56 @@ response = client.chat.completions.create(
     });
   }
 
-  // ── GitHub Login ──────────────────────────────────────────
+  // ── GitHub Token & Login ────────────────────────────────────
+  var ghEyeBtn = document.getElementById('github-eye-btn');
+  if (ghEyeBtn) {
+    ghEyeBtn.addEventListener('click', function() {
+      var inp = document.getElementById('github-token-input');
+      if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+  }
+
+  var btnGhTokenSave = document.getElementById('btn-github-token-save');
+  if (btnGhTokenSave) {
+    btnGhTokenSave.addEventListener('click', function() {
+      var inp = document.getElementById('github-token-input');
+      var token = inp ? inp.value.trim() : '';
+      if (!token) { showToast('Insira um Personal Access Token (PAT) do GitHub', 'warning'); return; }
+      var self = this; setLoading(self, true);
+      fetch('/api/oauth/github', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.ok !== false) {
+          showToast('Token do GitHub salvo com sucesso!', 'success');
+          loadPreflight(true);
+        } else {
+          showToast('Erro: ' + (data.error || 'Falha ao salvar token'), 'error');
+        }
+      }).catch(function(err) {
+        showToast('Erro ao salvar token: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
+
   var btnGithubLogin = document.getElementById('btn-github-login');
   if (btnGithubLogin) {
     btnGithubLogin.addEventListener('click', function() {
       var self = this; setLoading(self, true);
-      fetch('/api/oauth/github', { method: 'POST' })
+      fetch('/api/oauth/github', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.url) {
             window.open(data.url, '_blank');
             if (data.code) {
               try { navigator.clipboard.writeText(data.code); } catch(e){}
-              showToast('Código copiado: ' + data.code + '! Cole na página do GitHub aberta.', 'success');
+              showToast('Código copiado: ' + data.code + '! Cole na página aberta do GitHub.', 'success');
             } else {
-              showToast('Página do GitHub aberta no navegador.', 'info');
+              showToast(data.message || 'Página do GitHub aberta no navegador.', 'info');
             }
           } else {
-            showToast('Erro ao obter link do GitHub', 'error');
+            showToast(data.error || 'Erro ao obter link do GitHub. Use a opção de token acima.', 'warning');
           }
         }).catch(function(err) {
           showToast('Erro ao iniciar login GitHub: ' + String(err), 'error');
@@ -1331,19 +1395,51 @@ response = client.chat.completions.create(
     });
   }
 
-  // ── Vercel Login ──────────────────────────────────────────
+  // ── Vercel Token & Login ────────────────────────────────────
+  var vercelEyeBtn = document.getElementById('vercel-eye-btn');
+  if (vercelEyeBtn) {
+    vercelEyeBtn.addEventListener('click', function() {
+      var inp = document.getElementById('vercel-token-input');
+      if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+  }
+
+  var btnVercelTokenSave = document.getElementById('btn-vercel-token-save');
+  if (btnVercelTokenSave) {
+    btnVercelTokenSave.addEventListener('click', function() {
+      var inp = document.getElementById('vercel-token-input');
+      var token = inp ? inp.value.trim() : '';
+      if (!token) { showToast('Insira um Token de API da Vercel', 'warning'); return; }
+      var self = this; setLoading(self, true);
+      fetch('/api/oauth/vercel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.ok !== false) {
+          showToast('Token da Vercel salvo com sucesso!', 'success');
+          loadPreflight(true);
+        } else {
+          showToast('Erro: ' + (data.error || 'Falha ao salvar token'), 'error');
+        }
+      }).catch(function(err) {
+        showToast('Erro ao salvar token: ' + String(err), 'error');
+      }).finally(function() { setLoading(self, false); });
+    });
+  }
+
   var btnVercelLogin = document.getElementById('btn-vercel-login');
   if (btnVercelLogin) {
     btnVercelLogin.addEventListener('click', function() {
       var self = this; setLoading(self, true);
-      fetch('/api/oauth/vercel', { method: 'POST' })
+      fetch('/api/oauth/vercel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.url) {
             window.open(data.url, '_blank');
-            showToast('Página de autorização da Vercel aberta no navegador!', 'success');
+            showToast(data.message || 'Página da Vercel aberta no navegador!', 'success');
           } else {
-            showToast('Erro ao obter link da Vercel', 'error');
+            showToast(data.error || 'Erro ao obter link da Vercel. Use a opção de token acima.', 'warning');
           }
         }).catch(function(err) {
           showToast('Erro ao iniciar login Vercel: ' + String(err), 'error');
@@ -1446,19 +1542,28 @@ response = client.chat.completions.create(
         if (stepsCard) stepsCard.style.display = 'none';
         var pb = document.getElementById('wa-pairing-box');
         if (pb) pb.style.display = 'none';
+        var qrWrap = document.getElementById('wa-qr-container');
+        if (qrWrap) qrWrap.style.display = 'none';
       } else {
         // qr_ready or pairing_ready or disconnected
         var pCode = data.pairingCode || data.pairing_code;
         if (pill) {
-          pill.textContent = pCode ? ('Código: ' + pCode) : 'Aguardando Pareamento';
+          pill.textContent = pCode ? ('Código: ' + pCode) : (data.lastQrImage ? 'QR Code Ativo' : 'Aguardando');
           pill.className = 'pill pill-warning';
         }
         if (startWrap) startWrap.style.display = 'none';
         if (connBox) connBox.style.display = 'none';
 
         var pairDisplay = document.getElementById('wa-pairing-code-display');
-        if (pCode && pairDisplay) {
-          pairDisplay.textContent = pCode;
+        var pairHint = document.getElementById('wa-pairing-code-hint');
+        if (pairDisplay) {
+          if (pCode) {
+            pairDisplay.textContent = pCode;
+            if (pairHint) pairHint.textContent = 'Código de 8 dígitos ativo! Digite no WhatsApp do celular.';
+          } else {
+            pairDisplay.textContent = '--------';
+            if (pairHint) pairHint.textContent = 'Digite seu número com DDD acima para gerar o código de 8 dígitos.';
+          }
         }
 
         if (data.lastQrImage && qrImg) {
@@ -1466,7 +1571,6 @@ response = client.chat.completions.create(
           qrImg.style.display = 'block';
           if (placeholder) placeholder.style.display = 'none';
         } else {
-          // fetch direct qr
           fetch('/api/whatsapp/qr').then(function(r) { return r.json(); }).then(function(qrd) {
             if (qrd.qr_image && qrImg) {
               qrImg.src = qrd.qr_image;
@@ -1475,6 +1579,7 @@ response = client.chat.completions.create(
             }
             if (qrd.pairing_code && pairDisplay) {
               pairDisplay.textContent = qrd.pairing_code;
+              if (pairHint) pairHint.textContent = 'Código de 8 dígitos ativo! Digite no WhatsApp do celular.';
             }
           }).catch(function() {});
         }
@@ -1676,13 +1781,80 @@ response = client.chat.completions.create(
       var pill = document.getElementById('drive-auth-pill');
       var det  = document.getElementById('drive-status-detail');
       if (pill) {
-        pill.textContent = data.authenticated ? 'Autenticado' : 'Não autenticado';
-        pill.className   = 'pill ' + (data.authenticated ? 'pill-success' : 'pill-danger');
+        pill.textContent = data.authenticated ? 'Autenticado' : 'Não Configurado';
+        pill.className   = 'pill ' + (data.authenticated ? 'pill-success' : 'pill-warning');
       }
       if (det) {
-        det.textContent = (data.details || '') + (data.type ? ' (' + data.type + ')' : '');
+        if (data.authenticated) {
+          det.innerHTML = '&#9989; <strong>Conta Ativa:</strong> ' + escHtml(data.client_email || data.details || 'Conectado');
+        } else {
+          det.textContent = data.details || 'Nenhuma credencial configurada. Envie o arquivo JSON ao lado.';
+        }
       }
     }).catch(function() {});
+  }
+
+  function saveDriveCredentials(jsonData, triggerBtn) {
+    if (triggerBtn) setLoading(triggerBtn, true, 'Salvando credenciais...');
+    fetch('/api/drive/credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jsonData)
+    }).then(function(r) { return r.json(); }).then(function(res) {
+      if (res.ok !== false) {
+        showToast(res.message || 'Credenciais da Conta de Serviço salvas com sucesso!', 'success');
+        var area = document.getElementById('drive-json-text');
+        if (area) area.value = '';
+        loadDriveStatus();
+      } else {
+        showToast('Erro ao salvar credenciais: ' + (res.error || 'JSON inválido'), 'error');
+      }
+    }).catch(function(err) {
+      showToast('Erro de comunicação: ' + String(err), 'error');
+    }).finally(function() {
+      if (triggerBtn) setLoading(triggerBtn, false);
+    });
+  }
+
+  var btnUploadDrive = document.getElementById('btn-upload-drive-json');
+  var driveFileInput = document.getElementById('drive-json-file');
+  if (btnUploadDrive && driveFileInput) {
+    btnUploadDrive.addEventListener('click', function() {
+      driveFileInput.value = '';
+      driveFileInput.click();
+    });
+    driveFileInput.addEventListener('change', function(e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          var parsed = JSON.parse(evt.target.result);
+          saveDriveCredentials(parsed, btnUploadDrive);
+        } catch(err) {
+          showToast('Arquivo selecionado não é um JSON válido: ' + err.message, 'error');
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  var btnSaveDriveJson = document.getElementById('btn-save-drive-json');
+  if (btnSaveDriveJson) {
+    btnSaveDriveJson.addEventListener('click', function() {
+      var area = document.getElementById('drive-json-text');
+      var raw = area ? area.value.trim() : '';
+      if (!raw) {
+        showToast('Cole o conteúdo do arquivo JSON da Conta de Serviço', 'warning');
+        return;
+      }
+      try {
+        var parsed = JSON.parse(raw);
+        saveDriveCredentials(parsed, btnSaveDriveJson);
+      } catch(err) {
+        showToast('Conteúdo colado não é um JSON válido: ' + err.message, 'error');
+      }
+    });
   }
 
   var btnDriveSync = document.getElementById('btn-drive-sync');
@@ -1739,6 +1911,14 @@ response = client.chat.completions.create(
       if (fGitMail) fGitMail.value = cleanVal(git.user_email);
       if (fGitOrg)  fGitOrg.value  = cleanVal(git.org_github_handle);
       if (fVpsIp)   fVpsIp.value   = cleanVal(dep.vps_host_ip);
+
+      var envObj = data.env || {};
+      var ghInp = document.getElementById('github-token-input');
+      var vcInp = document.getElementById('vercel-token-input');
+      var cfInp = document.getElementById('cf-token-input');
+      if (ghInp && envObj.GITHUB_TOKEN && !ghInp.value) ghInp.value = envObj.GITHUB_TOKEN;
+      if (vcInp && envObj.VERCEL_TOKEN && !vcInp.value) vcInp.value = envObj.VERCEL_TOKEN;
+      if (cfInp && envObj.CLOUDFLARE_API_TOKEN && !cfInp.value) cfInp.value = envObj.CLOUDFLARE_API_TOKEN;
 
       var targetVal = cleanVal(dep.primary_target) || 'Vercel';
       if (fTarget) {

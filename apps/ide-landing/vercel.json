@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "axion-ide-landing",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
