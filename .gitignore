@@ -96,3 +96,21 @@ scripts/fix_migrations_and_nginx.py
 scripts/configure_central_api.py
 scripts/list_flow_routes.py
 
+# Client application sources are operational-only; export_whitelabel_release.py
+# and validate_whitelabel.py explicitly purge these paths from the public release.
+!apps/isabela-platform/
+!apps/isabela-platform/**
+apps/isabela-platform/**/node_modules/
+apps/isabela-platform/**/dist/
+apps/isabela-platform/**/.wrangler/
+apps/isabela-platform/**/temp/
+apps/isabela-platform/**/.env*
+apps/isabela-platform/**/*.log
+
+# Keep non-secret Isabela payment schema/docs in the private operational branch.
+!vault/payments/
+!vault/payments/isabela-staging/
+!vault/payments/isabela-staging/index.json
+!vault/payments/isabela-staging/README.md
+vault/payments/isabela-staging/.env
+

@@ -665,7 +665,7 @@ async function initBaileys() {
       }
 
       // Check if pairing code is needed
-      if (!authState.creds.registered && !pairingRequested && state.status !== 'connected') {
+      if (PAIRING_NUMBER && PAIRING_NUMBER.length >= 10 && !authState.creds.registered && !pairingRequested && state.status !== 'connected') {
         pairingRequested = true;
         console.log(`[*] Dispositivo não pareado. Gerando Pairing Code para ${PAIRING_NUMBER}...`);
         setTimeout(async () => {

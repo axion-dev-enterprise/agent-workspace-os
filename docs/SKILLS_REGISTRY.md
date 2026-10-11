@@ -1,6 +1,6 @@
 # Registro Canônico de Skills Operacionais — AXION Enterprise
 
-> **Última Sincronização Automática**: 2026-10-10  
+> **Última Sincronização Automática**: 2026-10-11  
 > **Padrão de Especificação**: Antigravity / Cursor / Claude Code / MCP Standard (`SKILL.md` com YAML Frontmatter)  
 > **Local do Workspace**: `C:\workspace\.agents\skills/`  
 > **Local Global do Sistema**: `C:\Users\AXION\.gemini\antigravity\skills/`  
